@@ -1,0 +1,56 @@
+{
+  "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
+  "channelName": "TunnelLab",
+  "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
+  "feedUpdatedAt": "2026-09-24T16:00:09+00:00",
+  "videos": [
+    {
+      "videoId": "Oq6Xy_4IHbI",
+      "title": "حافظه واقعی برای Coding Agent؟ | تست Graphify روی یک پروژه واقعی",
+      "publishedAt": "2026-09-24T16:00:09Z",
+      "updatedAt": "2026-09-24T16:00:09Z",
+      "url": "https://www.youtube.com/watch?v=Oq6Xy_4IHbI",
+      "thumbnail": "https://i.ytimg.com/vi/Oq6Xy_4IHbI/maxresdefault.jpg"
+    },
+    {
+      "videoId": "_Xla4w9Z2KM",
+      "title": "ساخت کاراکتر و فیلم کوتاه هوش مصنوعی: بدون نیاز به چندین ابزار با FlexClip!",
+      "publishedAt": "2026-09-16T15:00:17Z",
+      "updatedAt": "2026-09-16T15:00:17Z",
+      "url": "https://www.youtube.com/watch?v=_Xla4w9Z2KM",
+      "thumbnail": "https://i.ytimg.com/vi/_Xla4w9Z2KM/maxresdefault.jpg"
+    },
+    {
+      "videoId": "7ZcitKxHjuM",
+      "title": "دیپ‌سیک جایگزین Claude Code شده؟ | تست واقعی DeepSeek Harness",
+      "publishedAt": "2026-09-13T16:00:15Z",
+      "updatedAt": "2026-09-13T16:00:15Z",
+      "url": "https://www.youtube.com/watch?v=7ZcitKxHjuM",
+      "thumbnail": "https://i.ytimg.com/vi/7ZcitKxHjuM/maxresdefault.jpg"
+    },
+    {
+      "videoId": "NNrZqsXSxbg",
+      "title": "همه مدل‌های AI داخل Claude Code! | آموزش OmniRoute + مدل‌های رایگان",
+      "publishedAt": "2026-09-10T16:00:01Z",
+      "updatedAt": "2026-09-10T16:00:01Z",
+      "url": "https://www.youtube.com/watch?v=NNrZqsXSxbg",
+      "thumbnail": "https://i.ytimg.com/vi/NNrZqsXSxbg/maxresdefault.jpg"
+    },
+    {
+      "videoId": "1Pvs7qOg0zs",
+      "title": "آموزش OpenCode | جایگزین متن‌باز Claude Code و Codex با مدل رایگان",
+      "publishedAt": "2026-09-07T18:08:53Z",
+      "updatedAt": "2026-09-07T18:08:53Z",
+      "url": "https://www.youtube.com/watch?v=1Pvs7qOg0zs",
+      "thumbnail": "https://i.ytimg.com/vi/1Pvs7qOg0zs/maxresdefault.jpg"
+    },
+    {
+      "videoId": "IDEG0bUYbyo",
+      "title": "گوگل Claude Opus رو رایگان کرد؟ | تست واقعی Antigravity از صفر تا پروژه",
+      "publishedAt": "2026-09-05T16:00:31Z",
+      "updatedAt": "2026-09-05T16:00:31Z",
+      "url": "https://www.youtube.com/watch?v=IDEG0bUYbyo",
+      "thumbnail": "https://i.ytimg.com/vi/IDEG0bUYbyo/maxresdefault.jpg"
+    }
+  ]
+}
