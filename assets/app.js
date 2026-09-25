@@ -1,40 +1,57 @@
-
 (() => {
   const root = document.documentElement;
   const $ = (s, p=document) => p.querySelector(s);
   const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+  const themeMeta = $('meta[name="theme-color"]');
+
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || '');
+  $$('[data-command-open]').forEach(btn => {
+    btn.innerHTML = isMac ? '<span>⌘</span>K' : '<span>Ctrl</span>K';
+    btn.setAttribute('aria-label', `Open command palette (${isMac ? 'Command' : 'Control'} K)`);
+  });
 
   let storedTheme = null;
   try { storedTheme = localStorage.getItem('theme'); } catch (_) {}
   const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  root.dataset.theme = storedTheme || (systemDark ? 'dark' : 'light');
+  const applyTheme = theme => {
+    root.dataset.theme = theme;
+    themeMeta?.setAttribute('content', theme === 'dark' ? '#111315' : '#f7f7f4');
+    $$('[data-theme-toggle]').forEach(btn => btn.setAttribute('aria-pressed', String(theme === 'dark')));
+  };
+  applyTheme(storedTheme || (systemDark ? 'dark' : 'light'));
   $$('[data-theme-toggle]').forEach(btn => btn.addEventListener('click', () => {
-    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch (_) {}
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('theme', next); } catch (_) {}
   }));
 
   $$('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 
   const menuBtn = $('[data-menu-toggle]');
   const menu = $('[data-mobile-menu]');
+  if (menu && menuBtn) {
+    if (!menu.id) menu.id = 'mobile-menu';
+    menuBtn.setAttribute('aria-controls', menu.id);
+  }
+  const closeMenu = () => {
+    if (!menu || !menuBtn) return;
+    menu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
   menuBtn?.addEventListener('click', () => {
     const open = !menu.classList.contains('open');
     menu.classList.toggle('open', open);
     menuBtn.setAttribute('aria-expanded', String(open));
     document.body.style.overflow = open ? 'hidden' : '';
   });
+  $$('[data-mobile-menu] a').forEach(a => a.addEventListener('click', closeMenu));
+  window.addEventListener('resize', () => { if (window.innerWidth > 1050) closeMenu(); });
 
   const backdrop = $('[data-command-backdrop]');
   const commandInput = $('[data-command-input]');
-  const openCommand = () => { if (!backdrop) return; backdrop.hidden=false; requestAnimationFrame(()=>{ commandInput?.focus(); try { commandIndex = 0; paintCommandSelection(); } catch (_) {} }); };
-  const closeCommand = () => { if (!backdrop) return; backdrop.hidden=true; if (!menu?.classList.contains('open')) document.body.style.overflow=''; };
-  $$('[data-command-open]').forEach(b=>b.addEventListener('click', openCommand));
-  backdrop?.addEventListener('click', e=>{ if(e.target===backdrop) closeCommand(); });
-  document.addEventListener('keydown', e=>{
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); backdrop?.hidden ? openCommand() : closeCommand(); }
-    if(e.key==='Escape'){ closeCommand(); closeTerminal(); }
-  });
   let commandIndex = 0;
+  let lastCommandTrigger = null;
   const visibleCommands = () => $$('[data-command-item]').filter(item => !item.hidden);
   const paintCommandSelection = () => {
     const items = visibleCommands();
@@ -44,10 +61,34 @@
     items[commandIndex]?.setAttribute('data-selected', 'true');
     items[commandIndex]?.scrollIntoView({ block: 'nearest' });
   };
+  const resetCommandSearch = () => {
+    if (commandInput) commandInput.value = '';
+    $$('[data-command-item]').forEach(item => item.hidden = false);
+    commandIndex = 0;
+  };
+  const openCommand = () => {
+    if (!backdrop) return;
+    if (menu?.classList.contains('open')) closeMenu();
+    resetCommandSearch();
+    backdrop.hidden = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { commandInput?.focus(); paintCommandSelection(); });
+  };
+  const closeCommand = () => {
+    if (!backdrop) return;
+    backdrop.hidden = true;
+    resetCommandSearch();
+    if (!menu?.classList.contains('open')) document.body.style.overflow = '';
+    lastCommandTrigger?.focus();
+  };
+  $$('[data-command-open]').forEach(b => b.addEventListener('click', () => { lastCommandTrigger = b; openCommand(); }));
+  backdrop?.addEventListener('click', e => { if (e.target === backdrop) closeCommand(); });
+
   commandInput?.addEventListener('input', () => {
-    const q=commandInput.value.toLowerCase().trim();
-    $$('[data-command-item]').forEach(item=>item.hidden = Boolean(q && !item.textContent.toLowerCase().includes(q)));
-    commandIndex = 0; paintCommandSelection();
+    const q = commandInput.value.toLowerCase().trim();
+    $$('[data-command-item]').forEach(item => item.hidden = Boolean(q && !item.textContent.toLowerCase().includes(q)));
+    commandIndex = 0;
+    paintCommandSelection();
   });
   commandInput?.addEventListener('keydown', e => {
     const items = visibleCommands();
@@ -65,51 +106,117 @@
   function closeTerminal(){ if(terminal) terminal.hidden=true; }
   $$('[data-terminal-open]').forEach(b=>b.addEventListener('click', openTerminal));
   $('[data-terminal-close]')?.addEventListener('click', closeTerminal);
-  const commands={
-    help:'Commands: about, projects, now, lab, videos, github, youtube, coffee, clear',
+
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      backdrop?.hidden ? openCommand() : closeCommand();
+    }
+    if (e.key === 'Escape') { closeCommand(); closeTerminal(); }
+  });
+
+  const commands = {
+    help:'Commands: about, projects, builds, now, lab, videos, uses, github, youtube, coffee, clear',
     about:'Amin builds practical AI and developer tools, tests them on real projects, and documents what survives.',
     projects:'Open /projects/ to see shipped work, active builds, experiments and archived projects.',
+    builds:'Small tools, prototypes and one-purpose utilities live in /builds/.',
     now:'Currently focused on TL Studio, TlabRouter, and TunnelLab.',
     lab:'Benchmarks, experiments, prototypes and useful dead ends live in /lab/.',
     videos:'TunnelLab → https://www.youtube.com/@tunnellab',
+    uses:'The current hardware, software and services are listed in /uses/.',
     github:'GitHub → https://github.com/pouramin',
     youtube:'YouTube → https://www.youtube.com/@tunnellab',
     coffee:'Support → https://buymeacoffee.com/pouramin'
   };
-  terminalForm?.addEventListener('submit', e=>{
-    e.preventDefault(); const cmd=(terminalInput.value||'').trim().toLowerCase(); if(!cmd) return;
-    const line=document.createElement('p'); line.textContent=`$ ${cmd}`; terminalOutput.appendChild(line);
-    if(cmd==='clear'){ terminalOutput.innerHTML=''; }
-    else {
-      const resp=document.createElement('p');
-      resp.textContent=commands[cmd] || `command not found: ${cmd}`;
+  terminalForm?.addEventListener('submit', e => {
+    e.preventDefault();
+    const cmd = (terminalInput.value || '').trim().toLowerCase();
+    if (!cmd) return;
+    const line = document.createElement('p');
+    line.textContent = `$ ${cmd}`;
+    terminalOutput.appendChild(line);
+    if (cmd === 'clear') {
+      terminalOutput.innerHTML = '';
+    } else {
+      const resp = document.createElement('p');
+      resp.textContent = commands[cmd] || `command not found: ${cmd}`;
       terminalOutput.appendChild(resp);
-      const routes={projects:'/projects/',now:'/now/',lab:'/lab/',videos:'/videos/',github:'https://github.com/pouramin',youtube:'https://www.youtube.com/@tunnellab',coffee:'https://buymeacoffee.com/pouramin'};
-      if(routes[cmd]){ const link=document.createElement('a'); link.href=routes[cmd]; link.textContent='open →'; if(routes[cmd].startsWith('http')){link.target='_blank';link.rel='noreferrer'} const p=document.createElement('p');p.appendChild(link);terminalOutput.appendChild(p); }
+      const routes = {
+        projects:'/projects/', builds:'/builds/', now:'/now/', lab:'/lab/', videos:'/videos/', uses:'/uses/',
+        github:'https://github.com/pouramin', youtube:'https://www.youtube.com/@tunnellab', coffee:'https://buymeacoffee.com/pouramin'
+      };
+      if (routes[cmd]) {
+        const link = document.createElement('a');
+        link.href = routes[cmd];
+        link.textContent = 'open →';
+        if (routes[cmd].startsWith('http')) { link.target='_blank'; link.rel='noreferrer'; }
+        const p = document.createElement('p');
+        p.appendChild(link);
+        terminalOutput.appendChild(p);
+      }
     }
-    terminalInput.value=''; terminalOutput.scrollTop=terminalOutput.scrollHeight;
+    terminalInput.value = '';
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
   });
 
-  const filters=$$('[data-filter]');
-  const projects=$$('[data-project-card]');
-  filters.forEach(btn=>btn.addEventListener('click',()=>{
-    filters.forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const f=btn.dataset.filter;
-    projects.forEach(card=>card.dataset.hidden=String(f!=='all' && card.dataset.status!==f));
+  const filters = $$('[data-filter]');
+  const projects = $$('[data-project-card]');
+  const filterEmpty = $('[data-filter-empty]');
+  const applyProjectFilter = f => {
+    let visible = 0;
+    projects.forEach(card => {
+      const hidden = f !== 'all' && card.dataset.status !== f;
+      card.dataset.hidden = String(hidden);
+      if (!hidden) visible++;
+    });
+    if (filterEmpty) {
+      filterEmpty.hidden = visible !== 0;
+      filterEmpty.textContent = f === 'archived'
+        ? 'No archived projects on this shelf yet.'
+        : 'Nothing in this category yet.';
+    }
+    filters.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === f)));
+  };
+  filters.forEach(btn => btn.addEventListener('click', () => {
+    filters.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyProjectFilter(btn.dataset.filter);
   }));
+  if (filters.length) applyProjectFilter('all');
 
-  const reveal=$$('.reveal');
-  if('IntersectionObserver' in window){ const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}}),{threshold:.08});reveal.forEach(el=>obs.observe(el)); } else reveal.forEach(el=>el.classList.add('visible'));
+  const reveal = $$('.reveal');
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    }), { threshold:.08 });
+    reveal.forEach(el => obs.observe(el));
+  } else {
+    reveal.forEach(el => el.classList.add('visible'));
+  }
 
   const activity = $('[data-github-activity]');
-  if(activity){
+  if (activity) {
     const fallback = () => activity.innerHTML = `
-      <div class="activity-item"><i class="activity-dot"></i><div><strong>TL Studio is under active development</strong><small>Local AI development workspace</small></div><time>current</time></div>
-      <div class="activity-item"><i class="activity-dot"></i><div><strong>TlabRouter private MVP</strong><small>Discovery + model routing</small></div><time>current</time></div>`;
+      <a class="activity-item activity-link" href="https://github.com/pouramin/TL-Studio" target="_blank" rel="noreferrer"><i class="activity-dot"></i><div><strong>TL Studio is under active development</strong><small>Local AI development workspace</small></div><time>current</time></a>
+      <a class="activity-item activity-link" href="/projects/tlabrouter.html"><i class="activity-dot"></i><div><strong>TlabRouter private MVP</strong><small>Discovery + model routing</small></div><time>current</time></a>`;
     fetch('https://api.github.com/users/pouramin/events/public?per_page=6',{headers:{'Accept':'application/vnd.github+json'}})
-      .then(r=>{if(!r.ok)throw new Error();return r.json()}).then(events=>{
-        const seen=new Set(); const rows=[];
-        for(const e of events){ const repo=e.repo?.name; if(!repo||seen.has(repo))continue; seen.add(repo); const kind=e.type?.replace('Event','')||'Activity'; const date=new Date(e.created_at); const rel=Math.max(0,Math.floor((Date.now()-date.getTime())/86400000)); rows.push(`<div class="activity-item"><i class="activity-dot"></i><div><strong>${repo.replace('pouramin/','')}</strong><small>${kind} on GitHub</small></div><time>${rel===0?'today':rel+'d ago'}</time></div>`); if(rows.length===4)break; }
-        activity.innerHTML=rows.length?rows.join(''):''; if(!rows.length)fallback();
-      }).catch(fallback);
+      .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+      .then(events => {
+        const seen = new Set();
+        const rows = [];
+        for (const e of events) {
+          const repo = e.repo?.name;
+          if (!repo || seen.has(repo)) continue;
+          seen.add(repo);
+          const kind = e.type?.replace('Event','') || 'Activity';
+          const date = new Date(e.created_at);
+          const rel = Math.max(0, Math.floor((Date.now()-date.getTime())/86400000));
+          rows.push(`<a class="activity-item activity-link" href="https://github.com/${repo}" target="_blank" rel="noreferrer"><i class="activity-dot"></i><div><strong>${repo.replace('pouramin/','')}</strong><small>${kind} on GitHub</small></div><time>${rel===0?'today':rel+'d ago'}</time></a>`);
+          if (rows.length === 4) break;
+        }
+        activity.innerHTML = rows.length ? rows.join('') : '';
+        if (!rows.length) fallback();
+      })
+      .catch(fallback);
   }
 })();
