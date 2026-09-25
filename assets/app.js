@@ -219,4 +219,87 @@
       })
       .catch(fallback);
   }
+
+  const videoGrid = $('[data-video-grid]');
+  const latestVideoFeature = $('[data-latest-video-feature]');
+  const latestVideoTitle = $('[data-latest-video-title]');
+  const latestVideoMeta = $('[data-latest-video-meta]');
+  const videoStatus = $('[data-video-status]');
+
+  const formatVideoDate = value => {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return new Intl.DateTimeFormat('en', { day: '2-digit', month: 'short', year: 'numeric' })
+      .format(date)
+      .toUpperCase();
+  };
+
+  const renderVideoCard = video => {
+    const link = document.createElement('a');
+    link.className = 'latest-video-card';
+    link.href = video.url || `https://www.youtube.com/watch?v=${video.videoId}`;
+    link.target = '_blank';
+    link.rel = 'noreferrer';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'latest-video-thumb';
+    const img = document.createElement('img');
+    img.src = video.thumbnail || `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`;
+    img.alt = `${video.title || 'TunnelLab video'} thumbnail`;
+    img.loading = 'lazy';
+    thumb.appendChild(img);
+
+    const body = document.createElement('div');
+    body.className = 'latest-video-body';
+    const date = document.createElement('span');
+    date.className = 'micro';
+    date.textContent = formatVideoDate(video.publishedAt);
+    const title = document.createElement('h3');
+    title.dir = 'auto';
+    title.textContent = video.title || 'TunnelLab video';
+    const meta = document.createElement('div');
+    meta.className = 'latest-video-meta';
+    const source = document.createElement('span');
+    source.textContent = 'TunnelLab';
+    const watch = document.createElement('span');
+    watch.textContent = 'Watch ↗';
+    meta.append(source, watch);
+    body.append(date, title, meta);
+    link.append(thumb, body);
+    return link;
+  };
+
+  if (videoGrid || latestVideoFeature) {
+    fetch('/data/videos.json', { cache: 'no-store' })
+      .then(r => { if (!r.ok) throw new Error('video feed unavailable'); return r.json(); })
+      .then(data => {
+        const videos = Array.isArray(data.videos) ? data.videos : [];
+        if (!videos.length) throw new Error('empty video feed');
+
+        if (videoGrid) {
+          videoGrid.replaceChildren(...videos.slice(0, 6).map(renderVideoCard));
+          if (videoStatus) {
+            const feedDate = formatVideoDate(data.feedUpdatedAt);
+            videoStatus.textContent = feedDate
+              ? `Automatically refreshed from YouTube · feed updated ${feedDate}`
+              : 'Automatically refreshed from the public YouTube feed.';
+          }
+        }
+
+        const latest = videos[0];
+        if (latestVideoFeature && latest) {
+          latestVideoFeature.href = latest.url || `https://www.youtube.com/watch?v=${latest.videoId}`;
+          if (latestVideoTitle) latestVideoTitle.textContent = latest.title || 'Latest TunnelLab video';
+          if (latestVideoMeta) {
+            const date = formatVideoDate(latest.publishedAt);
+            latestVideoMeta.textContent = date ? `Latest upload · ${date}` : 'Latest upload on TunnelLab';
+          }
+        }
+      })
+      .catch(() => {
+        if (videoStatus) videoStatus.textContent = 'Showing the latest cached TunnelLab videos.';
+      });
+  }
+
 })();
