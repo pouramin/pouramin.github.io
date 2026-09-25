@@ -63,7 +63,45 @@
 
 <main id="main">
 <section class="page-hero"><div class="site-shell page-hero-grid"><div><span class="kicker">LAB</span><h1 class="page-title">Experiments that do not need permission to be useful.</h1><p>Benchmarks, prototypes, tiny utilities, comparisons and things that may never become a polished product.</p></div><aside class="page-aside"><strong>Lab rule</strong>A failed experiment is still a result if I can explain what failed.</aside></div></section>
-<section class="section compact"><div class="site-shell lab-grid"><article class="lab-card"><span class="lab-icon">◫</span><h3>Graph-aware coding context</h3><p>Comparing agent answers with and without a generated code graph to see whether structure actually improves repository understanding.</p><footer>benchmark · context · agents</footer></article><article class="lab-card"><span class="lab-icon">↯</span><h3>Model routing tests</h3><p>Provider quality, uptime, rate limits, model availability and how much “free” access survives real usage.</p><footer>routing · APIs · reliability</footer></article><article class="lab-card"><span class="lab-icon">⌁</span><h3>Agent harness benchmarks</h3><p>Real intentionally broken projects, issue discovery, repair quality, token usage and generated tests.</p><footer>agents · benchmark · code</footer></article><article class="lab-card"><span class="lab-icon">⌘</span><h3>Tiny developer tools</h3><p>Small utilities that solve one annoyance well enough to keep around, even if they never deserve a full product page.</p><footer>tools · automation</footer></article><article class="lab-card"><span class="lab-icon">◎</span><h3>AI product trials</h3><p>Testing claims made by AI products against actual workflows instead of repeating feature lists.</p><footer>review · real-world test</footer></article><article class="lab-card"><span class="lab-icon">×</span><h3>Useful dead ends</h3><p>Ideas that looked promising and then failed the “would I actually use this?” test.</p><footer>archive · lessons</footer></article></div></section>
+<section class="section compact">
+  <div class="site-shell">
+    <div class="lab-grid">
+      <a class="lab-card link-card" href="#graph-context"><span class="lab-icon">◫</span><h3>Graph-aware coding context</h3><p>Comparing agent answers with and without a generated code graph to see whether structure actually improves repository understanding.</p><footer>benchmark · context · agents <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#model-routing"><span class="lab-icon">↯</span><h3>Model routing tests</h3><p>Provider quality, uptime, rate limits, model availability and how much “free” access survives real usage.</p><footer>routing · APIs · reliability <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#agent-harness"><span class="lab-icon">⌁</span><h3>Agent harness benchmarks</h3><p>Real intentionally broken projects, issue discovery, repair quality, token usage and generated tests.</p><footer>agents · benchmark · code <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#tiny-tools"><span class="lab-icon">⌘</span><h3>Tiny developer tools</h3><p>Small utilities that solve one annoyance well enough to keep around, even if they never deserve a full product page.</p><footer>tools · automation <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#product-trials"><span class="lab-icon">◎</span><h3>AI product trials</h3><p>Testing claims made by AI products against actual workflows instead of repeating feature lists.</p><footer>review · real-world test <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#dead-ends"><span class="lab-icon">×</span><h3>Useful dead ends</h3><p>Ideas that looked promising and then failed the “would I actually use this?” test.</p><footer>archive · lessons <span class="card-action">Open notes →</span></footer></a>
+    </div>
+
+    <div class="detail-stack">
+      <section class="detail-panel" id="graph-context">
+        <div><span class="micro">LAB NOTE / 01</span><h2>Graph-aware coding context</h2></div>
+        <div><p>The experiment compares the same repository-understanding task with and without graph-derived context. The useful question is not whether a graph looks impressive, but whether it helps an agent find the right files, boundaries and request path with less wandering.</p><div class="case-cta"><a class="button" href="/build-log/#graph-aware-context">Build log →</a></div></div>
+      </section>
+      <section class="detail-panel" id="model-routing">
+        <div><span class="micro">LAB NOTE / 02</span><h2>Model routing tests</h2></div>
+        <div><p>I test providers as infrastructure rather than a model list: availability, real free quota, authentication friction, endpoint compatibility, uptime and what happens when the preferred route disappears.</p><div class="case-cta"><a class="button" href="/projects/tlabrouter.html">TlabRouter notes →</a></div></div>
+      </section>
+      <section class="detail-panel" id="agent-harness">
+        <div><span class="micro">LAB NOTE / 03</span><h2>Agent harness benchmarks</h2></div>
+        <div><p>Benchmarks use intentionally broken projects so an agent has to discover issues, reason about them, make repairs and prove the result with tests. Token usage and failure modes matter as much as a final “success”.</p><div class="case-cta"><a class="button youtube" href="/videos/">Related videos →</a></div></div>
+      </section>
+      <section class="detail-panel" id="tiny-tools">
+        <div><span class="micro">LAB NOTE / 04</span><h2>Tiny developer tools</h2></div>
+        <div><p>Some ideas are useful long before they deserve a roadmap. This is where small utilities, prototypes and one-purpose helpers get to exist without pretending to be products.</p><div class="case-cta"><a class="button" href="/builds/">Browse builds →</a></div></div>
+      </section>
+      <section class="detail-panel" id="product-trials">
+        <div><span class="micro">LAB NOTE / 05</span><h2>AI product trials</h2></div>
+        <div><p>The test starts from a task, not a feature checklist. If a product claims to build, reason, automate or save time, I want to see what survives contact with an actual workflow.</p><div class="case-cta"><a class="button youtube" href="/videos/">TunnelLab tests →</a></div></div>
+      </section>
+      <section class="detail-panel" id="dead-ends">
+        <div><span class="micro">LAB NOTE / 06</span><h2>Useful dead ends</h2></div>
+        <div><p>Not every prototype deserves continuation. The useful part is recording why it stopped: weak reliability, bad ergonomics, duplicated value, cost, or simply failing the “would I keep using this?” test.</p><div class="case-cta"><a class="button" href="/build-log/">Browse the build log →</a></div></div>
+      </section>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer class="site-footer">
