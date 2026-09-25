@@ -55,14 +55,37 @@
   </div>
 </header><main id="main">
 <section class="page-hero"><div class="site-shell page-hero-grid"><div><span class="kicker">BUILDS</span><h1 class="page-title">Not everything needs to become a product.</h1><p>Small tools, internal utilities, one-off experiments and prototypes that solved a real problem well enough to keep.</p></div><aside class="page-aside"><strong>Difference from Projects</strong>Projects have a product story. Builds can simply be useful.</aside></div></section>
-<section class="section compact"><div class="site-shell lab-grid">
-<a class="lab-card" href="https://go.pouramin.dev" target="_blank" rel="noreferrer" style="text-decoration:none"><span class="lab-icon">↗</span><h3>Personal short links</h3><p>A tiny Cloudflare Worker-backed short-link system for clean links under my own domain.</p><footer>shipped · web utility · cloudflare</footer></a>
-<article class="lab-card"><span class="lab-icon">CC</span><h3>Coding-agent benchmark fixtures</h3><p>Intentionally broken repositories used to test whether agents can discover, explain and fix real issues without being handed the answer.</p><footer>internal · benchmark · agents</footer></article>
-<article class="lab-card"><span class="lab-icon">字幕</span><h3>Live subtitle extension</h3><p>A browser-extension prototype exploring live English-to-Persian subtitles across arbitrary video sites instead of only YouTube.</p><footer>prototype · browser · translation</footer></article>
-<article class="lab-card"><span class="lab-icon">$</span><h3>Token budget calculator</h3><p>A small pricing utility for estimating how many input and output tokens a budget buys across different model rates.</p><footer>utility · pricing · models</footer></article>
-<article class="lab-card"><span class="lab-icon">API</span><h3>Provider test harnesses</h3><p>Small throwaway scripts and fixtures for checking endpoint compatibility, model behavior, errors and actual usage before a video or integration.</p><footer>internal · APIs · testing</footer></article>
-<article class="lab-card"><span class="lab-icon">＋</span><h3>The next tiny thing</h3><p>This shelf is intentionally allowed to grow without turning every idea into a roadmap commitment.</p><footer>open slot · future build</footer></article>
-</div></section>
+<section class="section compact">
+  <div class="site-shell">
+    <div class="lab-grid">
+      <a class="lab-card link-card" href="https://go.pouramin.dev" target="_blank" rel="noreferrer"><span class="lab-icon">↗</span><h3>Personal short links</h3><p>A tiny Cloudflare Worker-backed short-link system for clean links under my own domain.</p><footer>shipped · web utility · cloudflare <span class="card-action">Open app ↗</span></footer></a>
+      <a class="lab-card link-card" href="#benchmark-fixtures"><span class="lab-icon">CC</span><h3>Coding-agent benchmark fixtures</h3><p>Intentionally broken repositories used to test whether agents can discover, explain and fix real issues without being handed the answer.</p><footer>internal · benchmark · agents <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#live-subtitles"><span class="lab-icon">字幕</span><h3>Live subtitle extension</h3><p>A browser-extension prototype exploring live English-to-Persian subtitles across arbitrary video sites instead of only YouTube.</p><footer>prototype · browser · translation <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#token-calculator"><span class="lab-icon">$</span><h3>Token budget calculator</h3><p>A small pricing utility for estimating how many input and output tokens a budget buys across different model rates.</p><footer>utility · pricing · models <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#provider-harnesses"><span class="lab-icon">API</span><h3>Provider test harnesses</h3><p>Small throwaway scripts and fixtures for checking endpoint compatibility, model behavior, errors and actual usage before a video or integration.</p><footer>internal · APIs · testing <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="/now/"><span class="lab-icon">＋</span><h3>The next tiny thing</h3><p>This shelf is intentionally allowed to grow without turning every idea into a roadmap commitment.</p><footer>open slot · future build <span class="card-action">See what’s next →</span></footer></a>
+    </div>
+
+    <div class="detail-stack">
+      <section class="detail-panel" id="benchmark-fixtures">
+        <div><span class="micro">BUILD NOTE / 01</span><h2>Coding-agent benchmark fixtures</h2></div>
+        <div><p>Small repositories with known logical, security and completeness problems. The benchmark stays useful because the agent is not told exactly what is broken; discovery is part of the job.</p><div class="case-cta"><a class="button" href="/lab/#agent-harness">Related lab note →</a></div></div>
+      </section>
+      <section class="detail-panel" id="live-subtitles">
+        <div><span class="micro">BUILD NOTE / 02</span><h2>Live subtitle extension</h2></div>
+        <div><p>A browser-extension prototype for turning English video audio into Persian subtitles across arbitrary sites. The hard part is not the overlay; it is reliable browser audio capture, transcription compatibility and keeping latency reasonable.</p><div class="tag-row"><span class="tag">Prototype</span><span class="tag">Not publicly released yet</span></div></div>
+      </section>
+      <section class="detail-panel" id="token-calculator">
+        <div><span class="micro">BUILD NOTE / 03</span><h2>Token budget calculator</h2></div>
+        <div><p>A practical calculator for turning model pricing into something easier to reason about: given a budget and an input/output split, how many tokens can a workflow actually afford?</p><div class="tag-row"><span class="tag">Utility</span><span class="tag">Pricing</span><span class="tag">Spreadsheet workflow</span></div></div>
+      </section>
+      <section class="detail-panel" id="provider-harnesses">
+        <div><span class="micro">BUILD NOTE / 04</span><h2>Provider test harnesses</h2></div>
+        <div><p>Quick scripts and fixtures for checking whether an API really behaves like the interface it claims to support: endpoint shape, streaming, tool calls, model IDs, error behavior and usage reporting.</p><div class="case-cta"><a class="button" href="/lab/#model-routing">Routing experiments →</a></div></div>
+      </section>
+    </div>
+  </div>
+</section>
 </main><footer class="site-footer">
   <div class="site-shell footer-grid">
     <div>
