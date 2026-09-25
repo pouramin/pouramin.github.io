@@ -2,55 +2,103 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-09-24T16:00:09+00:00",
+  "feedUpdatedAt": "",
   "videos": [
     {
       "videoId": "Oq6Xy_4IHbI",
       "title": "حافظه واقعی برای Coding Agent؟ | تست Graphify روی یک پروژه واقعی",
-      "publishedAt": "2026-09-24T16:00:09Z",
-      "updatedAt": "2026-09-24T16:00:09Z",
+      "publishedAt": "2026-09-24T16:00:09+00:00",
+      "updatedAt": "2026-09-24T22:01:18+00:00",
       "url": "https://www.youtube.com/watch?v=Oq6Xy_4IHbI",
       "thumbnail": "https://i.ytimg.com/vi/Oq6Xy_4IHbI/maxresdefault.jpg"
     },
     {
       "videoId": "_Xla4w9Z2KM",
       "title": "ساخت کاراکتر و فیلم کوتاه هوش مصنوعی: بدون نیاز به چندین ابزار با FlexClip!",
-      "publishedAt": "2026-09-16T15:00:17Z",
-      "updatedAt": "2026-09-16T15:00:17Z",
+      "publishedAt": "2026-09-16T15:00:17+00:00",
+      "updatedAt": "2026-09-25T10:50:10+00:00",
       "url": "https://www.youtube.com/watch?v=_Xla4w9Z2KM",
       "thumbnail": "https://i.ytimg.com/vi/_Xla4w9Z2KM/maxresdefault.jpg"
     },
     {
       "videoId": "7ZcitKxHjuM",
       "title": "دیپ‌سیک جایگزین Claude Code شده؟ | تست واقعی DeepSeek Harness",
-      "publishedAt": "2026-09-13T16:00:15Z",
-      "updatedAt": "2026-09-13T16:00:15Z",
+      "publishedAt": "2026-09-13T16:00:15+00:00",
+      "updatedAt": "2026-09-17T05:30:29+00:00",
       "url": "https://www.youtube.com/watch?v=7ZcitKxHjuM",
       "thumbnail": "https://i.ytimg.com/vi/7ZcitKxHjuM/maxresdefault.jpg"
     },
     {
       "videoId": "NNrZqsXSxbg",
       "title": "همه مدل‌های AI داخل Claude Code! | آموزش OmniRoute + مدل‌های رایگان",
-      "publishedAt": "2026-09-10T16:00:01Z",
-      "updatedAt": "2026-09-10T16:00:01Z",
+      "publishedAt": "2026-09-10T16:00:01+00:00",
+      "updatedAt": "2026-09-15T07:33:03+00:00",
       "url": "https://www.youtube.com/watch?v=NNrZqsXSxbg",
       "thumbnail": "https://i.ytimg.com/vi/NNrZqsXSxbg/maxresdefault.jpg"
     },
     {
       "videoId": "1Pvs7qOg0zs",
       "title": "آموزش OpenCode | جایگزین متن‌باز Claude Code و Codex با مدل رایگان",
-      "publishedAt": "2026-09-07T18:08:53Z",
-      "updatedAt": "2026-09-07T18:08:53Z",
+      "publishedAt": "2026-09-07T18:08:53+00:00",
+      "updatedAt": "2026-09-14T06:21:31+00:00",
       "url": "https://www.youtube.com/watch?v=1Pvs7qOg0zs",
       "thumbnail": "https://i.ytimg.com/vi/1Pvs7qOg0zs/maxresdefault.jpg"
     },
     {
       "videoId": "IDEG0bUYbyo",
       "title": "گوگل Claude Opus رو رایگان کرد؟ | تست واقعی Antigravity از صفر تا پروژه",
-      "publishedAt": "2026-09-05T16:00:31Z",
-      "updatedAt": "2026-09-05T16:00:31Z",
+      "publishedAt": "2026-09-05T16:00:31+00:00",
+      "updatedAt": "2026-09-12T14:21:53+00:00",
       "url": "https://www.youtube.com/watch?v=IDEG0bUYbyo",
       "thumbnail": "https://i.ytimg.com/vi/IDEG0bUYbyo/maxresdefault.jpg"
+    },
+    {
+      "videoId": "7qrwLhAW4UQ",
+      "title": "آموزش پنل ثنایی بدون VPS و دامنه! | دیپلوی اصولی 3X-UI روی Railway",
+      "publishedAt": "2026-09-03T11:45:59+00:00",
+      "updatedAt": "2026-09-18T18:24:47+00:00",
+      "url": "https://www.youtube.com/watch?v=7qrwLhAW4UQ",
+      "thumbnail": "https://i.ytimg.com/vi/7qrwLhAW4UQ/maxresdefault.jpg"
+    },
+    {
+      "videoId": "0Z1COkBt3A4",
+      "title": "دسترسی رایگان به Claude Opus 5 | تست واقعی روی پروژه با JustDoWork",
+      "publishedAt": "2026-08-31T16:24:30+00:00",
+      "updatedAt": "2026-09-11T11:36:08+00:00",
+      "url": "https://www.youtube.com/watch?v=0Z1COkBt3A4",
+      "thumbnail": "https://i.ytimg.com/vi/0Z1COkBt3A4/maxresdefault.jpg"
+    },
+    {
+      "videoId": "RwTEyvmp_lw",
+      "title": "دسترسی رایگان به Claude Code و Codex | بدون نیاز به خرید اکانت Pro",
+      "publishedAt": "2026-08-27T16:00:26+00:00",
+      "updatedAt": "2026-09-19T21:05:46+00:00",
+      "url": "https://www.youtube.com/watch?v=RwTEyvmp_lw",
+      "thumbnail": "https://i.ytimg.com/vi/RwTEyvmp_lw/maxresdefault.jpg"
+    },
+    {
+      "videoId": "VxvGU4F4k74",
+      "title": "آموزش نصب  و راه‌اندازی Hysteria2 با پنل H-UI از صفر| مدیریت کاربران و TLS",
+      "publishedAt": "2026-08-25T16:00:28+00:00",
+      "updatedAt": "2026-09-11T04:49:48+00:00",
+      "url": "https://www.youtube.com/watch?v=VxvGU4F4k74",
+      "thumbnail": "https://i.ytimg.com/vi/VxvGU4F4k74/maxresdefault.jpg"
+    },
+    {
+      "videoId": "aSSAqv_-mto",
+      "title": "آموزش تانل زدن بین دو سرور با Hedioum Pool Tunnel،  دور زدن اینترنت ملی",
+      "publishedAt": "2026-08-23T13:00:33+00:00",
+      "updatedAt": "2026-09-10T15:44:48+00:00",
+      "url": "https://www.youtube.com/watch?v=aSSAqv_-mto",
+      "thumbnail": "https://i.ytimg.com/vi/aSSAqv_-mto/maxresdefault.jpg"
+    },
+    {
+      "videoId": "TgBV-VvGLaM",
+      "title": "حل مشکل localhost در SpiderPanel",
+      "publishedAt": "2026-08-22T08:12:44+00:00",
+      "updatedAt": "2026-09-16T08:57:52+00:00",
+      "url": "https://www.youtube.com/watch?v=TgBV-VvGLaM",
+      "thumbnail": "https://i.ytimg.com/vi/TgBV-VvGLaM/maxresdefault.jpg"
     }
   ]
 }
