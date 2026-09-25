@@ -19,3 +19,23 @@ html[data-theme="dark"]{--bg:#111315;--surface:#181b1e;--surface-2:#202428;--tex
 @media(max-width:760px){.site-shell{width:min(calc(100% - 28px),var(--shell))}.header-inner{height:66px}.brand-copy small{display:none}.command-trigger{display:none}.hero{padding:58px 0 44px}.hero h1{font-size:clamp(46px,12vw,66px)}.hero-actions{display:grid;grid-template-columns:1fr 1fr}.hero-actions .coffee{grid-column:1/-1}.button{width:100%}.workspace-grid{grid-template-columns:1fr}.section{padding:72px 0}.section-head{margin-bottom:26px}.project-grid,.uses-grid,.about-layout,.start-grid,.contact-grid{grid-template-columns:1fr}.lab-grid{grid-template-columns:1fr}.principles{grid-template-columns:repeat(2,1fr)}.support-strip{grid-template-columns:1fr}.timeline{grid-template-columns:1fr}.timeline-date{padding:16px 0 4px}.timeline-entry{margin-left:4px}.profile-panel{position:static}.case-head{gap:34px}.case-visual{min-height:290px}.studio-main{grid-template-columns:58px 1fr 95px}.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-grid>div:first-child{grid-column:1/-1}.footer-bottom{align-items:flex-start;justify-content:center;flex-direction:column;gap:4px;padding:16px 0}.now-row{grid-template-columns:72px 1fr}.now-row>span:last-child{display:none}}
 @media(max-width:480px){.site-shell{width:min(calc(100% - 22px),var(--shell))}.brand-copy{display:none}.header-actions{margin-left:auto}.header-icon{width:37px;height:37px}.hero{padding-top:46px}.eyebrow{font-size:9px}.hero h1{font-size:44px}.hero-lead{font-size:16px}.hero-actions{grid-template-columns:1fr}.hero-actions .coffee{grid-column:auto}.focus-row{gap:7px 13px}.workbench{padding:10px;border-radius:21px}.work-row{grid-template-columns:auto 1fr}.work-row>.pill{display:none}.work-row small{font-size:10px}.console-body{grid-template-columns:1fr;padding:13px}.section{padding:62px 0}.section-head h2,.page-title{font-size:38px}.panel{padding:18px}.span-7,.span-5,.span-4,.span-8,.span-12{grid-column:auto}.principles{grid-template-columns:1fr}.project-card{min-height:350px;padding:18px}.project-mark{margin-top:36px}.lab-card{min-height:240px}.uses-item{grid-template-columns:1fr;gap:3px}.support-strip{padding:22px}.case-title h1{font-size:48px}.case-visual{min-height:240px;padding:10px;border-radius:20px}.studio-main{grid-template-columns:45px 1fr}.studio-agent{display:none}.footer-grid{grid-template-columns:1fr}.footer-grid>div:first-child{grid-column:auto}.command-backdrop{padding-top:7vh}.command-footer{display:none}.terminal-window{right:14px;bottom:14px}.terminal-output{height:210px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* Interactive Lab / Builds cards and anchored detail notes */
+.lab-card.link-card{color:inherit;text-decoration:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.lab-card.link-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--accent) 30%,var(--line))}
+.lab-card.link-card:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 42%,transparent);outline-offset:3px}
+.lab-card.link-card footer{display:flex;justify-content:space-between;align-items:end;gap:12px}
+.card-action{color:var(--text);font-weight:850;white-space:nowrap}
+.detail-stack{display:grid;gap:14px;margin-top:58px}
+.detail-panel{scroll-margin-top:96px;display:grid;grid-template-columns:minmax(220px,.52fr) minmax(0,1fr);gap:48px;padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--surface);transition:border-color .25s ease,box-shadow .25s ease}
+.detail-panel:target{border-color:color-mix(in srgb,var(--accent) 48%,var(--line));box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 10%,transparent),var(--shadow)}
+.detail-panel h2{margin:8px 0 0;font-size:clamp(26px,3vw,38px);letter-spacing:-.04em;line-height:1.05}
+.detail-panel p{margin:0;color:var(--muted);font-size:15px}
+.timeline-entry[id]{scroll-margin-top:96px}
+.timeline-entry:target{background:color-mix(in srgb,var(--accent-soft) 32%,transparent)}
+@media(max-width:760px){
+  .detail-stack{margin-top:38px}
+  .detail-panel{grid-template-columns:1fr;gap:16px;padding:21px}
+  .lab-card.link-card footer{align-items:flex-start;flex-direction:column}
+  .card-action{margin-top:3px}
+}
