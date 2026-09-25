@@ -260,6 +260,10 @@
     img.src = video.thumbnail || `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`;
     img.alt = `${video.title || 'TunnelLab video'} thumbnail`;
     img.loading = 'lazy';
+    img.addEventListener('error', () => {
+      const fallback = `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`;
+      if (img.src !== fallback) img.src = fallback;
+    }, { once: true });
     thumb.appendChild(img);
 
     const body = document.createElement('div');
@@ -302,7 +306,7 @@
         const latest = videos[0];
         if (latestVideoFeature && latest) {
           latestVideoFeature.href = latest.url || `https://www.youtube.com/watch?v=${latest.videoId}`;
-          if (latestVideoTitle) latestVideoTitle.textContent = latest.title || 'Latest TunnelLab video';
+          if (latestVideoTitle) { latestVideoTitle.dir = 'auto'; latestVideoTitle.textContent = latest.title || 'Latest TunnelLab video'; }
           if (latestVideoMeta) {
             const date = formatVideoDate(latest.publishedAt);
             latestVideoMeta.textContent = date ? `Latest upload · ${date}` : 'Latest upload on TunnelLab';
