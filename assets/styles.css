@@ -57,3 +57,12 @@ html[data-theme="dark"]{--bg:#111315;--surface:#181b1e;--surface-2:#202428;--tex
 .terminal-output{height:min(240px,42dvh)}
 @media(max-width:1050px){.latest-video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.latest-video-grid{grid-template-columns:1fr}.latest-video-body{min-height:0}}
+
+
+/* Progressive reveal fail-safe: content stays readable if JavaScript ever fails. */
+.reveal{opacity:1!important;transform:none!important}
+.reveal.reveal-pending{opacity:0!important;transform:translateY(16px)!important}
+.reveal.visible{opacity:1!important;transform:none!important}
+@media (prefers-reduced-motion: reduce){
+  .reveal,.reveal.reveal-pending,.reveal.visible{opacity:1!important;transform:none!important;transition:none!important}
+}
