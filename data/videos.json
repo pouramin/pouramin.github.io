@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-09-26T12:57:36+00:00",
+  "feedUpdatedAt": "2026-09-26T17:01:23+00:00",
   "videos": [
+    {
+      "videoId": "KZZTVsYi1Rk",
+      "title": "کلاد اوپوس رایگان؟ 28 مدل هوش مصنوعی داخل Notion Ai رو تست کردم!",
+      "publishedAt": "2026-09-26T17:01:22+00:00",
+      "updatedAt": "2026-09-26T17:01:23+00:00",
+      "url": "https://www.youtube.com/watch?v=KZZTVsYi1Rk",
+      "thumbnail": "https://i.ytimg.com/vi/KZZTVsYi1Rk/maxresdefault.jpg"
+    },
     {
       "videoId": "Oq6Xy_4IHbI",
       "title": "حافظه واقعی برای Coding Agent؟ | تست Graphify روی یک پروژه واقعی",
@@ -91,14 +99,6 @@
       "updatedAt": "2026-09-10T15:44:48+00:00",
       "url": "https://www.youtube.com/watch?v=aSSAqv_-mto",
       "thumbnail": "https://i.ytimg.com/vi/aSSAqv_-mto/maxresdefault.jpg"
-    },
-    {
-      "videoId": "TgBV-VvGLaM",
-      "title": "حل مشکل localhost در SpiderPanel",
-      "publishedAt": "2026-08-22T08:12:44+00:00",
-      "updatedAt": "2026-09-16T08:57:52+00:00",
-      "url": "https://www.youtube.com/watch?v=TgBV-VvGLaM",
-      "thumbnail": "https://i.ytimg.com/vi/TgBV-VvGLaM/maxresdefault.jpg"
     }
   ]
 }
