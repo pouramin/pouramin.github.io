@@ -62,52 +62,203 @@
 
   const backdrop = $('[data-command-backdrop]');
   const commandInput = $('[data-command-input]');
+  const commandList = $('[data-command-list]');
   let commandIndex = 0;
   let lastCommandTrigger = null;
-  const visibleCommands = () => $$('[data-command-item]').filter(item => !item.hidden);
+
+  const commandItems = () => $$('[data-command-item]');
+  const visibleCommands = () => commandItems().filter(item => !item.hidden);
+
+  const commandKeyFor = item => {
+    if (item.matches('[data-terminal-open]')) return 't';
+    const href = item.getAttribute('href') || '';
+    if (href === '/projects/') return 'p';
+    if (href === '/builds/') return 'd';
+    if (href === '/now/') return 'n';
+    if (href === '/lab/') return 'l';
+    if (href === '/videos/') return 'v';
+    if (href === '/build-log/') return 'b';
+    if (href.includes('github.com/pouramin')) return 'g';
+    if (href.includes('buymeacoffee.com/pouramin')) return 's';
+    return '';
+  };
+
+  const hotkeyLabel = key => {
+    if (!key) return '';
+    return `${isMac ? '⌥' : 'Alt+'}${key.toUpperCase()}`;
+  };
+
+  commandItems().forEach(item => {
+    const key = commandKeyFor(item);
+    if (key) item.dataset.commandKey = key;
+    const badge = $('kbd', item);
+    if (badge && key) badge.textContent = hotkeyLabel(key);
+  });
+
+  const commandEmpty = document.createElement('div');
+  commandEmpty.className = 'command-empty';
+  commandEmpty.textContent = 'No matching commands.';
+  commandEmpty.hidden = true;
+  commandList?.appendChild(commandEmpty);
+
   const paintCommandSelection = () => {
     const items = visibleCommands();
-    if (!items.length) return;
+    commandItems().forEach(item => item.removeAttribute('data-selected'));
+
+    if (!items.length) {
+      commandEmpty.hidden = false;
+      return;
+    }
+
+    commandEmpty.hidden = true;
     commandIndex = Math.max(0, Math.min(commandIndex, items.length - 1));
-    $$('[data-command-item]').forEach(item => item.removeAttribute('data-selected'));
-    items[commandIndex]?.setAttribute('data-selected', 'true');
-    items[commandIndex]?.scrollIntoView({ block: 'nearest' });
+    const selected = items[commandIndex];
+    selected?.setAttribute('data-selected', 'true');
+    selected?.scrollIntoView({ block: 'nearest' });
   };
+
   const resetCommandSearch = () => {
     if (commandInput) commandInput.value = '';
-    $$('[data-command-item]').forEach(item => item.hidden = false);
+    commandItems().forEach(item => item.hidden = false);
     commandIndex = 0;
+    commandEmpty.hidden = true;
   };
-  const openCommand = () => {
+
+  const openCommand = trigger => {
     if (!backdrop) return;
+    if (trigger) lastCommandTrigger = trigger;
     if (menu?.classList.contains('open')) closeMenu();
     resetCommandSearch();
     backdrop.hidden = false;
     document.body.style.overflow = 'hidden';
-    requestAnimationFrame(() => { commandInput?.focus(); paintCommandSelection(); });
+    requestAnimationFrame(() => {
+      commandInput?.focus();
+      paintCommandSelection();
+    });
   };
-  const closeCommand = () => {
-    if (!backdrop) return;
+
+  const closeCommand = ({ restoreFocus = true } = {}) => {
+    if (!backdrop || backdrop.hidden) return;
     backdrop.hidden = true;
     resetCommandSearch();
     if (!menu?.classList.contains('open')) document.body.style.overflow = '';
-    lastCommandTrigger?.focus();
+    if (restoreFocus) lastCommandTrigger?.focus();
   };
-  $$('[data-command-open]').forEach(b => b.addEventListener('click', () => { lastCommandTrigger = b; openCommand(); }));
-  backdrop?.addEventListener('click', e => { if (e.target === backdrop) closeCommand(); });
+
+  const activateCommand = item => {
+    if (!item) return;
+    if (item.matches('[data-terminal-open]')) {
+      item.click();
+      return;
+    }
+
+    const href = item.getAttribute('href');
+    if (!href) return;
+
+    const target = item.getAttribute('target');
+    closeCommand({ restoreFocus: false });
+    if (target === '_blank') {
+      window.open(href, '_blank', 'noopener,noreferrer');
+    } else {
+      window.location.assign(href);
+    }
+  };
+
+  $$('[data-command-open]').forEach(button => {
+    button.addEventListener('click', () => openCommand(button));
+  });
+
+  commandItems().forEach((item, index) => {
+    item.addEventListener('mouseenter', () => {
+      const items = visibleCommands();
+      const visibleIndex = items.indexOf(item);
+      if (visibleIndex >= 0) {
+        commandIndex = visibleIndex;
+        paintCommandSelection();
+      }
+    });
+
+    item.addEventListener('focus', () => {
+      const items = visibleCommands();
+      const visibleIndex = items.indexOf(item);
+      if (visibleIndex >= 0) commandIndex = visibleIndex;
+    });
+
+    item.addEventListener('click', event => {
+      if (item.matches('[data-terminal-open]')) return;
+      if (event.defaultPrevented || event.button > 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      activateCommand(item);
+    });
+  });
+
+  backdrop?.addEventListener('mousedown', event => {
+    if (event.target === backdrop) closeCommand();
+  });
 
   commandInput?.addEventListener('input', () => {
-    const q = commandInput.value.toLowerCase().trim();
-    $$('[data-command-item]').forEach(item => item.hidden = Boolean(q && !item.textContent.toLowerCase().includes(q)));
+    const query = commandInput.value.toLocaleLowerCase().trim();
+    commandItems().forEach(item => {
+      item.hidden = Boolean(query && !item.textContent.toLocaleLowerCase().includes(query));
+    });
     commandIndex = 0;
     paintCommandSelection();
   });
-  commandInput?.addEventListener('keydown', e => {
+
+  commandInput?.addEventListener('keydown', event => {
     const items = visibleCommands();
-    if (!items.length) return;
-    if (e.key === 'ArrowDown') { e.preventDefault(); commandIndex = (commandIndex + 1) % items.length; paintCommandSelection(); }
-    if (e.key === 'ArrowUp') { e.preventDefault(); commandIndex = (commandIndex - 1 + items.length) % items.length; paintCommandSelection(); }
-    if (e.key === 'Enter') { e.preventDefault(); items[commandIndex]?.click(); }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (!items.length) return;
+      commandIndex = (commandIndex + 1) % items.length;
+      paintCommandSelection();
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (!items.length) return;
+      commandIndex = (commandIndex - 1 + items.length) % items.length;
+      paintCommandSelection();
+      return;
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      activateCommand(items[commandIndex]);
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeCommand();
+      return;
+    }
+
+    if (event.altKey && /^[a-z]$/i.test(event.key)) {
+      const item = commandItems().find(candidate => candidate.dataset.commandKey === event.key.toLowerCase() && !candidate.hidden);
+      if (item) {
+        event.preventDefault();
+        activateCommand(item);
+      }
+    }
+  });
+
+  backdrop?.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const focusable = [commandInput, ...visibleCommands()].filter(Boolean);
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
 
   const terminal = $('[data-terminal]');
@@ -122,9 +273,23 @@
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
-      backdrop?.hidden ? openCommand() : closeCommand();
+      backdrop?.hidden ? openCommand(document.activeElement) : closeCommand();
+      return;
     }
-    if (e.key === 'Escape') { closeCommand(); closeTerminal(); }
+
+    if (e.key === 'Escape') {
+      closeCommand();
+      closeTerminal();
+      return;
+    }
+
+    if (!backdrop?.hidden && e.altKey && /^[a-z]$/i.test(e.key) && document.activeElement !== commandInput) {
+      const item = commandItems().find(candidate => candidate.dataset.commandKey === e.key.toLowerCase() && !candidate.hidden);
+      if (item) {
+        e.preventDefault();
+        activateCommand(item);
+      }
+    }
   });
 
   const commands = {
