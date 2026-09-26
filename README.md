@@ -28,7 +28,7 @@ Personal builder hub for Amin Pour.
 - Automated TunnelLab video feed
 
 ### TunnelLab automation
-`.github/workflows/refresh-site.yml` runs every 6 hours and can also be run manually.
+`.github/workflows/refresh-site.yml` runs once daily and can also be run manually.
 
 It:
 1. reads the public YouTube Atom feed for TunnelLab;
