@@ -5,7 +5,7 @@
   const themeMeta = $('meta[name="theme-color"]');
 
   const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || '');
-  $('[data-command-open]').forEach(btn => {
+  $$('[data-command-open]').forEach(btn => {
     btn.innerHTML = '<span>/</span>';
     btn.setAttribute('aria-label', 'Open command palette (/)');
     btn.setAttribute('title', 'Open command palette (/)');
@@ -384,7 +384,7 @@
   }));
   if (filters.length) applyProjectFilter('all');
 
-  const reveal = $('.reveal');
+  const reveal = $$('.reveal');
   if ('IntersectionObserver' in window) {
     reveal.forEach(el => el.classList.add('reveal-pending'));
     const obs = new IntersectionObserver(entries => entries.forEach(e => {
