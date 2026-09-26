@@ -88,6 +88,12 @@
     return `${isMac ? '⌥' : 'Alt+'}${key.toUpperCase()}`;
   };
 
+  const pressedCommandKey = event => {
+    if (!event.altKey) return '';
+    const match = /^Key([A-Z])$/.exec(event.code || '');
+    return match ? match[1].toLowerCase() : '';
+  };
+
   commandItems().forEach(item => {
     const key = commandKeyFor(item);
     if (key) item.dataset.commandKey = key;
@@ -236,8 +242,9 @@
       return;
     }
 
-    if (event.altKey && /^[a-z]$/i.test(event.key)) {
-      const item = commandItems().find(candidate => candidate.dataset.commandKey === event.key.toLowerCase() && !candidate.hidden);
+    const commandKey = pressedCommandKey(event);
+    if (commandKey) {
+      const item = commandItems().find(candidate => candidate.dataset.commandKey === commandKey && !candidate.hidden);
       if (item) {
         event.preventDefault();
         activateCommand(item);
@@ -283,8 +290,9 @@
       return;
     }
 
-    if (!backdrop?.hidden && e.altKey && /^[a-z]$/i.test(e.key) && document.activeElement !== commandInput) {
-      const item = commandItems().find(candidate => candidate.dataset.commandKey === e.key.toLowerCase() && !candidate.hidden);
+    const commandKey = pressedCommandKey(e);
+    if (!backdrop?.hidden && commandKey && document.activeElement !== commandInput) {
+      const item = commandItems().find(candidate => candidate.dataset.commandKey === commandKey && !candidate.hidden);
       if (item) {
         e.preventDefault();
         activateCommand(item);
