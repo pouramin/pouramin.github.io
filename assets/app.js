@@ -5,9 +5,10 @@
   const themeMeta = $('meta[name="theme-color"]');
 
   const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || '');
-  $$('[data-command-open]').forEach(btn => {
-    btn.innerHTML = isMac ? '<span>⌘</span>K' : '<span>Ctrl</span>K';
-    btn.setAttribute('aria-label', `Open command palette (${isMac ? 'Command' : 'Control'} K)`);
+  $('[data-command-open]').forEach(btn => {
+    btn.innerHTML = '<span>/</span>';
+    btn.setAttribute('aria-label', 'Open command palette (/)');
+    btn.setAttribute('title', 'Open command palette (/)');
   });
 
   let storedTheme = null;
@@ -278,9 +279,24 @@
   $('[data-terminal-close]')?.addEventListener('click', closeTerminal);
 
   document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    const target = e.target;
+    const isTyping =
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target instanceof HTMLSelectElement ||
+      target?.isContentEditable;
+
+    if (
+      e.code === 'Slash' &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      !e.shiftKey &&
+      backdrop?.hidden &&
+      !isTyping
+    ) {
       e.preventDefault();
-      backdrop?.hidden ? openCommand(document.activeElement) : closeCommand();
+      openCommand(document.activeElement);
       return;
     }
 
