@@ -25,7 +25,7 @@
     try { localStorage.setItem('theme', next); } catch (_) {}
   }));
 
-  $('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
+  $$('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 
   const normalizePath = path => {
     if (!path) return '/';
@@ -33,7 +33,7 @@
     return clean !== '/' && clean.endsWith('/') ? clean : clean;
   };
   const currentPath = normalizePath(window.location.pathname);
-  $('.desktop-nav a, [data-mobile-menu] a, .footer-col a').forEach(link => {
+  $$('.desktop-nav a, [data-mobile-menu] a, .footer-col a').forEach(link => {
     if (!link.href || link.origin !== window.location.origin) return;
     const target = normalizePath(new URL(link.href).pathname);
     if (target === currentPath) link.setAttribute('aria-current', 'page');
