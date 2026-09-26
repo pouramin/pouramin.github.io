@@ -66,3 +66,9 @@ html[data-theme="dark"]{--bg:#111315;--surface:#181b1e;--surface-2:#202428;--tex
 @media (prefers-reduced-motion: reduce){
   .reveal,.reveal.reveal-pending,.reveal.visible{opacity:1!important;transform:none!important;transition:none!important}
 }
+
+
+/* Command palette states */
+.command-empty{padding:22px 12px;text-align:center;color:var(--muted);font-size:11px}
+.command-list kbd{white-space:nowrap;min-width:34px;text-align:center}
+.command-list [data-command-item]:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:-2px;background:var(--surface-2)}
