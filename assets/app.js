@@ -196,10 +196,15 @@
   }));
   if (filters.length) applyProjectFilter('all');
 
-  const reveal = $$('.reveal');
+  const reveal = $('.reveal');
   if ('IntersectionObserver' in window) {
+    reveal.forEach(el => el.classList.add('reveal-pending'));
     const obs = new IntersectionObserver(entries => entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.remove('reveal-pending');
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
     }), { threshold:.08 });
     reveal.forEach(el => obs.observe(el));
   } else {
