@@ -287,11 +287,10 @@
       target?.isContentEditable;
 
     if (
-      e.code === 'Slash' &&
+      e.key === '/' &&
       !e.ctrlKey &&
       !e.metaKey &&
       !e.altKey &&
-      !e.shiftKey &&
       backdrop?.hidden &&
       !isTyping
     ) {
