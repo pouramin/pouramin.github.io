@@ -2,13 +2,14 @@ name: Refresh dynamic site data
 
 on:
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 6 * * *"
   workflow_dispatch:
   push:
     paths:
       - ".github/workflows/refresh-site.yml"
       - "scripts/update_videos.py"
       - "scripts/generate_social_preview.py"
+      - "scripts/render_videos.py"
 
 permissions:
   contents: write
@@ -35,18 +36,21 @@ jobs:
       - name: Refresh TunnelLab videos
         run: python scripts/update_videos.py
 
+      - name: Render TunnelLab videos into static HTML
+        run: python scripts/render_videos.py
+
       - name: Generate social preview
         run: python scripts/generate_social_preview.py
 
       - name: Commit changed generated files
         shell: bash
         run: |
-          if git diff --quiet -- data/videos.json assets/social-preview.png; then
+          if git diff --quiet -- data/videos.json assets/social-preview.png videos/index.html index.html; then
             echo "Generated files are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/videos.json assets/social-preview.png
+          git add data/videos.json assets/social-preview.png videos/index.html index.html
           git commit -m "chore: refresh dynamic site data"
           git push
