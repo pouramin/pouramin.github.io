@@ -3,7 +3,8 @@
   "client_name": "TL Studio",
   "redirect_uris": [
     "http://127.0.0.1/local/provider-accounts/huggingface/oauth/callback",
-    "http://localhost/local/provider-accounts/huggingface/oauth/callback"
+    "http://localhost/local/provider-accounts/huggingface/oauth/callback",
+    "http://[::1]/local/provider-accounts/huggingface/oauth/callback"
   ],
   "token_endpoint_auth_method": "none",
   "client_uri": "https://github.com/pouramin/TL-Studio"
