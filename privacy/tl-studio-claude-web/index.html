@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Privacy policy for the TL Studio Claude Web Bridge Chrome extension.">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta property="og:title" content="TL Studio Claude Web Bridge — Privacy Policy">
+  <meta property="og:description" content="Privacy policy for the TL Studio Claude Web Bridge Chrome extension.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pouramin.dev/privacy/tl-studio-claude-web/">
+  <meta property="og:site_name" content="Amin Pour">
+  <link rel="canonical" href="https://pouramin.dev/privacy/tl-studio-claude-web/">
+  <title>TL Studio Claude Web Bridge — Privacy Policy</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="site-shell header-inner">
+    <a class="brand" href="/" aria-label="Amin Pour — home">
+      <span class="brand-mark" aria-hidden="true">AP</span>
+      <span class="brand-copy"><strong>Amin Pour</strong><small>builder / developer</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/projects/">Projects</a>
+      <a href="/lab/">Lab</a>
+      <a href="/builds/">Builds</a>
+      <a href="/videos/">Videos</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="site-shell">
+      <span class="kicker">PRIVACY</span>
+      <h1 class="page-title">TL Studio Claude Web Bridge</h1>
+      <p>Privacy policy · Effective October 3, 2026</p>
+    </div>
+  </section>
+
+  <section class="section compact">
+    <div class="site-shell">
+      <article class="panel prose-panel">
+        <p><strong>TL Studio Claude Web Bridge</strong> is a Chrome extension that connects the TL Studio desktop/local application to a Claude Web session already signed in to the same Chrome profile. The extension is an inference transport only; TL Studio retains control of its Agent loop, tools, permissions, files, terminal, sessions, and persistence.</p>
+
+        <h2>Data the extension handles</h2>
+        <p>When you use the Claude Web provider in TL Studio, the extension temporarily handles the prompt content that TL Studio asks it to send to Claude Web and the response content returned by Claude Web. This processing is necessary to provide the feature you explicitly request.</p>
+        <p>The extension does not use this content for advertising, profiling, analytics, or unrelated purposes.</p>
+
+        <h2>Authentication and browser credentials</h2>
+        <p>The extension does not read, export, copy, serialize, or store your Claude cookies, <code>sessionKey</code>, passwords, or other browser authentication credentials. Authenticated Claude requests run in the page context of <code>claude.ai</code>, and Chrome keeps the signed-in session browser-owned.</p>
+
+        <h2>Storage and retention</h2>
+        <p>The extension does not maintain its own database and does not persist Claude prompts, Claude responses, cookies, session keys, or account credentials. TL Studio may store your local project/session history on your own machine according to TL Studio's local application behavior.</p>
+
+        <h2>Data sharing</h2>
+        <p>Prompt content is sent to Claude Web at <code>claude.ai</code> only when you select and use the Claude Web provider. Claude's handling of data is governed by Anthropic's own terms and privacy practices. The extension does not sell user data and does not share user data with advertisers or data brokers.</p>
+
+        <h2>Permissions</h2>
+        <p>The extension requests access to <code>https://claude.ai/*</code> and the Chrome scripting capability required to run the authenticated request in the Claude page context. It accepts bridge connections only from local TL Studio pages on <code>localhost</code> or <code>127.0.0.1</code>.</p>
+        <p>The extension does not request Chrome cookie access, debugger access, browsing-history access, clipboard access, or broad access to unrelated websites.</p>
+
+        <h2>Security</h2>
+        <p>The bridge accepts only the limited transport operations needed to probe the Claude Web session and complete model requests. The extension has no direct authority over TL Studio project files, terminal commands, permission decisions, sessions, plugins, or tool execution.</p>
+
+        <h2>Changes to this policy</h2>
+        <p>If the extension's data handling changes materially, this policy will be updated before the changed behavior is published.</p>
+
+        <h2>Contact</h2>
+        <p>For questions or privacy concerns, open an issue in the TL Studio repository:</p>
+        <p><a href="https://github.com/pouramin/TL-Studio/issues" target="_blank" rel="noreferrer">github.com/pouramin/TL-Studio/issues ↗</a></p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-shell footer-bottom"><span>© <span data-year></span> Amin Pour</span><span>TL Studio Claude Web Bridge</span></div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>
