@@ -79,7 +79,7 @@
   <div class="site-shell">
     <div class="lab-grid">
       <a class="lab-card link-card" href="#graph-context"><span class="lab-icon">◫</span><h3>Graph-aware coding context</h3><p>Comparing agent answers with and without a generated code graph to see whether structure actually improves repository understanding.</p><footer>benchmark · context · agents <span class="card-action">Open notes →</span></footer></a>
-      <a class="lab-card link-card" href="#model-routing"><span class="lab-icon">↯</span><h3>Model routing tests</h3><p>Provider quality, uptime, rate limits, model availability and how much “free” access survives real usage.</p><footer>routing · APIs · reliability <span class="card-action">Open notes →</span></footer></a>
+      <a class="lab-card link-card" href="#jev-routing"><span class="lab-icon">↯</span><h3>JEV routing simulation</h3><p>Comparing routed model tiers with direct fixed-model baselines, including explicit token/runtime penalties when a lightweight model is mismatched to a harder task.</p><footer>routing · simulation · cost <span class="card-action">Open notes →</span></footer></a>
       <a class="lab-card link-card" href="#agent-harness"><span class="lab-icon">⌁</span><h3>Agent harness benchmarks</h3><p>Real intentionally broken projects, issue discovery, repair quality, token usage and generated tests.</p><footer>agents · benchmark · code <span class="card-action">Open notes →</span></footer></a>
       <a class="lab-card link-card" href="#tiny-tools"><span class="lab-icon">⌘</span><h3>Tiny developer tools</h3><p>Small utilities that solve one annoyance well enough to keep around, even if they never deserve a full product page.</p><footer>tools · automation <span class="card-action">Open notes →</span></footer></a>
       <a class="lab-card link-card" href="#product-trials"><span class="lab-icon">◎</span><h3>AI product trials</h3><p>Testing claims made by AI products against actual workflows instead of repeating feature lists.</p><footer>review · real-world test <span class="card-action">Open notes →</span></footer></a>
@@ -91,9 +91,9 @@
         <div><span class="micro">LAB NOTE / 01</span><h2>Graph-aware coding context</h2></div>
         <div><p>The experiment compares the same repository-understanding task with and without graph-derived context. The useful question is not whether a graph looks impressive, but whether it helps an agent find the right files, boundaries and request path with less wandering.</p><div class="case-cta"><a class="button" href="/build-log/#graph-aware-context">Build log →</a></div></div>
       </section>
-      <section class="detail-panel" id="model-routing">
-        <div><span class="micro">LAB NOTE / 02</span><h2>Model routing tests</h2></div>
-        <div><p>I test providers as infrastructure rather than a model list: availability, real free quota, authentication friction, endpoint compatibility, uptime and what happens when the preferred route disappears.</p><div class="case-cta"><a class="button" href="/projects/tlabrouter.html">TlabRouter notes →</a></div></div>
+      <section class="detail-panel" id="jev-routing">
+        <div><span class="micro">LAB NOTE / 02</span><h2>JEV routing simulation</h2></div>
+        <div><p>JEVArena makes routing decisions visible instead of hiding them behind a single score. The simulator separates decision time from model execution, compares routed tiers against direct models, and applies transparent capability-mismatch multipliers when a selected lightweight model is asked to carry a substantially harder workload.</p><div class="case-cta"><a class="button" href="/projects/jevarena.html">Open JEVArena notes →</a><a class="button" href="https://pouramin.dev/JEVArena/" target="_blank" rel="noreferrer">Try online ↗</a></div></div>
       </section>
       <section class="detail-panel" id="agent-harness">
         <div><span class="micro">LAB NOTE / 03</span><h2>Agent harness benchmarks</h2></div>
