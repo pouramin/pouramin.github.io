@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="TL-Dub — turn your YouTube captions into a timed English dubbing script.">
+  <title>TL-Dub — Timed YouTube dubbing scripts</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/tldub/tldub.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="site-shell header-inner">
+    <a class="brand" href="/" aria-label="Amin Pour — home">
+      <span class="brand-mark" aria-hidden="true">AP</span>
+      <span class="brand-copy"><strong>Amin Pour</strong><small>builder / developer</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/projects/">Projects</a><a href="/lab/">Lab</a><a href="/builds/">Builds</a><a href="/videos/">Videos</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-icon" href="https://github.com/pouramin/Tldub" target="_blank" rel="noreferrer" aria-label="TL-Dub on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.16c-3.23.7-3.91-1.37-3.91-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.04 1.77 2.72 1.26 3.39.96.1-.75.4-1.26.74-1.55-2.58-.29-5.3-1.29-5.3-5.75 0-1.27.46-2.31 1.2-3.13-.12-.3-.52-1.48.12-3.09 0 0 .98-.31 3.16 1.2a10.9 10.9 0 0 1 5.75 0c2.18-1.51 3.16-1.2 3.16-1.2.64 1.61.24 2.8.12 3.09.75.82 1.2 1.86 1.2 3.13 0 4.47-2.72 5.45-5.31 5.74.42.36.79 1.07.79 2.16v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+      </a>
+      <button class="theme-toggle header-icon" type="button" data-theme-toggle aria-label="Toggle theme"><span class="theme-glyph">◐</span></button>
+    </div>
+  </div>
+</header>
+<main id="main" class="tldub-main">
+  <section class="tldub-hero">
+    <div class="site-shell tldub-hero-grid">
+      <div>
+        <div class="eyebrow"><span class="status-dot" data-api-dot></span><span data-api-state>Checking backend…</span></div>
+        <h1>Turn a YouTube video into a <span>timed dub script.</span></h1>
+        <p>Connect your YouTube account, paste one of your video links, and TL-Dub pulls the timed Persian captions and prepares an English track without losing the original timeline.</p>
+      </div>
+      <aside class="tldub-flow" aria-label="TL-Dub workflow">
+        <span>01</span><strong>YouTube captions</strong><i>→</i>
+        <span>02</span><strong>Timed English</strong><i>→</i>
+        <span>03</span><strong>SRT / VTT / JSON</strong>
+      </aside>
+    </div>
+  </section>
+  <section class="site-shell tldub-workspace">
+    <div class="tldub-control-card">
+      <div class="tldub-card-head">
+        <div><span class="micro">STEP 1</span><h2>YouTube access</h2></div>
+        <span class="connection-pill" data-auth-pill>Not connected</span>
+      </div>
+      <p class="muted">TL-Dub uses the official YouTube Data API. It requests access only when you connect and uses it to read caption tracks for videos you can edit.</p>
+      <div class="control-actions">
+        <button class="button primary" type="button" data-connect>Connect YouTube</button>
+        <button class="button" type="button" data-disconnect hidden>Disconnect</button>
+      </div>
+      <div class="account-note" data-account-note></div>
+    </div>
+    <div class="tldub-control-card tldub-input-card">
+      <div class="tldub-card-head">
+        <div><span class="micro">STEP 2</span><h2>Load a video</h2></div>
+        <span class="connection-pill neutral" data-segment-count>0 segments</span>
+      </div>
+      <label class="field-label" for="video-url">YouTube URL</label>
+      <div class="url-row">
+        <input id="video-url" data-video-url inputmode="url" autocomplete="off" placeholder="https://www.youtube.com/watch?v=…">
+        <button class="button primary" type="button" data-load>Get timed script</button>
+      </div>
+      <div class="option-row">
+        <label><input type="checkbox" data-translate checked> Include English machine translation</label>
+        <span>Source language: Persian</span>
+      </div>
+      <div class="status-box" data-status role="status" aria-live="polite">Ready.</div>
+    </div>
+    <div class="tldub-results" data-results hidden>
+      <div class="results-head">
+        <div><span class="micro">SCRIPT</span><h2 data-video-title>Untitled video</h2><p data-video-meta></p></div>
+        <div class="export-actions">
+          <button class="button" type="button" data-export="source-srt">Persian SRT</button>
+          <button class="button" type="button" data-export="target-srt">English SRT</button>
+          <button class="button" type="button" data-export="target-vtt">English VTT</button>
+          <button class="button" type="button" data-export="json">JSON</button>
+        </div>
+      </div>
+      <div class="desktop-table-wrap">
+        <table class="script-table"><thead><tr><th>#</th><th>Time</th><th>Persian</th><th>English</th></tr></thead><tbody data-script-body></tbody></table>
+      </div>
+      <div class="mobile-script" data-mobile-script></div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer tldub-footer"><div class="site-shell footer-bottom"><span>TL-Dub · private beta</span><span>Built for pouramin.dev</span></div></footer>
+<script src="/assets/app.js" defer></script><script src="/tldub/tldub.js" defer></script>
+</body></html>
