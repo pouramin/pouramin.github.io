@@ -75,6 +75,21 @@
         <span>Source language: Persian</span>
       </div>
       <div class="status-box" data-status role="status" aria-live="polite">Ready.</div>
+      <div class="project-memory">
+        <div class="project-memory-copy">
+          <strong>Project memory</strong>
+          <span data-project-memory-note>Nothing saved locally yet.</span>
+        </div>
+        <div class="project-memory-actions">
+          <select data-project-list aria-label="Saved TL-Dub projects">
+            <option value="">Saved projects…</option>
+          </select>
+          <button class="button" type="button" data-project-open>Open</button>
+          <button class="button" type="button" data-project-import>Import JSON</button>
+          <input type="file" accept=".json,application/json" data-project-file hidden>
+          <button class="button" type="button" data-project-refresh>Refresh from YouTube</button>
+        </div>
+      </div>
     </div>
     <div class="tldub-results" data-results data-private-content hidden>
       <div class="results-head">
