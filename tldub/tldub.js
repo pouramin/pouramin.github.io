@@ -265,12 +265,14 @@
       state.glossaryModel=data.resolvedModel||'';
       rememberCredentialSlot(data.credentialSlot);
       if(els.aiNote)els.aiNote.textContent='Glossary ready · '+state.glossary.length+' terms';
+      await saveProject('glossary built');
       return true;
     }catch(err){
       state.glossary=[];
       state.glossaryModel='';
       if(els.aiNote)els.aiNote.textContent='Glossary unavailable; continuing with Persian source + video title only.';
       setStatus('Glossary step failed: '+(err.message||'unknown error')+' Continuing with title/source protection.','error');
+      await saveProject('glossary unavailable');
       return false;
     }
   }
@@ -311,6 +313,7 @@
         failed++;
         state.qcRepairFailed=true;
         setStatus('Final QC repair '+(i+1)+'/'+chunks.length+' failed. Translation is already complete; continuing with the remaining repair groups.','error');
+        await saveProject('QC repair failed '+(i+1)+'/'+chunks.length);
         continue;
       }
 
@@ -343,6 +346,7 @@
         }
       }
       state.qcFinalRepairCalls++;
+      await saveProject('QC repair '+(i+1)+'/'+chunks.length);
     }
 
     if(ids.length>chunks.length*chunkSize)state.qcRepairFailed=true;
@@ -394,26 +398,76 @@
     els.results.hidden=false;
     refreshExportLabels();
   }
-  function syncEdit(e){const t=e.target;if(!t.matches('textarea[data-index][data-field]'))return;const i=Number(t.dataset.index),field=t.dataset.field;if(!state.segments[i]||!field)return;state.segments[i][field]=t.value;if(field==='sourceText'){state.glossary=[];state.glossaryModel='';state.segments[i].aiAdapted=false;state.segments[i].qcIssues=[];state.aiComplete=false}document.querySelectorAll(`textarea[data-index="${i}"][data-field="${field}"]`).forEach(o=>{if(o!==t)o.value=t.value});refreshExportLabels()}
+  function syncEdit(e){const t=e.target;if(!t.matches('textarea[data-index][data-field]'))return;const i=Number(t.dataset.index),field=t.dataset.field;if(!state.segments[i]||!field)return;state.segments[i][field]=t.value;if(field==='sourceText'){state.glossary=[];state.glossaryModel='';state.segments[i].aiAdapted=false;state.segments[i].qcIssues=[];state.aiComplete=false}document.querySelectorAll(`textarea[data-index="${i}"][data-field="${field}"]`).forEach(o=>{if(o!==t)o.value=t.value});refreshExportLabels();queueAutosave('manual edit')}
   els.body?.addEventListener('input',syncEdit);els.mobile?.addEventListener('input',syncEdit);
+  els.projectOpen?.addEventListener('click',async()=>{
+    const id=els.projectList?.value||'';
+    if(!id){setStatus('Choose a saved project first.','error');return}
+    const project=await getSavedProject(id);
+    if(!project){setStatus('That saved project could not be found.','error');await refreshProjectList();return}
+    restoreProject(project);
+    setStatus('Loaded saved project from local memory. No YouTube or AI request was used.','success');
+  });
+
+  els.projectImport?.addEventListener('click',()=>els.projectFile?.click());
+  els.projectFile?.addEventListener('change',async()=>{
+    const file=els.projectFile.files?.[0];
+    if(!file)return;
+    try{
+      const project=JSON.parse(await file.text());
+      restoreProject(project);
+      await saveProject('imported project',true);
+      setStatus('Project JSON imported and saved locally.','success');
+    }catch(err){
+      setStatus('Could not import this Project JSON: '+(err?.message||'invalid file'),'error');
+    }finally{
+      els.projectFile.value='';
+    }
+  });
+
+  els.projectRefresh?.addEventListener('click',()=>{
+    state.forceYoutubeRefresh=true;
+    els.load?.click();
+  });
+
   els.connect?.addEventListener('click',()=>{location.href=`${API}/oauth/start?return_to=${encodeURIComponent('/tldub/')}`});
   els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/oauth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('YouTube disconnected and access token revoked.')});
   els.load?.addEventListener('click',async()=>{
     const url=els.videoUrl.value.trim();
     if(!url){setStatus('Paste a YouTube video URL first.','error');return}
+    const videoId=clientVideoId(url);
+    if(!videoId){setStatus('Paste a valid YouTube video URL.','error');return}
+
+    const forceRefresh=Boolean(state.forceYoutubeRefresh);
+    state.forceYoutubeRefresh=false;
     els.load.disabled=true;
-    setStatus('Reading caption tracks from YouTube…');
+
     try{
+      if(!forceRefresh){
+        const saved=await getSavedProject(videoId);
+        if(saved){
+          restoreProject(saved);
+          await refreshProjectList(videoId);
+          setStatus('Loaded saved project from local memory. No YouTube or AI request was used.','success');
+          return;
+        }
+      }
+
+      setStatus(forceRefresh?'Refreshing captions from YouTube…':'Reading caption tracks from YouTube…');
       const data=await jsonFetch(`${API}/transcript`,{method:'POST',body:JSON.stringify({url,sourceLanguage:'fa',targetLanguage:'en',translate:els.translate.checked})});
       state.segments=data.segments||[];
-      state.videoId=data.videoId||'';
+      state.videoId=data.videoId||videoId;
       state.title=data.title||'YouTube video';
       state.translationSource=data.translationSource||'';
+      state.projectCreatedAt=null;
+      state.projectFolderName=safeFolderName(state.title,state.videoId);
+      state.projectOriginalUrl=url;
       if(!state.segments.length)throw new Error('No caption segments were returned.');
       snapshotYouTubeEnglish();
       hideProgress();
       render();
-      setStatus(`Loaded ${state.segments.length} timed segments${data.translationSource?` · English: ${data.translationSource}`:''}.`,'success');
+      await saveProject('captions loaded',true);
+      setStatus(`Loaded and saved ${state.segments.length} timed segments${data.translationSource?` · English: ${data.translationSource}`:''}.`,'success');
     }catch(err){
       if(/auth|connect|authorization|401|expired|security token/i.test(err.message)){state.auth=false;state.csrf=null;els.privateContent.forEach(el=>{el.hidden=true})}
       setStatus(err.message||'Could not load this video.','error');
@@ -450,9 +504,11 @@
         const credentialText=state.aiCredentialSlotsUsed.length?('credentials used #'+state.aiCredentialSlotsUsed.sort((a,b)=>a-b).join(', #')):'credential usage unavailable';
         if(els.aiNote)els.aiNote.textContent='Translation complete · final repair '+state.qcFinalRepairCalls+' call(s) · QC '+severeLeft+' severe / '+warningsLeft+' warnings · '+credentialText+' · models: '+modelText;
         setStatus(severeLeft?'Translation remains complete, but '+severeLeft+' severe QC issue(s) still need repair.':'Translation and final QC repair are complete.',severeLeft?'error':'success');
+        await saveProject('final QC retry',true);
       }catch(err){
         state.qcRepairFailed=true;
         setStatus('Translation is complete, but final QC repair could not finish: '+(err.message||'unknown error'),'error');
+        await saveProject('final QC retry failed',true);
       }finally{
         state.aiRunning=false;
         els.aiTranslate.disabled=!state.aiConfigured;
@@ -536,6 +592,7 @@
         refreshExportLabels();
         const doneBatches=Math.ceil(completed/batchSize);
         setProgress(completed,total,doneBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
+        await saveProject('AI batch '+batchNo+'/'+totalBatches);
       }
 
       state.translationSource='AI dubbing adaptation';
@@ -561,6 +618,7 @@
       setProgress(total,total,'Complete · '+total+'/'+total+' segments');
       render();
       setStatus((severe?'AI translation is complete. Final QC still has '+severe+' severe issue(s); use Retry final QC repair before TTS.':'AI dubbing adaptation complete and passed severe QC checks.')+' '+total+' segments updated.',severe?'error':'success');
+      await saveProject('AI adaptation complete',true);
     }catch(err){
       completed=state.segments.filter(s=>s.aiAdapted).length;
       const msg=err.message||'Could not adapt the English script.';
@@ -569,6 +627,7 @@
       setStatus(msg+partial,'error');
       if(els.aiNote)els.aiNote.textContent='Stopped while sending the already-loaded transcript to AI: '+msg;
       refreshExportLabels();
+      await saveProject('AI adaptation paused',true);
     }finally{
       state.aiRunning=false;
       els.aiTranslate.disabled=!state.aiConfigured;
@@ -594,6 +653,7 @@
     render();
     setStatus('Restored the original YouTube English translation.','success');
     if(els.aiNote)els.aiNote.textContent='Ready for timing-aware English rewrite.';
+    saveProject('restored YouTube English',true);
   });
 
   const makeSrt=translated=>state.segments.map((s,i)=>`${i+1}\n${fmt(s.start,true)} --> ${fmt(s.end,true)}\n${translated?(s.translatedText||s.sourceText):s.sourceText}\n`).join('\n');
@@ -613,9 +673,9 @@
       case'target-srt':download(id+suffix+'.srt',makeSrt(true));break;
       case'target-vtt':download(id+suffix+'.vtt',makeVtt(true),'text/vtt;charset=utf-8');break;
       case'youtube-srt':download(id+'.youtube.en.srt',makeYouTubeSrt());break;
-      case'json':download(id+'.tldub.json',JSON.stringify({videoId:state.videoId,title:state.title,translationSource:state.translationSource,aiComplete:state.aiComplete,aiModels:state.aiModels,glossary:state.glossary,glossaryModel:state.glossaryModel,qc:{repairBatches:state.qcRepairBatches,repairSkippedBatches:state.qcRepairSkippedBatches,finalRepairCalls:state.qcFinalRepairCalls,repairFailed:state.qcRepairFailed,issues:state.qcIssues},aiCredentialSlotsUsed:state.aiCredentialSlotsUsed,youtubeEnglish:state.youtubeEnglish,segments:state.segments},null,2),'application/json;charset=utf-8');break;
+      case'json':download(id+'.tldub.json',JSON.stringify(buildProjectSnapshot(),null,2),'application/json;charset=utf-8');break;
     }
   });
   const params=new URLSearchParams(location.search);if(params.get('oauth')==='ok'){history.replaceState({},'','/tldub/');setStatus('YouTube connected. Paste a video URL.','success')}if(params.get('oauth_error')){const m=params.get('oauth_error');history.replaceState({},'','/tldub/');setStatus(m||'YouTube authorization failed.','error')}
-  (async()=>{await checkBackend();await checkAuth()})();
+  (async()=>{await checkBackend();await checkAuth();await refreshProjectList();if(state.auth)await restoreLastProject()})();
 })();
