@@ -11,7 +11,46 @@
   const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0;if(els.currentEnLabel)els.currentEnLabel.textContent=hasAI?(state.aiComplete?'AI English SRT':'Partial AI SRT'):'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=hasAI?(state.aiComplete?'AI English VTT':'Partial AI VTT'):'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=state.aiComplete?'Re-adapt English':hasAI?'Resume AI adaptation':'Adapt English to timing'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
-  async function jsonFetch(url,options={}){const method=(options.method||'GET').toUpperCase();const headers={'Content-Type':'application/json',...(options.headers||{})};if(method==='POST'&&state.csrf)headers['X-TL-Dub-CSRF']=state.csrf;const response=await fetch(url,{credentials:'include',...options,headers});let data=null;try{data=await response.json()}catch(_){data={error:`HTTP ${response.status}`}}if(!response.ok)throw new Error(data?.error||data?.message||`HTTP ${response.status}`);return data}
+  async function jsonFetch(url,options={}){
+    const method=(options.method||'GET').toUpperCase();
+    const headers={'Content-Type':'application/json',...(options.headers||{})};
+    if(method==='POST'&&state.csrf)headers['X-TL-Dub-CSRF']=state.csrf;
+    let response;
+    try{
+      response=await fetch(url,{credentials:'include',...options,headers});
+    }catch(cause){
+      const error=new Error('Network request to TL-Dub API failed. The transcript is still loaded locally.');
+      error.code='NETWORK_FETCH_FAILED';
+      error.cause=cause;
+      throw error;
+    }
+    let data=null;
+    try{data=await response.json()}catch(_){data={error:`HTTP ${response.status}`}}
+    if(!response.ok){
+      const error=new Error(data?.error||data?.message||`HTTP ${response.status}`);
+      error.status=response.status;
+      throw error;
+    }
+    return data;
+  }
+  const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  async function sendAIBatch(payload,batchNo,totalBatches){
+    const maxAttempts=3;
+    for(let attempt=1;attempt<=maxAttempts;attempt++){
+      try{
+        return await jsonFetch(API+'/translate',{
+          method:'POST',
+          body:JSON.stringify(payload)
+        });
+      }catch(err){
+        const retryable=err?.code==='NETWORK_FETCH_FAILED'||err?.status===502||err?.status===503||err?.status===504;
+        if(!retryable||attempt===maxAttempts)throw err;
+        setStatus('AI dubbing adaptation · batch '+batchNo+'/'+totalBatches+' · temporary network/provider error, retry '+(attempt+1)+'/'+maxAttempts+'…');
+        await sleep(1200*attempt);
+      }
+    }
+  }
+
   async function checkBackend(){
     try{
       const data=await jsonFetch(`${API}/health`,{headers:{}});
@@ -104,10 +143,11 @@
         const contextAfter=state.segments.slice(offset+batch.length,offset+batch.length+3);
         setStatus('AI dubbing adaptation · batch '+batchNo+'/'+totalBatches+' · segments '+(offset+1)+'-'+(offset+batch.length)+'…');
 
-        const data=await jsonFetch(API+'/translate',{
-          method:'POST',
-          body:JSON.stringify({segments:batch,contextBefore,contextAfter,singleBatch:true})
-        });
+        const data=await sendAIBatch(
+          {segments:batch,contextBefore,contextAfter,singleBatch:true},
+          batchNo,
+          totalBatches
+        );
 
         const byId=new Map((data.segments||[]).map(item=>[Number(item.index),item.translatedText]));
         const touched=[];
@@ -144,7 +184,7 @@
       const partial=completed>0?' '+completed+'/'+total+' segments are already saved in this page; Resume will continue from the next batch.':'';
       if(/auth|connect|authorization|401|expired|security token/i.test(msg)){state.auth=false;state.csrf=null;els.privateContent.forEach(el=>{el.hidden=true})}
       setStatus(msg+partial,'error');
-      if(els.aiNote)els.aiNote.textContent='Stopped: '+msg;
+      if(els.aiNote)els.aiNote.textContent='Stopped while sending the already-loaded transcript to AI: '+msg;
       refreshExportLabels();
     }finally{
       state.aiRunning=false;
