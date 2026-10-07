@@ -227,6 +227,40 @@
     if(!state.aiConfigured){setStatus('AI dubbing is not configured on the backend yet.','error');return}
     if(state.aiRunning)return;
 
+    const allAlreadyAdapted=state.segments.length>0&&state.segments.every(seg=>seg.aiAdapted);
+    const severePending=state.qcIssues.filter(issue=>issue.severity==='severe').length;
+
+    if(allAlreadyAdapted&&severePending>0){
+      state.aiRunning=true;
+      state.qcRepairFailed=false;
+      refreshExportLabels();
+      els.aiTranslate.disabled=true;
+      els.aiTranslate.textContent='Repairing QC…';
+      els.load.disabled=true;
+      setProgress(state.segments.length,state.segments.length,'Translation complete · QC repair');
+
+      try{
+        setStatus('Translation is already complete · retrying final QC repair for '+severePending+' severe issue(s)…');
+        const summary=await runFinalRepairs();
+        const severeLeft=state.qcIssues.filter(issue=>issue.severity==='severe').length;
+        const warningsLeft=state.qcIssues.filter(issue=>issue.severity!=='severe').length;
+        state.qcRepairFailed=summary.failed>0||severeLeft>0;
+        const modelText=state.aiModels.length?state.aiModels.join(', '):'OpenRouter free router';
+        const credentialText=state.aiCredentialSlotsUsed.length?('credentials used #'+state.aiCredentialSlotsUsed.sort((a,b)=>a-b).join(', #')):'credential usage unavailable';
+        if(els.aiNote)els.aiNote.textContent='Translation complete · final repair '+state.qcFinalRepairCalls+' call(s) · QC '+severeLeft+' severe / '+warningsLeft+' warnings · '+credentialText+' · models: '+modelText;
+        setStatus(severeLeft?'Translation remains complete, but '+severeLeft+' severe QC issue(s) still need repair.':'Translation and final QC repair are complete.',severeLeft?'error':'success');
+      }catch(err){
+        state.qcRepairFailed=true;
+        setStatus('Translation is complete, but final QC repair could not finish: '+(err.message||'unknown error'),'error');
+      }finally{
+        state.aiRunning=false;
+        els.aiTranslate.disabled=!state.aiConfigured;
+        els.load.disabled=false;
+        refreshExportLabels();
+      }
+      return;
+    }
+
     if(state.aiComplete){
       state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||seg.translatedText;seg.aiAdapted=false});
       state.aiComplete=false;
