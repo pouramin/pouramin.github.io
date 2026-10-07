@@ -5,10 +5,10 @@
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.aiComplete=false;state.aiModels=[]};
+  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false});state.aiComplete=false;state.aiModels=[]};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
-  const refreshExportLabels=()=>{if(els.currentEnLabel)els.currentEnLabel.textContent=state.aiComplete?'AI English SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=state.aiComplete?'AI English VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!state.aiComplete;if(els.restoreYoutube)els.restoreYoutube.hidden=!state.aiComplete};
+  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0;if(els.currentEnLabel)els.currentEnLabel.textContent=hasAI?(state.aiComplete?'AI English SRT':'Partial AI SRT'):'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=hasAI?(state.aiComplete?'AI English VTT':'Partial AI VTT'):'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=state.aiComplete?'Re-adapt English':hasAI?'Resume AI adaptation':'Adapt English to timing'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
   async function jsonFetch(url,options={}){const method=(options.method||'GET').toUpperCase();const headers={'Content-Type':'application/json',...(options.headers||{})};if(method==='POST'&&state.csrf)headers['X-TL-Dub-CSRF']=state.csrf;const response=await fetch(url,{credentials:'include',...options,headers});let data=null;try{data=await response.json()}catch(_){data={error:`HTTP ${response.status}`}}if(!response.ok)throw new Error(data?.error||data?.message||`HTTP ${response.status}`);return data}
@@ -70,32 +70,45 @@
   });
 
 
+
   els.aiTranslate?.addEventListener('click',async()=>{
     if(!state.segments.length){setStatus('Load a timed script first.','error');return}
     if(!state.aiConfigured){setStatus('AI dubbing is not configured on the backend yet.','error');return}
     if(state.aiRunning)return;
+
+    if(state.aiComplete){
+      state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||seg.translatedText;seg.aiAdapted=false});
+      state.aiComplete=false;
+      state.aiModels=[];
+      updateEnglishFields(state.segments.map((_,i)=>i));
+    }
+
     state.aiRunning=true;
-    state.aiComplete=false;
-    state.aiModels=[];
     refreshExportLabels();
     els.aiTranslate.disabled=true;
+    els.aiTranslate.textContent='Adapting…';
     els.load.disabled=true;
 
-    const batchSize=12,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
-    let completed=0;
-    setProgress(0,total,'0/'+totalBatches+' batches');
-    setStatus('Starting AI dubbing adaptation · 0/'+totalBatches+' batches…');
+    const batchSize=20,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
+    let completed=state.segments.filter(s=>s.aiAdapted).length;
+    const completedBatches=Math.floor(completed/batchSize);
+    setProgress(completed,total,completedBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
+    setStatus('AI dubbing adaptation · resuming from segment '+(completed+1)+'…');
 
     try{
       for(let offset=0,batchNo=1;offset<total;offset+=batchSize,batchNo++){
         const batch=state.segments.slice(offset,offset+batchSize);
+        if(batch.every(seg=>seg.aiAdapted))continue;
+
         const contextBefore=state.segments.slice(Math.max(0,offset-3),offset);
         const contextAfter=state.segments.slice(offset+batch.length,offset+batch.length+3);
         setStatus('AI dubbing adaptation · batch '+batchNo+'/'+totalBatches+' · segments '+(offset+1)+'-'+(offset+batch.length)+'…');
+
         const data=await jsonFetch(API+'/translate',{
           method:'POST',
           body:JSON.stringify({segments:batch,contextBefore,contextAfter,singleBatch:true})
         });
+
         const byId=new Map((data.segments||[]).map(item=>[Number(item.index),item.translatedText]));
         const touched=[];
         for(let local=0;local<batch.length;local++){
@@ -104,17 +117,21 @@
           const text=byId.get(Number(seg.index));
           if(typeof text==='string'&&text.trim()){
             seg.translatedText=text.trim();
+            seg.aiAdapted=true;
             touched.push(globalIndex);
           }
         }
+
         for(const model of (data.resolvedModels||[])){if(model&&!state.aiModels.includes(model))state.aiModels.push(model)}
-        completed+=batch.length;
+        completed=state.segments.filter(s=>s.aiAdapted).length;
         updateEnglishFields(touched);
-        setProgress(completed,total,batchNo+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
+        refreshExportLabels();
+        const doneBatches=Math.ceil(completed/batchSize);
+        setProgress(completed,total,doneBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
       }
 
       state.translationSource='AI dubbing adaptation';
-      state.aiComplete=true;
+      state.aiComplete=state.segments.every(s=>s.aiAdapted);
       refreshExportLabels();
       const modelText=state.aiModels.length?state.aiModels.join(', '):'OpenRouter free router';
       if(els.aiNote)els.aiNote.textContent='AI adaptation complete · models used: '+modelText;
@@ -122,20 +139,24 @@
       render();
       setStatus('AI dubbing adaptation complete. '+total+' segments updated. Use AI English SRT/VTT or Project JSON to save the result.','success');
     }catch(err){
-      const partial=completed>0?' '+completed+'/'+total+' segments were already updated and can be exported.':'';
-      if(/auth|connect|authorization|401|expired|security token/i.test(err.message)){state.auth=false;state.csrf=null;els.privateContent.forEach(el=>{el.hidden=true})}
-      setStatus((err.message||'Could not adapt the English script.')+partial,'error');
-      if(els.aiNote)els.aiNote.textContent=completed>0?'AI adaptation stopped part-way. You can retry or export the partial result.':'AI adaptation did not complete.';
+      completed=state.segments.filter(s=>s.aiAdapted).length;
+      const msg=err.message||'Could not adapt the English script.';
+      const partial=completed>0?' '+completed+'/'+total+' segments are already saved in this page; Resume will continue from the next batch.':'';
+      if(/auth|connect|authorization|401|expired|security token/i.test(msg)){state.auth=false;state.csrf=null;els.privateContent.forEach(el=>{el.hidden=true})}
+      setStatus(msg+partial,'error');
+      if(els.aiNote)els.aiNote.textContent='Stopped: '+msg;
+      refreshExportLabels();
     }finally{
       state.aiRunning=false;
       els.aiTranslate.disabled=!state.aiConfigured;
       els.load.disabled=false;
+      refreshExportLabels();
     }
   });
 
   els.restoreYoutube?.addEventListener('click',()=>{
     if(!state.youtubeEnglish.length||state.youtubeEnglish.length!==state.segments.length)return;
-    state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||''});
+    state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||'';seg.aiAdapted=false});
     state.translationSource='YouTube machine translation';
     state.aiComplete=false;
     state.aiModels=[];
@@ -150,14 +171,17 @@
   const makeVtt=translated=>'WEBVTT\n\n'+state.segments.map(s=>`${fmt(s.start)} --> ${fmt(s.end)}\n${translated?(s.translatedText||s.sourceText):s.sourceText}\n`).join('\n');
   function download(name,text,type='text/plain;charset=utf-8'){const blob=new Blob([text],{type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
 
+
   document.addEventListener('click',e=>{
     const btn=e.target.closest('[data-export]');
     if(!btn||!state.segments.length)return;
     const id=state.videoId||'video';
+    const adapted=state.segments.some(s=>s.aiAdapted);
+    const suffix=state.aiComplete?'.ai.en':adapted?'.ai.partial.en':'.en';
     switch(btn.dataset.export){
       case'source-srt':download(id+'.fa.srt',makeSrt(false));break;
-      case'target-srt':download(id+(state.aiComplete?'.ai.en.srt':'.en.srt'),makeSrt(true));break;
-      case'target-vtt':download(id+(state.aiComplete?'.ai.en.vtt':'.en.vtt'),makeVtt(true),'text/vtt;charset=utf-8');break;
+      case'target-srt':download(id+suffix+'.srt',makeSrt(true));break;
+      case'target-vtt':download(id+suffix+'.vtt',makeVtt(true),'text/vtt;charset=utf-8');break;
       case'youtube-srt':download(id+'.youtube.en.srt',makeYouTubeSrt());break;
       case'json':download(id+'.tldub.json',JSON.stringify({videoId:state.videoId,title:state.title,translationSource:state.translationSource,aiComplete:state.aiComplete,aiModels:state.aiModels,youtubeEnglish:state.youtubeEnglish,segments:state.segments},null,2),'application/json;charset=utf-8');break;
     }
