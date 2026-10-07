@@ -1,11 +1,11 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0};
   const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0};
+  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
   const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0;if(els.currentEnLabel)els.currentEnLabel.textContent=hasAI?(state.aiComplete?'AI English SRT':'Partial AI SRT'):'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=hasAI?(state.aiComplete?'AI English VTT':'Partial AI VTT'):'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=state.aiComplete?'Re-adapt English':hasAI?'Resume AI adaptation':'Adapt English to timing'};
@@ -143,6 +143,7 @@
       state.aiModels=[];
       state.qcIssues=[];
       state.qcRepairBatches=0;
+      state.qcRepairSkippedBatches=0;
       state.segments.forEach(seg=>{seg.qcIssues=[]});
       updateEnglishFields(state.segments.map((_,i)=>i));
     }
@@ -155,7 +156,7 @@
 
     await ensureGlossary();
 
-    const batchSize=20,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
+    const batchSize=15,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
     let completed=state.segments.filter(s=>s.aiAdapted).length;
     const completedBatches=Math.floor(completed/batchSize);
     setProgress(completed,total,completedBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
@@ -191,6 +192,7 @@
 
         for(const model of (data.resolvedModels||[])){if(model&&!state.aiModels.includes(model))state.aiModels.push(model)}
         if(data.qc?.repaired)state.qcRepairBatches++;
+        if(data.qc?.repairSkipped)state.qcRepairSkippedBatches++;
         for(const issue of (data.qc?.issues||[])){
           const enriched={...issue,batch:batchNo};
           state.qcIssues.push(enriched);
@@ -214,7 +216,7 @@
       const severe=state.qcIssues.filter(issue=>issue.severity==='severe').length;
       const warnings=state.qcIssues.filter(issue=>issue.severity!=='severe').length;
       const glossaryText=state.glossary.length?state.glossary.length+' glossary terms':'title/source context only';
-      if(els.aiNote)els.aiNote.textContent='Complete · '+glossaryText+' · auto-repair '+state.qcRepairBatches+' batches · QC '+severe+' severe / '+warnings+' warnings · models: '+modelText;
+      if(els.aiNote)els.aiNote.textContent='Complete · '+glossaryText+' · auto-repair '+state.qcRepairBatches+' batches · repair deferred '+state.qcRepairSkippedBatches+' · QC '+severe+' severe / '+warnings+' warnings · models: '+modelText;
       setProgress(total,total,'Complete · '+total+'/'+total+' segments');
       render();
       setStatus((severe?'AI adaptation complete, but QC still has '+severe+' severe issue(s). Review Project JSON before TTS.':'AI dubbing adaptation complete and passed severe QC checks.')+' '+total+' segments updated.','success');
@@ -242,6 +244,7 @@
     state.aiModels=[];
     state.qcIssues=[];
     state.qcRepairBatches=0;
+    state.qcRepairSkippedBatches=0;
     state.segments.forEach(seg=>{seg.qcIssues=[]});
     hideProgress();
     render();
@@ -266,7 +269,7 @@
       case'target-srt':download(id+suffix+'.srt',makeSrt(true));break;
       case'target-vtt':download(id+suffix+'.vtt',makeVtt(true),'text/vtt;charset=utf-8');break;
       case'youtube-srt':download(id+'.youtube.en.srt',makeYouTubeSrt());break;
-      case'json':download(id+'.tldub.json',JSON.stringify({videoId:state.videoId,title:state.title,translationSource:state.translationSource,aiComplete:state.aiComplete,aiModels:state.aiModels,glossary:state.glossary,glossaryModel:state.glossaryModel,qc:{repairBatches:state.qcRepairBatches,issues:state.qcIssues},youtubeEnglish:state.youtubeEnglish,segments:state.segments},null,2),'application/json;charset=utf-8');break;
+      case'json':download(id+'.tldub.json',JSON.stringify({videoId:state.videoId,title:state.title,translationSource:state.translationSource,aiComplete:state.aiComplete,aiModels:state.aiModels,glossary:state.glossary,glossaryModel:state.glossaryModel,qc:{repairBatches:state.qcRepairBatches,repairSkippedBatches:state.qcRepairSkippedBatches,issues:state.qcIssues},youtubeEnglish:state.youtubeEnglish,segments:state.segments},null,2),'application/json;charset=utf-8');break;
     }
   });
   const params=new URLSearchParams(location.search);if(params.get('oauth')==='ok'){history.replaceState({},'','/tldub/');setStatus('YouTube connected. Paste a video URL.','success')}if(params.get('oauth_error')){const m=params.get('oauth_error');history.replaceState({},'','/tldub/');setStatus(m||'YouTube authorization failed.','error')}
