@@ -1,5 +1,5 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false};
   const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
@@ -99,35 +99,53 @@
         issues:[...(state.qcIssues||[])]
       },
       youtubeEnglish:[...(state.youtubeEnglish||[])],
-      segments:state.segments.map(seg=>({...seg,qcIssues:Array.isArray(seg.qcIssues)?[...seg.qcIssues]:[]})),
-      files:currentProjectFiles()
+      segments:state.segments.map(seg=>({...seg,qcIssues:Array.isArray(seg.qcIssues)?[...seg.qcIssues]:[]}))
     };
   }
 
   async function saveProject(reason='autosave',refreshList=false){
     if(!state.videoId||!state.segments.length)return false;
+    const snapshot=buildProjectSnapshot();
+    let cloudSaved=false,cloudError=null,storedProject=snapshot;
+
+    if(state.auth&&state.csrf){
+      try{
+        const data=await jsonFetch(API+'/projects/'+encodeURIComponent(state.videoId),{
+          method:'POST',
+          body:JSON.stringify({project:snapshot,files:currentProjectFiles()})
+        });
+        storedProject=data?.project||snapshot;
+        cloudSaved=true;
+        state.projectStorage=true;
+      }catch(err){
+        cloudError=err;
+      }
+    }
+
     try{
       const db=await openProjectDb();
-      const snapshot=buildProjectSnapshot();
       await new Promise((resolve,reject)=>{
         const tx=db.transaction(PROJECT_STORE,'readwrite');
-        tx.objectStore(PROJECT_STORE).put(snapshot);
+        tx.objectStore(PROJECT_STORE).put(storedProject);
         tx.oncomplete=()=>resolve();
-        tx.onerror=()=>reject(tx.error||new Error('Local project save failed.'));
-        tx.onabort=()=>reject(tx.error||new Error('Local project save aborted.'));
+        tx.onerror=()=>reject(tx.error||new Error('Local project cache failed.'));
+        tx.onabort=()=>reject(tx.error||new Error('Local project cache aborted.'));
       });
-      state.projectCreatedAt=snapshot.createdAt;
-      state.projectFolderName=snapshot.folderName;
-      state.projectOriginalUrl=snapshot.originalUrl;
-      try{localStorage.setItem('tldub:lastProject',state.videoId)}catch(_){}
-      const adapted=state.segments.filter(seg=>seg.aiAdapted).length;
-      if(els.projectMemoryNote)els.projectMemoryNote.textContent='Autosaved · '+snapshot.folderName+' · '+adapted+'/'+state.segments.length+' AI segments · '+new Date(snapshot.updatedAt).toLocaleTimeString();
-      if(refreshList)await refreshProjectList(state.videoId);
-      return true;
-    }catch(err){
-      if(els.projectMemoryNote)els.projectMemoryNote.textContent='Local autosave failed: '+(err?.message||'unknown error');
-      return false;
+    }catch(_){}
+
+    state.projectCreatedAt=storedProject.createdAt||snapshot.createdAt;
+    state.projectFolderName=storedProject.folderName||snapshot.folderName;
+    state.projectOriginalUrl=storedProject.originalUrl||snapshot.originalUrl;
+    try{localStorage.setItem('tldub:lastProject',state.videoId)}catch(_){}
+
+    const adapted=state.segments.filter(seg=>seg.aiAdapted).length;
+    if(els.projectMemoryNote){
+      els.projectMemoryNote.textContent=cloudSaved
+        ? 'Cloud autosaved · '+state.projectFolderName+' · '+adapted+'/'+state.segments.length+' AI segments · '+new Date(storedProject.updatedAt||Date.now()).toLocaleTimeString()
+        : 'Saved to local cache · cloud sync pending'+(cloudError?': '+cloudError.message:'');
     }
+    if(refreshList)await refreshProjectList(state.videoId);
+    return cloudSaved;
   }
 
   function queueAutosave(reason='edit'){
@@ -137,6 +155,28 @@
 
   async function getSavedProject(videoId){
     if(!videoId)return null;
+
+    if(state.auth&&state.csrf){
+      try{
+        const data=await jsonFetch(API+'/projects/'+encodeURIComponent(videoId),{headers:{}});
+        if(data?.project){
+          state.projectStorage=true;
+          try{
+            const db=await openProjectDb();
+            await new Promise((resolve,reject)=>{
+              const tx=db.transaction(PROJECT_STORE,'readwrite');
+              tx.objectStore(PROJECT_STORE).put(data.project);
+              tx.oncomplete=()=>resolve();
+              tx.onerror=()=>reject(tx.error);
+            });
+          }catch(_){}
+          return data.project;
+        }
+      }catch(err){
+        if(err?.status!==404&&els.projectMemoryNote)els.projectMemoryNote.textContent='Cloud load unavailable; checking local cache…';
+      }
+    }
+
     try{
       const db=await openProjectDb();
       return await new Promise((resolve,reject)=>{
@@ -148,6 +188,16 @@
   }
 
   async function listSavedProjects(){
+    if(state.auth&&state.csrf){
+      try{
+        const data=await jsonFetch(API+'/projects',{headers:{}});
+        if(Array.isArray(data?.projects)){
+          state.projectStorage=true;
+          return data.projects;
+        }
+      }catch(_){}
+    }
+
     try{
       const db=await openProjectDb();
       const all=await new Promise((resolve,reject)=>{
@@ -163,8 +213,9 @@
     if(!els.projectList)return;
     const projects=await listSavedProjects();
     els.projectList.innerHTML='<option value="">Saved projects…</option>'+projects.map(project=>{
-      const adapted=(project.segments||[]).filter(seg=>seg.aiAdapted).length;
-      const label=project.title+' · '+adapted+'/'+(project.segments?.length||0)+' · '+new Date(project.updatedAt||Date.now()).toLocaleDateString();
+      const adapted=Number.isFinite(Number(project.adaptedCount))?Number(project.adaptedCount):(project.segments||[]).filter(seg=>seg.aiAdapted).length;
+      const total=Number.isFinite(Number(project.segmentCount))?Number(project.segmentCount):(project.segments?.length||0);
+      const label=project.title+' · '+adapted+'/'+total+' · '+new Date(project.updatedAt||Date.now()).toLocaleDateString();
       return '<option value="'+esc(project.videoId)+'">'+esc(label)+'</option>';
     }).join('');
     if(selected)els.projectList.value=selected;
@@ -195,7 +246,7 @@
     const adapted=state.segments.filter(seg=>seg.aiAdapted).length;
     if(adapted) setProgress(adapted,state.segments.length,(adapted===state.segments.length?'Translation saved · ':'Saved progress · ')+adapted+'/'+state.segments.length+' segments');
     else hideProgress();
-    if(els.projectMemoryNote)els.projectMemoryNote.textContent='Restored · '+state.projectFolderName+' · saved '+new Date(project.updatedAt||project.createdAt||Date.now()).toLocaleString();
+    if(els.projectMemoryNote)els.projectMemoryNote.textContent=(state.projectStorage?'Cloud restored':'Local cache restored')+' · '+state.projectFolderName+' · saved '+new Date(project.updatedAt||project.createdAt||Date.now()).toLocaleString();
     try{localStorage.setItem('tldub:lastProject',state.videoId)}catch(_){}
     refreshExportLabels();
   }
@@ -208,7 +259,7 @@
     if(!project)return false;
     restoreProject(project);
     await refreshProjectList(id);
-    setStatus('Restored your last local project. No YouTube or AI request was used.','success');
+    setStatus('Restored your last saved project. No YouTube or AI request was used.','success');
     return true;
   }
 
@@ -372,10 +423,12 @@
       const data=await jsonFetch(`${API}/health`,{headers:{}});
       state.aiConfigured=Boolean(data.aiConfigured);
       state.aiCredentialCount=Number(data.aiCredentialSlots||0);
+      state.projectStorage=Boolean(data.projectStorage);
       els.apiState.textContent=data?.status==='ok'?'Backend online':'Backend reachable';
       els.apiDot.style.background='#2bb673';
       if(els.aiTranslate)els.aiTranslate.disabled=!state.aiConfigured;
       if(els.aiNote)els.aiNote.textContent=state.aiConfigured?('Ready for timing-aware English rewrite · '+state.aiCredentialCount+' credential'+(state.aiCredentialCount===1?'':'s')+'.'):'AI provider is not configured yet.';
+      if(els.projectMemoryNote)els.projectMemoryNote.textContent=state.projectStorage?'R2 cloud project storage ready.':'Cloud project storage not ready; local cache fallback active.';
       return true;
     }catch(_){
       state.aiConfigured=false;
@@ -406,7 +459,7 @@
     const project=await getSavedProject(id);
     if(!project){setStatus('That saved project could not be found.','error');await refreshProjectList();return}
     restoreProject(project);
-    setStatus('Loaded saved project from local memory. No YouTube or AI request was used.','success');
+    setStatus('Loaded saved project. No YouTube or AI request was used.','success');
   });
 
   els.projectImport?.addEventListener('click',()=>els.projectFile?.click());
