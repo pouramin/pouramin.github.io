@@ -1,6 +1,6 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false};
-  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false};
+  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -10,6 +10,207 @@
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
   const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Re-adapt English':hasAI?'Resume AI adaptation':'Adapt English to timing'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
+
+
+  const PROJECT_DB='tldub-projects',PROJECT_STORE='projects',PROJECT_DB_VERSION=1;
+  let projectDbPromise=null,autosaveTimer=null;
+
+  function openProjectDb(){
+    if(projectDbPromise)return projectDbPromise;
+    projectDbPromise=new Promise((resolve,reject)=>{
+      const request=indexedDB.open(PROJECT_DB,PROJECT_DB_VERSION);
+      request.onupgradeneeded=()=>{
+        const db=request.result;
+        if(!db.objectStoreNames.contains(PROJECT_STORE)){
+          const store=db.createObjectStore(PROJECT_STORE,{keyPath:'videoId'});
+          store.createIndex('updatedAt','updatedAt');
+        }
+      };
+      request.onsuccess=()=>resolve(request.result);
+      request.onerror=()=>reject(request.error||new Error('Could not open local project memory.'));
+    });
+    return projectDbPromise;
+  }
+
+  function clientVideoId(value){
+    try{
+      const url=new URL(String(value||'').trim());
+      if(url.hostname==='youtu.be')return url.pathname.split('/').filter(Boolean)[0]||'';
+      if(url.searchParams.get('v'))return url.searchParams.get('v')||'';
+      const parts=url.pathname.split('/').filter(Boolean);
+      const shorts=parts.indexOf('shorts');
+      if(shorts>=0&&parts[shorts+1])return parts[shorts+1];
+      const embed=parts.indexOf('embed');
+      if(embed>=0&&parts[embed+1])return parts[embed+1];
+    }catch(_){}
+    return '';
+  }
+
+  function safeFolderName(title,videoId){
+    const cleaned=String(title||'YouTube video').normalize('NFKC').replace(/[<>:"/\\|?*\u0000-\u001F]/g,'-').replace(/\s+/g,' ').trim().slice(0,110);
+    return (cleaned||'YouTube video')+' -- '+String(videoId||'project');
+  }
+
+  function currentProjectFiles(){
+    if(!state.segments.length)return {};
+    const sourceSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(s.sourceText||'')+'\n').join('\n');
+    const currentSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(s.translatedText||s.sourceText||'')+'\n').join('\n');
+    const currentVtt='WEBVTT\n\n'+state.segments.map(s=>fmt(s.start)+' --> '+fmt(s.end)+'\n'+(s.translatedText||s.sourceText||'')+'\n').join('\n');
+    const youtubeSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(state.youtubeEnglish[i]||s.sourceText||'')+'\n').join('\n');
+    return {
+      'source.fa.srt':sourceSrt,
+      'youtube.en.srt':youtubeSrt,
+      'current.en.srt':currentSrt,
+      'current.en.vtt':currentVtt,
+      'glossary.json':JSON.stringify(state.glossary||[],null,2),
+      'qc.json':JSON.stringify({
+        repairBatches:state.qcRepairBatches,
+        repairSkippedBatches:state.qcRepairSkippedBatches,
+        finalRepairCalls:state.qcFinalRepairCalls,
+        repairFailed:state.qcRepairFailed,
+        issues:state.qcIssues||[]
+      },null,2)
+    };
+  }
+
+  function buildProjectSnapshot(){
+    const now=new Date().toISOString();
+    const createdAt=state.projectCreatedAt||now;
+    const folderName=state.projectFolderName||safeFolderName(state.title,state.videoId);
+    return {
+      schemaVersion:1,
+      videoId:state.videoId,
+      title:state.title,
+      folderName,
+      originalUrl:state.projectOriginalUrl||els.videoUrl?.value||'',
+      createdAt,
+      updatedAt:now,
+      translationSource:state.translationSource,
+      aiComplete:Boolean(state.aiComplete),
+      aiModels:[...(state.aiModels||[])],
+      aiCredentialSlotsUsed:[...(state.aiCredentialSlotsUsed||[])],
+      glossary:[...(state.glossary||[])],
+      glossaryModel:state.glossaryModel||'',
+      qc:{
+        repairBatches:state.qcRepairBatches||0,
+        repairSkippedBatches:state.qcRepairSkippedBatches||0,
+        finalRepairCalls:state.qcFinalRepairCalls||0,
+        repairFailed:Boolean(state.qcRepairFailed),
+        issues:[...(state.qcIssues||[])]
+      },
+      youtubeEnglish:[...(state.youtubeEnglish||[])],
+      segments:state.segments.map(seg=>({...seg,qcIssues:Array.isArray(seg.qcIssues)?[...seg.qcIssues]:[]})),
+      files:currentProjectFiles()
+    };
+  }
+
+  async function saveProject(reason='autosave',refreshList=false){
+    if(!state.videoId||!state.segments.length)return false;
+    try{
+      const db=await openProjectDb();
+      const snapshot=buildProjectSnapshot();
+      await new Promise((resolve,reject)=>{
+        const tx=db.transaction(PROJECT_STORE,'readwrite');
+        tx.objectStore(PROJECT_STORE).put(snapshot);
+        tx.oncomplete=()=>resolve();
+        tx.onerror=()=>reject(tx.error||new Error('Local project save failed.'));
+        tx.onabort=()=>reject(tx.error||new Error('Local project save aborted.'));
+      });
+      state.projectCreatedAt=snapshot.createdAt;
+      state.projectFolderName=snapshot.folderName;
+      state.projectOriginalUrl=snapshot.originalUrl;
+      try{localStorage.setItem('tldub:lastProject',state.videoId)}catch(_){}
+      const adapted=state.segments.filter(seg=>seg.aiAdapted).length;
+      if(els.projectMemoryNote)els.projectMemoryNote.textContent='Autosaved · '+snapshot.folderName+' · '+adapted+'/'+state.segments.length+' AI segments · '+new Date(snapshot.updatedAt).toLocaleTimeString();
+      if(refreshList)await refreshProjectList(state.videoId);
+      return true;
+    }catch(err){
+      if(els.projectMemoryNote)els.projectMemoryNote.textContent='Local autosave failed: '+(err?.message||'unknown error');
+      return false;
+    }
+  }
+
+  function queueAutosave(reason='edit'){
+    clearTimeout(autosaveTimer);
+    autosaveTimer=setTimeout(()=>{saveProject(reason,false)},700);
+  }
+
+  async function getSavedProject(videoId){
+    if(!videoId)return null;
+    try{
+      const db=await openProjectDb();
+      return await new Promise((resolve,reject)=>{
+        const req=db.transaction(PROJECT_STORE,'readonly').objectStore(PROJECT_STORE).get(videoId);
+        req.onsuccess=()=>resolve(req.result||null);
+        req.onerror=()=>reject(req.error);
+      });
+    }catch(_){return null}
+  }
+
+  async function listSavedProjects(){
+    try{
+      const db=await openProjectDb();
+      const all=await new Promise((resolve,reject)=>{
+        const req=db.transaction(PROJECT_STORE,'readonly').objectStore(PROJECT_STORE).getAll();
+        req.onsuccess=()=>resolve(req.result||[]);
+        req.onerror=()=>reject(req.error);
+      });
+      return all.sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+    }catch(_){return []}
+  }
+
+  async function refreshProjectList(selected=''){
+    if(!els.projectList)return;
+    const projects=await listSavedProjects();
+    els.projectList.innerHTML='<option value="">Saved projects…</option>'+projects.map(project=>{
+      const adapted=(project.segments||[]).filter(seg=>seg.aiAdapted).length;
+      const label=project.title+' · '+adapted+'/'+(project.segments?.length||0)+' · '+new Date(project.updatedAt||Date.now()).toLocaleDateString();
+      return '<option value="'+esc(project.videoId)+'">'+esc(label)+'</option>';
+    }).join('');
+    if(selected)els.projectList.value=selected;
+  }
+
+  function restoreProject(project){
+    if(!project||!project.videoId||!Array.isArray(project.segments)||!project.segments.length)throw new Error('This TL-Dub project file is invalid.');
+    state.videoId=project.videoId;
+    state.title=project.title||'YouTube video';
+    state.translationSource=project.translationSource||'';
+    state.youtubeEnglish=Array.isArray(project.youtubeEnglish)?project.youtubeEnglish:[];
+    state.aiModels=Array.isArray(project.aiModels)?project.aiModels:[];
+    state.aiCredentialSlotsUsed=Array.isArray(project.aiCredentialSlotsUsed)?project.aiCredentialSlotsUsed:[];
+    state.aiComplete=Boolean(project.aiComplete);
+    state.glossary=Array.isArray(project.glossary)?project.glossary:[];
+    state.glossaryModel=project.glossaryModel||'';
+    state.qcIssues=Array.isArray(project.qc?.issues)?project.qc.issues:[];
+    state.qcRepairBatches=Number(project.qc?.repairBatches||0);
+    state.qcRepairSkippedBatches=Number(project.qc?.repairSkippedBatches||0);
+    state.qcFinalRepairCalls=Number(project.qc?.finalRepairCalls||0);
+    state.qcRepairFailed=Boolean(project.qc?.repairFailed);
+    state.segments=project.segments.map(seg=>({...seg,aiAdapted:Boolean(seg.aiAdapted),qcIssues:Array.isArray(seg.qcIssues)?seg.qcIssues:[]}));
+    state.projectCreatedAt=project.createdAt||new Date().toISOString();
+    state.projectFolderName=project.folderName||safeFolderName(state.title,state.videoId);
+    state.projectOriginalUrl=project.originalUrl||('https://www.youtube.com/watch?v='+state.videoId);
+    if(els.videoUrl)els.videoUrl.value=state.projectOriginalUrl;
+    render();
+    const adapted=state.segments.filter(seg=>seg.aiAdapted).length;
+    if(adapted) setProgress(adapted,state.segments.length,(adapted===state.segments.length?'Translation saved · ':'Saved progress · ')+adapted+'/'+state.segments.length+' segments');
+    else hideProgress();
+    if(els.projectMemoryNote)els.projectMemoryNote.textContent='Restored · '+state.projectFolderName+' · saved '+new Date(project.updatedAt||project.createdAt||Date.now()).toLocaleString();
+    try{localStorage.setItem('tldub:lastProject',state.videoId)}catch(_){}
+    refreshExportLabels();
+  }
+
+  async function restoreLastProject(){
+    let id='';
+    try{id=localStorage.getItem('tldub:lastProject')||''}catch(_){}
+    if(!id)return false;
+    const project=await getSavedProject(id);
+    if(!project)return false;
+    restoreProject(project);
+    await refreshProjectList(id);
+    setStatus('Restored your last local project. No YouTube or AI request was used.','success');
+    return true;
+  }
 
   async function jsonFetch(url,options={}){
     const method=(options.method||'GET').toUpperCase();
