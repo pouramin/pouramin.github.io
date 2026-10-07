@@ -81,17 +81,25 @@
         <div><span class="micro">SCRIPT</span><h2 data-video-title>Untitled video</h2><p data-video-meta></p></div>
         <div class="export-actions">
           <button class="button" type="button" data-export="source-srt">Persian SRT</button>
-          <button class="button" type="button" data-export="target-srt">English SRT</button>
-          <button class="button" type="button" data-export="target-vtt">English VTT</button>
-          <button class="button" type="button" data-export="json">JSON</button>
+          <button class="button" type="button" data-export="target-srt" data-current-en-label>English SRT</button>
+          <button class="button" type="button" data-export="target-vtt" data-current-vtt-label>English VTT</button>
+          <button class="button" type="button" data-export="youtube-srt" data-youtube-export hidden>YouTube EN SRT</button>
+          <button class="button" type="button" data-export="json">Project JSON</button>
         </div>
       </div>
       <div class="dubbing-tools">
-        <div>
+        <div class="dubbing-copy">
           <strong>AI dubbing adaptation</strong>
           <span data-ai-note>AI provider is not configured yet.</span>
+          <div class="ai-progress-row" data-ai-progress-row hidden>
+            <progress data-ai-progress max="100" value="0"></progress>
+            <span data-ai-progress-text>0%</span>
+          </div>
         </div>
-        <button class="button primary" type="button" data-ai-translate disabled>Adapt English to timing</button>
+        <div class="dubbing-actions">
+          <button class="button" type="button" data-restore-youtube hidden>Restore YouTube English</button>
+          <button class="button primary" type="button" data-ai-translate disabled>Adapt English to timing</button>
+        </div>
       </div>
       <div class="desktop-table-wrap">
         <table class="script-table"><thead><tr><th>#</th><th>Time</th><th>Persian</th><th>English</th></tr></thead><tbody data-script-body></tbody></table>
