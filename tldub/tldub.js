@@ -1,5 +1,5 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
   const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
@@ -89,6 +89,7 @@
       translationSource:state.translationSource,
       pipelineVersion:Number(state.pipelineVersion||1),
       previousEnglishBackup:state.previousEnglishBackup||null,
+      semanticAuditComplete:Boolean(state.semanticAuditComplete),
       aiComplete:Boolean(state.aiComplete),
       aiModels:[...(state.aiModels||[])],
       aiCredentialSlotsUsed:[...(state.aiCredentialSlotsUsed||[])],
@@ -231,6 +232,7 @@
     state.translationSource=project.translationSource||'';
     state.pipelineVersion=Number(project.pipelineVersion||1);
     state.previousEnglishBackup=project.previousEnglishBackup||null;
+    state.semanticAuditComplete=Boolean(project.semanticAuditComplete);
     state.youtubeEnglish=Array.isArray(project.youtubeEnglish)?project.youtubeEnglish:[];
     state.aiModels=Array.isArray(project.aiModels)?project.aiModels:[];
     state.aiCredentialSlotsUsed=Array.isArray(project.aiCredentialSlotsUsed)?project.aiCredentialSlotsUsed:[];
