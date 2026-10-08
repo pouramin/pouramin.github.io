@@ -741,7 +741,12 @@
       }
 
       state.translationSource='AI dubbing adaptation v2';
-      state.aiComplete=state.segments.every(s=>s.aiAdapted);
+      state.aiComplete=false;
+      refreshExportLabels();
+
+      setStatus('Translation pass complete · starting independent semantic QC…');
+      await runSemanticAudit();
+      state.aiComplete=state.segments.every(s=>s.aiAdapted)&&state.semanticAuditComplete;
       refreshExportLabels();
 
       const severeBeforeRepair=state.qcIssues.filter(issue=>issue.severity==='severe').length;
