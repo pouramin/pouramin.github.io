@@ -337,6 +337,58 @@
   }
 
   const rememberCredentialSlot=slot=>{const n=Number(slot);if(Number.isInteger(n)&&n>0&&!state.aiCredentialSlotsUsed.includes(n))state.aiCredentialSlotsUsed.push(n)};
+  async function sendSemanticAudit(payload,auditNo,totalAudits){
+    const maxAttempts=3;
+    for(let attempt=1;attempt<=maxAttempts;attempt++){
+      try{
+        return await jsonFetch(API+'/semantic-qc',{method:'POST',body:JSON.stringify(payload)});
+      }catch(err){
+        const retryable=err?.code==='NETWORK_FETCH_FAILED'||err?.status===502||err?.status===503||err?.status===504;
+        if(!retryable||attempt===maxAttempts)throw err;
+        setStatus('Semantic QC · group '+auditNo+'/'+totalAudits+' · retry '+(attempt+1)+'/'+maxAttempts+'…');
+        await sleep(1200*attempt);
+      }
+    }
+  }
+
+  async function runSemanticAudit(){
+    const auditSize=30,total=state.segments.length,totalAudits=Math.ceil(total/auditSize);
+    for(let offset=0,auditNo=1;offset<total;offset+=auditSize,auditNo++){
+      const group=state.segments.slice(offset,offset+auditSize);
+      if(group.every(seg=>seg.semanticAudited))continue;
+      setStatus('Semantic QC · group '+auditNo+'/'+totalAudits+' · segments '+(offset+1)+'-'+(offset+group.length)+'…');
+      const data=await sendSemanticAudit({videoTitle:state.title,glossary:state.glossary,segments:group},auditNo,totalAudits);
+      rememberCredentialSlot(data.credentialSlot);
+      if(data.resolvedModel&&!state.aiModels.includes(data.resolvedModel))state.aiModels.push(data.resolvedModel);
+      const byId=new Map((data.segments||[]).map(item=>[Number(item.index),String(item.translatedText||'').trim()]));
+      const ids=group.map(seg=>Number(seg.index));
+      state.qcIssues=state.qcIssues.filter(issue=>!ids.includes(Number(issue.id)));
+      const touched=[];
+      for(const seg of group){
+        const idx=state.segments.findIndex(item=>Number(item.index)===Number(seg.index));
+        if(idx<0)continue;
+        const text=byId.get(Number(seg.index));
+        if(text)state.segments[idx].translatedText=text;
+        state.segments[idx].semanticAudited=true;
+        state.segments[idx].qcIssues=[];
+        touched.push(idx);
+      }
+      for(const issue of (data.qc?.issues||[])){
+        const enriched={...issue,semanticAudit:true};
+        state.qcIssues.push(enriched);
+        const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
+        if(idx>=0)state.segments[idx].qcIssues.push(enriched);
+      }
+      updateEnglishFields(touched);
+      const done=state.segments.filter(seg=>seg.semanticAudited).length;
+      setProgress(done,total,'Semantic QC · '+auditNo+'/'+totalAudits+' · '+done+'/'+total+' segments');
+      await saveProject('semantic QC '+auditNo+'/'+totalAudits);
+    }
+    state.semanticAuditComplete=state.segments.every(seg=>seg.semanticAudited);
+    await saveProject('semantic QC complete',true);
+    return state.semanticAuditComplete;
+  }
+
   async function runFinalRepairs(){
     const severeById=new Map();
     for(const issue of state.qcIssues){
