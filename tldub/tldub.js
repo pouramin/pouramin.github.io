@@ -8,7 +8,7 @@
   const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.pipelineVersion=1;state.previousEnglishBackup=null;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
-  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
+  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
 
@@ -305,6 +305,7 @@
     }
     return data;
   }
+  const MAX_FINAL_REPAIR_CALLS=4;
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   async function sendAIBatch(payload,batchNo,totalBatches){
     const maxAttempts=2;
@@ -436,17 +437,24 @@
       severeById.get(id).push(issue);
     }
     const ids=[...severeById.keys()];
-    if(!ids.length)return {attempted:0,failed:0,repaired:0};
+    if(!ids.length)return {attempted:0,failed:0,repaired:0,budgetExhausted:false};
 
-    const chunkSize=30,maxCalls=2;
+    const remainingBudget=Math.max(0,MAX_FINAL_REPAIR_CALLS-Number(state.qcFinalRepairCalls||0));
+    if(!remainingBudget){
+      state.qcRepairFailed=true;
+      return {attempted:0,failed:0,repaired:0,budgetExhausted:true,unresolvedIds:ids};
+    }
+
+    const chunkSize=30;
     const chunks=[];
-    for(let i=0;i<ids.length&&chunks.length<maxCalls;i+=chunkSize)chunks.push(ids.slice(i,i+chunkSize));
-    let failed=0,repaired=0;
+    for(let i=0;i<ids.length&&chunks.length<remainingBudget;i+=chunkSize)chunks.push(ids.slice(i,i+chunkSize));
+    let failed=0,repaired=0,rejected=0;
 
     for(let i=0;i<chunks.length;i++){
       const groupIds=chunks[i];
       const segments=groupIds.map(id=>state.segments.find(seg=>Number(seg.index)===id)).filter(Boolean);
       const issues=groupIds.flatMap(id=>severeById.get(id)||[]);
+      const severeBefore=issues.filter(issue=>issue.severity==='severe').length;
       setStatus('Final QC repair · '+(i+1)+'/'+chunks.length+' · '+segments.length+' flagged segments…');
 
       let data;
@@ -460,13 +468,25 @@
       }catch(err){
         failed++;
         state.qcRepairFailed=true;
-        setStatus('Final QC repair '+(i+1)+'/'+chunks.length+' failed. Translation is already complete; continuing with the remaining repair groups.','error');
-        await saveProject('QC repair failed '+(i+1)+'/'+chunks.length);
+        state.qcFinalRepairCalls++;
+        await saveProject('QC repair request failed '+(i+1)+'/'+chunks.length);
         continue;
       }
 
+      state.qcFinalRepairCalls++;
       rememberCredentialSlot(data.credentialSlot);
       if(data.resolvedModel&&!state.aiModels.includes(data.resolvedModel))state.aiModels.push(data.resolvedModel);
+
+      const returnedIssues=Array.isArray(data.qc?.issues)?data.qc.issues:[];
+      const severeAfter=returnedIssues.filter(issue=>issue.severity==='severe').length;
+
+      // Never accept a repair that fails to strictly reduce severe issues.
+      if(severeAfter>=severeBefore){
+        rejected++;
+        state.qcRepairFailed=true;
+        await saveProject('Rejected non-improving QC repair '+(i+1)+'/'+chunks.length);
+        continue;
+      }
 
       const byId=new Map((data.segments||[]).map(item=>[Number(item.index),String(item.translatedText||'').trim()]));
       const touched=[];
@@ -484,7 +504,7 @@
       updateEnglishFields(touched);
 
       state.qcIssues=state.qcIssues.filter(issue=>!groupIds.includes(Number(issue.id)));
-      for(const issue of (data.qc?.issues||[])){
+      for(const issue of returnedIssues){
         const enriched={...issue,finalRepair:true};
         state.qcIssues.push(enriched);
         const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
@@ -493,12 +513,13 @@
           state.segments[idx].qcIssues.push(enriched);
         }
       }
-      state.qcFinalRepairCalls++;
-      await saveProject('QC repair '+(i+1)+'/'+chunks.length);
+      await saveProject('Accepted improving QC repair '+(i+1)+'/'+chunks.length);
     }
 
-    if(ids.length>chunks.length*chunkSize)state.qcRepairFailed=true;
-    return {attempted:chunks.length,failed,repaired};
+    const unresolvedIds=[...new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)).filter(Number.isInteger))];
+    const budgetExhausted=Number(state.qcFinalRepairCalls||0)>=MAX_FINAL_REPAIR_CALLS&&unresolvedIds.length>0;
+    if(budgetExhausted||failed||rejected)state.qcRepairFailed=true;
+    return {attempted:chunks.length,failed,repaired,rejected,budgetExhausted,unresolvedIds};
   }
 
   async function sendAIRepair(payload,repairNo,totalRepairs){
@@ -695,6 +716,16 @@
     }
 
     if(allAlreadyAdapted&&severePending>0){
+      if(Number(state.qcFinalRepairCalls||0)>=MAX_FINAL_REPAIR_CALLS){
+        const unresolved=[...new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)).filter(Number.isInteger))];
+        state.qcRepairFailed=true;
+        const idText=unresolved.length?unresolved.map(id=>'#'+id).join(', '):'unknown';
+        setStatus('Automatic QC repair stopped to protect time and quota. Manual review needed for: '+idText+'.','error');
+        if(els.aiNote)els.aiNote.textContent='Automatic repair cap reached · '+severePending+' severe issue(s) · manual review: '+idText;
+        await saveProject('automatic repair cap reached',true);
+        refreshExportLabels();
+        return;
+      }
       state.aiRunning=true;
       state.qcRepairFailed=false;
       refreshExportLabels();
@@ -712,7 +743,15 @@
         const modelText=state.aiModels.length?state.aiModels.join(', '):'OpenRouter free router';
         const credentialText=state.aiCredentialSlotsUsed.length?('credentials used #'+state.aiCredentialSlotsUsed.sort((a,b)=>a-b).join(', #')):'credential usage unavailable';
         if(els.aiNote)els.aiNote.textContent='Translation complete · final repair '+state.qcFinalRepairCalls+' call(s) · QC '+severeLeft+' severe / '+warningsLeft+' warnings · '+credentialText+' · models: '+modelText;
-        setStatus(severeLeft?'Translation remains complete, but '+severeLeft+' severe QC issue(s) still need repair.':'Translation and final QC repair are complete.',severeLeft?'error':'success');
+        if(severeLeft){
+          const unresolved=[...new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)).filter(Number.isInteger))];
+          const capped=Number(state.qcFinalRepairCalls||0)>=MAX_FINAL_REPAIR_CALLS;
+          setStatus(capped
+            ? 'Automatic repair stopped. Manual review needed for: '+unresolved.map(id=>'#'+id).join(', ')+'.'
+            : 'Translation remains complete, but '+severeLeft+' severe QC issue(s) still need repair.', 'error');
+        }else{
+          setStatus('Translation and final QC repair are complete.','success');
+        }
         await saveProject('final QC retry',true);
       }catch(err){
         state.qcRepairFailed=true;
