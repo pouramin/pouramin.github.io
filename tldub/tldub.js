@@ -159,22 +159,14 @@
 
   async function getSavedProject(videoId){
     if(!videoId)return null;
+    let cloudProject=null,localProject=null;
 
     if(state.auth&&state.csrf){
       try{
         const data=await jsonFetch(API+'/projects/'+encodeURIComponent(videoId),{headers:{}});
         if(data?.project){
+          cloudProject=data.project;
           state.projectStorage=true;
-          try{
-            const db=await openProjectDb();
-            await new Promise((resolve,reject)=>{
-              const tx=db.transaction(PROJECT_STORE,'readwrite');
-              tx.objectStore(PROJECT_STORE).put(data.project);
-              tx.oncomplete=()=>resolve();
-              tx.onerror=()=>reject(tx.error);
-            });
-          }catch(_){}
-          return data.project;
         }
       }catch(err){
         if(err?.status!==404&&els.projectMemoryNote)els.projectMemoryNote.textContent='Cloud load unavailable; checking local cache…';
@@ -183,12 +175,32 @@
 
     try{
       const db=await openProjectDb();
-      return await new Promise((resolve,reject)=>{
+      localProject=await new Promise((resolve,reject)=>{
         const req=db.transaction(PROJECT_STORE,'readonly').objectStore(PROJECT_STORE).get(videoId);
         req.onsuccess=()=>resolve(req.result||null);
         req.onerror=()=>reject(req.error);
       });
-    }catch(_){return null}
+    }catch(_){}
+
+    let chosen=cloudProject||localProject;
+    if(cloudProject&&localProject){
+      const cloudTime=Date.parse(cloudProject.updatedAt||cloudProject.createdAt||0)||0;
+      const localTime=Date.parse(localProject.updatedAt||localProject.createdAt||0)||0;
+      chosen=localTime>cloudTime?localProject:cloudProject;
+    }
+
+    if(chosen){
+      try{
+        const db=await openProjectDb();
+        await new Promise((resolve,reject)=>{
+          const tx=db.transaction(PROJECT_STORE,'readwrite');
+          tx.objectStore(PROJECT_STORE).put(chosen);
+          tx.oncomplete=()=>resolve();
+          tx.onerror=()=>reject(tx.error);
+        });
+      }catch(_){}
+    }
+    return chosen||null;
   }
 
   async function listSavedProjects(){
@@ -265,8 +277,9 @@
     const project=await getSavedProject(id);
     if(!project)return false;
     restoreProject(project);
+    await saveProject('restored and reconciled project',false);
     await refreshProjectList(id);
-    setStatus('Restored your last saved project. No YouTube or AI request was used.','success');
+    setStatus('Restored the newest saved project and synced project memory. No YouTube or AI request was used.','success');
     return true;
   }
 
@@ -568,7 +581,8 @@
     const project=await getSavedProject(id);
     if(!project){setStatus('That saved project could not be found.','error');await refreshProjectList();return}
     restoreProject(project);
-    setStatus('Loaded saved project. No YouTube or AI request was used.','success');
+    await saveProject('opened and reconciled project',true);
+    setStatus('Loaded the newest saved project and synced project memory. No YouTube or AI request was used.','success');
   });
 
   els.projectImport?.addEventListener('click',()=>els.projectFile?.click());
@@ -609,8 +623,9 @@
         const saved=await getSavedProject(videoId);
         if(saved){
           restoreProject(saved);
+          await saveProject('URL load reconciled project',false);
           await refreshProjectList(videoId);
-          setStatus('Loaded saved project from local memory. No YouTube or AI request was used.','success');
+          setStatus('Loaded the newest saved project. No YouTube or AI request was used.','success');
           return;
         }
       }
