@@ -805,7 +805,8 @@
     }catch(err){
       completed=state.segments.filter(s=>s.aiAdapted).length;
       const msg=err.message||'Could not adapt the English script.';
-      const partial=completed===total?' Translation is already complete; only final QC may need retry.':completed>0?' '+completed+'/'+total+' segments are already saved in this page; Resume will continue from the next batch.':'';
+      const audited=state.segments.filter(s=>s.semanticAudited).length;
+      const partial=completed===total&&!state.semanticAuditComplete?' Translation is complete; semantic QC progress '+audited+'/'+total+' is saved and will resume.':completed===total?' Translation is complete; only final QC may need retry.':completed>0?' '+completed+'/'+total+' segments are already saved in this page; Resume will continue from the next batch.':'';
       if(/auth|connect|authorization|401|expired|security token/i.test(msg)){state.auth=false;state.csrf=null;els.privateContent.forEach(el=>{el.hidden=true})}
       setStatus(msg+partial,'error');
       if(els.aiNote)els.aiNote.textContent='Stopped while sending the already-loaded transcript to AI: '+msg;
