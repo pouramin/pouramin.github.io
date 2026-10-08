@@ -2,13 +2,21 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-06T15:50:54+00:00",
+  "feedUpdatedAt": "2026-10-07T23:27:14+00:00",
   "videos": [
     {
+      "videoId": "9YpPxLbEYg4",
+      "title": "اعتبار API رایگان کلاد کد | پشت این Claude Code رایگان واقعاً چی بود؟",
+      "publishedAt": "2026-10-07T14:26:27+00:00",
+      "updatedAt": "2026-10-07T15:54:40+00:00",
+      "url": "https://www.youtube.com/watch?v=9YpPxLbEYg4",
+      "thumbnail": "https://i.ytimg.com/vi/9YpPxLbEYg4/maxresdefault.jpg"
+    },
+    {
       "videoId": "HWUuCjsnqlQ",
-      "title": "کاهش هزینه‌های هوش مصنوعی 61٪ سریع‌تر، 24٪ ارزان‌تر | JEV Router",
+      "title": "چطور هزینه Claude Code و Codex رو کم کنیم؟ | با JEV Router",
       "publishedAt": "2026-10-05T16:30:05+00:00",
-      "updatedAt": "2026-10-05T16:30:05+00:00",
+      "updatedAt": "2026-10-07T23:27:14+00:00",
       "url": "https://www.youtube.com/watch?v=HWUuCjsnqlQ",
       "thumbnail": "https://i.ytimg.com/vi/HWUuCjsnqlQ/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-01T08:23:16+00:00",
       "url": "https://www.youtube.com/watch?v=0Z1COkBt3A4",
       "thumbnail": "https://i.ytimg.com/vi/0Z1COkBt3A4/maxresdefault.jpg"
-    },
-    {
-      "videoId": "RwTEyvmp_lw",
-      "title": "دسترسی رایگان به Claude Code و Codex | بدون نیاز به خرید اکانت Pro",
-      "publishedAt": "2026-08-27T16:00:26+00:00",
-      "updatedAt": "2026-10-04T05:32:45+00:00",
-      "url": "https://www.youtube.com/watch?v=RwTEyvmp_lw",
-      "thumbnail": "https://i.ytimg.com/vi/RwTEyvmp_lw/maxresdefault.jpg"
     }
   ]
 }
