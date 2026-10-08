@@ -742,59 +742,86 @@
 
     await ensureGlossary(Number(state.pipelineVersion||1)>=2&&!state.glossary.length);
 
-    const batchSize=15,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
+    const batchSize=30,concurrency=3,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
     let completed=state.segments.filter(s=>s.aiAdapted).length;
-    const completedBatches=Math.floor(completed/batchSize);
-    setProgress(completed,total,completedBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
-    setStatus('AI v2 context-first adaptation · resuming from segment '+(completed+1)+'…');
+    setProgress(completed,total,Math.ceil(completed/batchSize)+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
+    setStatus('AI v2 context-first adaptation · preparing parallel batches…');
 
     try{
+      const tasks=[];
       for(let offset=0,batchNo=1;offset<total;offset+=batchSize,batchNo++){
         const batch=state.segments.slice(offset,offset+batchSize);
         if(batch.every(seg=>seg.aiAdapted))continue;
-
-        const contextBefore=state.segments.slice(Math.max(0,offset-5),offset);
-        const contextAfter=state.segments.slice(offset+batch.length,offset+batch.length+5);
-        setStatus('AI dubbing adaptation · batch '+batchNo+'/'+totalBatches+' · segments '+(offset+1)+'-'+(offset+batch.length)+'…');
-
-        const data=await sendAIBatch(
-          {segments:batch,contextBefore,contextAfter,singleBatch:true,videoTitle:state.title,glossary:state.glossary,pipelineVersion:2},
+        tasks.push({
+          offset,
           batchNo,
-          totalBatches
-        );
+          batch,
+          contextBefore:state.segments.slice(Math.max(0,offset-5),offset),
+          contextAfter:state.segments.slice(offset+batch.length,offset+batch.length+5)
+        });
+      }
 
-        const byId=new Map((data.segments||[]).map(item=>[Number(item.index),item.translatedText]));
+      for(let waveStart=0;waveStart<tasks.length;waveStart+=concurrency){
+        const wave=tasks.slice(waveStart,waveStart+concurrency);
+        const labels=wave.map(task=>task.batchNo).join(', ');
+        setStatus('AI v2 adaptation · parallel batches '+labels+' / '+totalBatches+'…');
+
+        const results=await Promise.allSettled(wave.map(task=>
+          sendAIBatch(
+            {segments:task.batch,contextBefore:task.contextBefore,contextAfter:task.contextAfter,singleBatch:true,videoTitle:state.title,glossary:state.glossary,pipelineVersion:2},
+            task.batchNo,
+            totalBatches
+          )
+        ));
+
+        let firstError=null;
         const touched=[];
-        for(let local=0;local<batch.length;local++){
-          const globalIndex=offset+local;
-          const seg=state.segments[globalIndex];
-          const text=byId.get(Number(seg.index));
-          if(typeof text==='string'&&text.trim()){
-            seg.translatedText=text.trim();
-            seg.aiAdapted=true;
-            touched.push(globalIndex);
+        for(let w=0;w<wave.length;w++){
+          const task=wave[w],result=results[w];
+          if(result.status!=='fulfilled'){
+            firstError=firstError||result.reason;
+            continue;
+          }
+
+          const data=result.value;
+          const ids=task.batch.map(seg=>Number(seg.index));
+          state.qcIssues=state.qcIssues.filter(issue=>!ids.includes(Number(issue.id)));
+          const byId=new Map((data.segments||[]).map(item=>[Number(item.index),item.translatedText]));
+
+          for(let local=0;local<task.batch.length;local++){
+            const globalIndex=task.offset+local;
+            const seg=state.segments[globalIndex];
+            const text=byId.get(Number(seg.index));
+            if(typeof text==='string'&&text.trim()){
+              seg.translatedText=text.trim();
+              seg.aiAdapted=true;
+              seg.semanticAudited=false;
+              seg.qcIssues=[];
+              touched.push(globalIndex);
+            }
+          }
+
+          for(const model of (data.resolvedModels||[])){if(model&&!state.aiModels.includes(model))state.aiModels.push(model)}
+          for(const slot of (data.credentialSlots||[]))rememberCredentialSlot(slot);
+          if(data.qc?.repaired)state.qcRepairBatches++;
+          if(data.qc?.repairSkipped)state.qcRepairSkippedBatches++;
+          for(const issue of (data.qc?.issues||[])){
+            const enriched={...issue,batch:task.batchNo};
+            state.qcIssues.push(enriched);
+            const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
+            if(idx>=0){
+              if(!Array.isArray(state.segments[idx].qcIssues))state.segments[idx].qcIssues=[];
+              state.segments[idx].qcIssues.push(enriched);
+            }
           }
         }
 
-        for(const model of (data.resolvedModels||[])){if(model&&!state.aiModels.includes(model))state.aiModels.push(model)}
-        for(const slot of (data.credentialSlots||[]))rememberCredentialSlot(slot);
-        if(data.qc?.repaired)state.qcRepairBatches++;
-        if(data.qc?.repairSkipped)state.qcRepairSkippedBatches++;
-        for(const issue of (data.qc?.issues||[])){
-          const enriched={...issue,batch:batchNo};
-          state.qcIssues.push(enriched);
-          const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
-          if(idx>=0){
-            if(!Array.isArray(state.segments[idx].qcIssues))state.segments[idx].qcIssues=[];
-            state.segments[idx].qcIssues.push(enriched);
-          }
-        }
         completed=state.segments.filter(s=>s.aiAdapted).length;
         updateEnglishFields(touched);
         refreshExportLabels();
-        const doneBatches=Math.ceil(completed/batchSize);
-        setProgress(completed,total,doneBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
-        await saveProject('AI batch '+batchNo+'/'+totalBatches);
+        setProgress(completed,total,Math.ceil(completed/batchSize)+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
+        await saveProject('AI parallel batch wave');
+        if(firstError)throw firstError;
       }
 
       state.translationSource='AI dubbing adaptation v2';
