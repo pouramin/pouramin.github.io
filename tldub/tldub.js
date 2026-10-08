@@ -294,7 +294,7 @@
   }
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   async function sendAIBatch(payload,batchNo,totalBatches){
-    const maxAttempts=3;
+    const maxAttempts=2;
     for(let attempt=1;attempt<=maxAttempts;attempt++){
       try{
         return await jsonFetch(API+'/translate',{
@@ -338,7 +338,7 @@
 
   const rememberCredentialSlot=slot=>{const n=Number(slot);if(Number.isInteger(n)&&n>0&&!state.aiCredentialSlotsUsed.includes(n))state.aiCredentialSlotsUsed.push(n)};
   async function sendSemanticAudit(payload,auditNo,totalAudits){
-    const maxAttempts=3;
+    const maxAttempts=2;
     for(let attempt=1;attempt<=maxAttempts;attempt++){
       try{
         return await jsonFetch(API+'/semantic-qc',{method:'POST',body:JSON.stringify(payload)});
@@ -425,7 +425,7 @@
     const ids=[...severeById.keys()];
     if(!ids.length)return {attempted:0,failed:0,repaired:0};
 
-    const chunkSize=12,maxCalls=6;
+    const chunkSize=30,maxCalls=2;
     const chunks=[];
     for(let i=0;i<ids.length&&chunks.length<maxCalls;i+=chunkSize)chunks.push(ids.slice(i,i+chunkSize));
     let failed=0,repaired=0;
@@ -489,7 +489,7 @@
   }
 
   async function sendAIRepair(payload,repairNo,totalRepairs){
-    const maxAttempts=3;
+    const maxAttempts=2;
     for(let attempt=1;attempt<=maxAttempts;attempt++){
       try{
         return await jsonFetch(API+'/repair',{method:'POST',body:JSON.stringify(payload)});
