@@ -674,6 +674,7 @@
       state.aiComplete=false;
       state.semanticAuditComplete=false;
       state.pipelineVersion=2;
+      state.semanticAuditComplete=false;
       state.translationSource='AI dubbing adaptation v2 · reprocessing';
       state.aiModels=[];
       state.glossary=[];
@@ -820,9 +821,10 @@
 
   els.restoreYoutube?.addEventListener('click',()=>{
     if(!state.youtubeEnglish.length||state.youtubeEnglish.length!==state.segments.length)return;
-    state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||'';seg.aiAdapted=false});
+    state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||'';seg.aiAdapted=false;seg.semanticAudited=false});
     state.translationSource='YouTube machine translation';
     state.aiComplete=false;
+    state.semanticAuditComplete=false;
     state.pipelineVersion=1;
     state.previousEnglishBackup=null;
     state.aiModels=[];
