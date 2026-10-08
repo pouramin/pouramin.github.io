@@ -598,6 +598,38 @@
     const allAlreadyAdapted=state.segments.length>0&&state.segments.every(seg=>seg.aiAdapted);
     const severePending=state.qcIssues.filter(issue=>issue.severity==='severe').length;
 
+    if(allAlreadyAdapted&&Number(state.pipelineVersion||1)>=2&&!state.semanticAuditComplete){
+      state.aiRunning=true;
+      refreshExportLabels();
+      els.aiTranslate.disabled=true;
+      els.aiTranslate.textContent='Semantic QC…';
+      els.load.disabled=true;
+      try{
+        await runSemanticAudit();
+        const severeAfterAudit=state.qcIssues.filter(issue=>issue.severity==='severe').length;
+        if(severeAfterAudit){
+          setStatus('Semantic QC complete · '+severeAfterAudit+' severe issue(s) found · starting final repair…');
+          await runFinalRepairs();
+        }
+        state.aiComplete=state.segments.every(seg=>seg.aiAdapted)&&state.semanticAuditComplete;
+        const severeLeft=state.qcIssues.filter(issue=>issue.severity==='severe').length;
+        const warningsLeft=state.qcIssues.filter(issue=>issue.severity!=='severe').length;
+        if(els.aiNote)els.aiNote.textContent='v2 · semantic QC complete · '+severeLeft+' severe / '+warningsLeft+' warnings';
+        setStatus(severeLeft?'Semantic QC completed, but '+severeLeft+' severe issue(s) remain.':'Translation, semantic QC, and final repair are complete.',severeLeft?'error':'success');
+        await saveProject('semantic QC resumed and completed',true);
+      }catch(err){
+        state.semanticAuditComplete=state.segments.every(seg=>seg.semanticAudited);
+        setStatus('Semantic QC paused: '+(err.message||'unknown error')+'. Progress is saved; resume from the next group.','error');
+        await saveProject('semantic QC paused',true);
+      }finally{
+        state.aiRunning=false;
+        els.aiTranslate.disabled=!state.aiConfigured;
+        els.load.disabled=false;
+        refreshExportLabels();
+      }
+      return;
+    }
+
     if(allAlreadyAdapted&&severePending>0){
       state.aiRunning=true;
       state.qcRepairFailed=false;
