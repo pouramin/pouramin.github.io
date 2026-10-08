@@ -640,6 +640,7 @@
       };
       state.segments.forEach(seg=>{seg.aiAdapted=false;seg.semanticAudited=false;seg.qcIssues=[]});
       state.aiComplete=false;
+      state.semanticAuditComplete=false;
       state.pipelineVersion=2;
       state.translationSource='AI dubbing adaptation v2 · reprocessing';
       state.aiModels=[];
@@ -660,7 +661,7 @@
         pipelineVersion:Number(state.pipelineVersion||1),
         segments:state.segments.map(seg=>({index:Number(seg.index),translatedText:String(seg.translatedText||'')}))
       };
-      state.segments.forEach(seg=>{seg.aiAdapted=false;seg.qcIssues=[]});
+      state.segments.forEach(seg=>{seg.aiAdapted=false;seg.semanticAudited=false;seg.qcIssues=[]});
       state.pipelineVersion=2;
       state.translationSource='AI dubbing adaptation v2 · reprocessing';
       state.aiModels=[];
