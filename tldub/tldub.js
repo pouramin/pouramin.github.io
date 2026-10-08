@@ -1,5 +1,5 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
   const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
@@ -522,7 +522,32 @@
       return false;
     }
   }
-  async function checkAuth(){try{const data=await jsonFetch(`${API}/oauth/status`,{headers:{}});state.auth=Boolean(data.connected);state.csrf=data.csrfToken||null;els.authPill.textContent=state.auth?'Connected':'Not connected';els.authPill.classList.toggle('connected',state.auth);els.connect.hidden=state.auth;els.disconnect.hidden=!state.auth;els.privateContent.forEach(el=>{el.hidden=!state.auth});els.accountNote.textContent=state.auth?(data.channel?.title?`Connected privately to ${data.channel.title}. Session expires automatically.`:'Private YouTube authorization is active on this device.'):'Private tool: connect the authorized YouTube account to unlock it.'}catch(_){state.auth=false;state.csrf=null;els.privateContent.forEach(el=>{el.hidden=true});els.authPill.textContent='Backend required';els.connect.hidden=false;els.disconnect.hidden=true}}
+  async function checkAuth(){
+    try{
+      const data=await jsonFetch(API+'/oauth/status',{headers:{}});
+      state.auth=Boolean(data.connected);
+      state.youtubeAccessValid=Boolean(data.youtubeAccessValid);
+      state.csrf=data.csrfToken||null;
+      els.authPill.textContent=state.auth?(state.youtubeAccessValid?'Connected':'Project session active'):'Not connected';
+      els.authPill.classList.toggle('connected',state.auth);
+      els.connect.hidden=state.youtubeAccessValid;
+      els.disconnect.hidden=!state.auth;
+      els.privateContent.forEach(el=>{el.hidden=!state.auth});
+      els.accountNote.textContent=state.auth
+        ? (state.youtubeAccessValid
+            ? (data.channel?.title?'Connected privately to '+data.channel.title+'. Project/AI session stays active for long jobs.':'Private project session is active.')
+            : 'Project/AI session is still active. Reconnect YouTube only before fetching fresh captions.')
+        : 'Private tool: connect the authorized YouTube account to unlock it.';
+    }catch(_){
+      state.auth=false;
+      state.youtubeAccessValid=false;
+      state.csrf=null;
+      els.privateContent.forEach(el=>{el.hidden=true});
+      els.authPill.textContent='Backend required';
+      els.connect.hidden=false;
+      els.disconnect.hidden=true;
+    }
+  }
   function render(){
     els.count.textContent=`${state.segments.length} segments`;
     els.title.textContent=state.title||'Untitled video';
