@@ -427,6 +427,50 @@
     return state.semanticAuditComplete;
   }
 
+  async function runLocalQcForIds(ids){
+    const unique=[...new Set((ids||[]).map(Number).filter(Number.isInteger))];
+    if(!unique.length)return {issues:[],severeCount:0,warningCount:0};
+
+    const segments=unique.map(id=>state.segments.find(seg=>Number(seg.index)===id)).filter(Boolean);
+    const data=await jsonFetch(API+'/qc/check',{
+      method:'POST',
+      body:JSON.stringify({segments,glossary:state.glossary})
+    });
+
+    state.qcIssues=state.qcIssues.filter(issue=>!unique.includes(Number(issue.id)));
+    for(const id of unique){
+      const idx=state.segments.findIndex(seg=>Number(seg.index)===id);
+      if(idx>=0)state.segments[idx].qcIssues=[];
+    }
+    for(const issue of (data.issues||[])){
+      const enriched={...issue,localRecheck:true};
+      state.qcIssues.push(enriched);
+      const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
+      if(idx>=0)state.segments[idx].qcIssues.push(enriched);
+    }
+    render();
+    await saveProject('zero-cost local QC recheck',true);
+    return data;
+  }
+
+  function focusFirstManualReview(){
+    const severe=state.qcIssues.filter(issue=>issue.severity==='severe');
+    const ids=[...new Set(severe.map(issue=>Number(issue.id)).filter(Number.isInteger))];
+    if(!ids.length)return;
+    const first=ids[0];
+    const target=document.querySelector('[data-segment-id="'+first+'"]');
+    if(target){
+      target.scrollIntoView({behavior:'smooth',block:'center'});
+      const textarea=target.querySelector('textarea[data-field="translatedText"]');
+      setTimeout(()=>textarea?.focus(),350);
+    }
+    const details=ids.map(id=>{
+      const msgs=severe.filter(issue=>Number(issue.id)===id).map(issue=>issue.type||issue.message).filter(Boolean);
+      return '#'+id+(msgs.length?' ('+[...new Set(msgs)].join(', ')+')':'');
+    }).join(' · ');
+    setStatus('Manual review needed: '+details+'. Edit the English text, then press Manual review needed again to recheck locally.','error');
+  }
+
   async function runFinalRepairs(){
     const severeById=new Map();
     for(const issue of state.qcIssues){
@@ -589,8 +633,9 @@
     if(state.videoId)meta.push(`Video ID: ${state.videoId}`);
     if(state.translationSource)meta.push(`English: ${state.translationSource}`);
     els.meta.textContent=meta.join(' · ');
-    els.body.innerHTML=state.segments.map((seg,i)=>`<tr><td>${i+1}</td><td class="time">${fmt(seg.start)}<br>→ ${fmt(seg.end)}</td><td><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea></td><td><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></td></tr>`).join('');
-    els.mobile.innerHTML=state.segments.map((seg,i)=>`<article class="script-card"><div class="script-card-top"><span>#${i+1}</span><span>${fmt(seg.start)} → ${fmt(seg.end)}</span></div><label>Persian</label><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea><label>English</label><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></article>`).join('');
+    const severeIds=new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)));
+    els.body.innerHTML=state.segments.map((seg,i)=>`<tr data-segment-id="${seg.index}" class="${severeIds.has(Number(seg.index))?'needs-review':''}"><td>${i+1}</td><td class="time">${fmt(seg.start)}<br>→ ${fmt(seg.end)}</td><td><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea></td><td><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></td></tr>`).join('');
+    els.mobile.innerHTML=state.segments.map((seg,i)=>`<article data-segment-id="${seg.index}" class="script-card ${severeIds.has(Number(seg.index))?'needs-review':''}"><div class="script-card-top"><span>#${i+1}</span><span>${fmt(seg.start)} → ${fmt(seg.end)}</span></div><label>Persian</label><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea><label>English</label><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></article>`).join('');
     els.results.hidden=false;
     refreshExportLabels();
   }
@@ -719,11 +764,26 @@
       if(Number(state.qcFinalRepairCalls||0)>=MAX_FINAL_REPAIR_CALLS){
         const unresolved=[...new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)).filter(Number.isInteger))];
         state.qcRepairFailed=true;
-        const idText=unresolved.length?unresolved.map(id=>'#'+id).join(', '):'unknown';
-        setStatus('Automatic QC repair stopped to protect time and quota. Manual review needed for: '+idText+'.','error');
-        if(els.aiNote)els.aiNote.textContent='Automatic repair cap reached · '+severePending+' severe issue(s) · manual review: '+idText;
+        try{
+          setStatus('Rechecking remaining QC locally · no OpenRouter request…');
+          await runLocalQcForIds(unresolved);
+        }catch(err){
+          setStatus('Local QC recheck failed: '+(err.message||'unknown error'),'error');
+        }
+        const remaining=state.qcIssues.filter(issue=>issue.severity==='severe');
+        const remainingIds=[...new Set(remaining.map(issue=>Number(issue.id)).filter(Number.isInteger))];
+        if(!remainingIds.length){
+          state.qcRepairFailed=false;
+          if(els.aiNote)els.aiNote.textContent='Local QC recheck cleared all remaining severe issues · no AI request used.';
+          setStatus('Local QC recheck passed. No severe issues remain.','success');
+          await saveProject('local QC cleared remaining issues',true);
+          refreshExportLabels();
+          return;
+        }
+        if(els.aiNote)els.aiNote.textContent='Automatic repair cap reached · '+remaining.length+' severe issue(s) across '+remainingIds.length+' segment(s) · manual review: '+remainingIds.map(id=>'#'+id).join(', ');
         await saveProject('automatic repair cap reached',true);
         refreshExportLabels();
+        focusFirstManualReview();
         return;
       }
       state.aiRunning=true;
