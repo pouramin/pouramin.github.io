@@ -1,14 +1,14 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null};
   const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
+  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.pipelineVersion=1;state.previousEnglishBackup=null;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
-  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Re-adapt English':hasAI?'Resume AI adaptation':'Adapt English to timing'};
+  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
 
@@ -68,6 +68,7 @@
         repairSkippedBatches:state.qcRepairSkippedBatches,
         finalRepairCalls:state.qcFinalRepairCalls,
         repairFailed:state.qcRepairFailed,
+        pipelineVersion:Number(state.pipelineVersion||1),
         issues:state.qcIssues||[]
       },null,2)
     };
@@ -86,6 +87,8 @@
       createdAt,
       updatedAt:now,
       translationSource:state.translationSource,
+      pipelineVersion:Number(state.pipelineVersion||1),
+      previousEnglishBackup:state.previousEnglishBackup||null,
       aiComplete:Boolean(state.aiComplete),
       aiModels:[...(state.aiModels||[])],
       aiCredentialSlotsUsed:[...(state.aiCredentialSlotsUsed||[])],
@@ -226,6 +229,8 @@
     state.videoId=project.videoId;
     state.title=project.title||'YouTube video';
     state.translationSource=project.translationSource||'';
+    state.pipelineVersion=Number(project.pipelineVersion||1);
+    state.previousEnglishBackup=project.previousEnglishBackup||null;
     state.youtubeEnglish=Array.isArray(project.youtubeEnglish)?project.youtubeEnglish:[];
     state.aiModels=Array.isArray(project.aiModels)?project.aiModels:[];
     state.aiCredentialSlotsUsed=Array.isArray(project.aiCredentialSlotsUsed)?project.aiCredentialSlotsUsed:[];
@@ -297,16 +302,17 @@
       }catch(err){
         const retryable=err?.code==='NETWORK_FETCH_FAILED'||err?.status===502||err?.status===503||err?.status===504;
         if(!retryable||attempt===maxAttempts)throw err;
-        setStatus('AI dubbing adaptation · batch '+batchNo+'/'+totalBatches+' · temporary network/provider error, retry '+(attempt+1)+'/'+maxAttempts+'…');
+        setStatus('AI v2 adaptation · batch '+batchNo+'/'+totalBatches+' · temporary network/provider error, retry '+(attempt+1)+'/'+maxAttempts+'…');
         await sleep(1200*attempt);
       }
     }
   }
 
-  async function ensureGlossary(){
-    if(state.glossary.length)return true;
-    setStatus('Building terminology glossary from the video title and Persian transcript…');
-    if(els.aiNote)els.aiNote.textContent='Building global terminology glossary…';
+  async function ensureGlossary(force=false){
+    if(state.glossary.length&&!force)return true;
+    if(force){state.glossary=[];state.glossaryModel=''}
+    setStatus('Building v2 terminology map from the full Persian transcript…');
+    if(els.aiNote)els.aiNote.textContent='Building source-first terminology map…';
     try{
       const data=await jsonFetch(API+'/glossary',{
         method:'POST',
@@ -470,7 +476,7 @@
       const project=JSON.parse(await file.text());
       restoreProject(project);
       await saveProject('imported project',true);
-      setStatus('Project JSON imported and saved locally.','success');
+      setStatus('Project JSON imported and saved to project memory.','success');
     }catch(err){
       setStatus('Could not import this Project JSON: '+(err?.message||'invalid file'),'error');
     }finally{
@@ -572,44 +578,75 @@
     }
 
     if(state.aiComplete){
-      state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||seg.translatedText;seg.aiAdapted=false});
+      state.previousEnglishBackup={
+        createdAt:new Date().toISOString(),
+        translationSource:state.translationSource,
+        pipelineVersion:Number(state.pipelineVersion||1),
+        segments:state.segments.map(seg=>({index:Number(seg.index),translatedText:String(seg.translatedText||'')}))
+      };
+      state.segments.forEach(seg=>{seg.aiAdapted=false;seg.qcIssues=[]});
       state.aiComplete=false;
+      state.pipelineVersion=2;
+      state.translationSource='AI dubbing adaptation v2 · reprocessing';
       state.aiModels=[];
+      state.glossary=[];
+      state.glossaryModel='';
       state.qcIssues=[];
       state.qcRepairBatches=0;
       state.qcRepairSkippedBatches=0;
       state.qcFinalRepairCalls=0;
       state.qcRepairFailed=false;
       state.aiCredentialSlotsUsed=[];
-      state.segments.forEach(seg=>{seg.qcIssues=[]});
-      updateEnglishFields(state.segments.map((_,i)=>i));
+      await saveProject('v2 reprocess backup created',true);
+      if(els.aiNote)els.aiNote.textContent='Previous English backed up · starting context-first v2 reprocess.';
+    } else if(Number(state.pipelineVersion||1)<2&&state.segments.some(seg=>seg.aiAdapted)){
+      state.previousEnglishBackup={
+        createdAt:new Date().toISOString(),
+        translationSource:state.translationSource,
+        pipelineVersion:Number(state.pipelineVersion||1),
+        segments:state.segments.map(seg=>({index:Number(seg.index),translatedText:String(seg.translatedText||'')}))
+      };
+      state.segments.forEach(seg=>{seg.aiAdapted=false;seg.qcIssues=[]});
+      state.pipelineVersion=2;
+      state.translationSource='AI dubbing adaptation v2 · reprocessing';
+      state.aiModels=[];
+      state.glossary=[];
+      state.glossaryModel='';
+      state.qcIssues=[];
+      state.qcRepairBatches=0;
+      state.qcRepairSkippedBatches=0;
+      state.qcFinalRepairCalls=0;
+      state.qcRepairFailed=false;
+      state.aiCredentialSlotsUsed=[];
+      await saveProject('v2 partial reprocess backup created',true);
     }
 
+    if(Number(state.pipelineVersion||1)<2)state.pipelineVersion=2;
     state.aiRunning=true;
     refreshExportLabels();
     els.aiTranslate.disabled=true;
     els.aiTranslate.textContent='Adapting…';
     els.load.disabled=true;
 
-    await ensureGlossary();
+    await ensureGlossary(Number(state.pipelineVersion||1)>=2&&!state.glossary.length);
 
     const batchSize=15,total=state.segments.length,totalBatches=Math.ceil(total/batchSize);
     let completed=state.segments.filter(s=>s.aiAdapted).length;
     const completedBatches=Math.floor(completed/batchSize);
     setProgress(completed,total,completedBatches+'/'+totalBatches+' batches · '+completed+'/'+total+' segments');
-    setStatus('AI dubbing adaptation · resuming from segment '+(completed+1)+'…');
+    setStatus('AI v2 context-first adaptation · resuming from segment '+(completed+1)+'…');
 
     try{
       for(let offset=0,batchNo=1;offset<total;offset+=batchSize,batchNo++){
         const batch=state.segments.slice(offset,offset+batchSize);
         if(batch.every(seg=>seg.aiAdapted))continue;
 
-        const contextBefore=state.segments.slice(Math.max(0,offset-3),offset);
-        const contextAfter=state.segments.slice(offset+batch.length,offset+batch.length+3);
+        const contextBefore=state.segments.slice(Math.max(0,offset-5),offset);
+        const contextAfter=state.segments.slice(offset+batch.length,offset+batch.length+5);
         setStatus('AI dubbing adaptation · batch '+batchNo+'/'+totalBatches+' · segments '+(offset+1)+'-'+(offset+batch.length)+'…');
 
         const data=await sendAIBatch(
-          {segments:batch,contextBefore,contextAfter,singleBatch:true,videoTitle:state.title,glossary:state.glossary},
+          {segments:batch,contextBefore,contextAfter,singleBatch:true,videoTitle:state.title,glossary:state.glossary,pipelineVersion:2},
           batchNo,
           totalBatches
         );
@@ -648,7 +685,7 @@
         await saveProject('AI batch '+batchNo+'/'+totalBatches);
       }
 
-      state.translationSource='AI dubbing adaptation';
+      state.translationSource='AI dubbing adaptation v2';
       state.aiComplete=state.segments.every(s=>s.aiAdapted);
       refreshExportLabels();
 
@@ -667,10 +704,10 @@
       const warnings=state.qcIssues.filter(issue=>issue.severity!=='severe').length;
       const glossaryText=state.glossary.length?state.glossary.length+' glossary terms':'title/source context only';
       const credentialText=state.aiCredentialSlotsUsed.length?('credentials used #'+state.aiCredentialSlotsUsed.sort((a,b)=>a-b).join(', #')):'credential usage unavailable';
-      if(els.aiNote)els.aiNote.textContent='Complete · '+glossaryText+' · final repair '+state.qcFinalRepairCalls+' call(s) · QC '+severe+' severe / '+warnings+' warnings · '+credentialText+' · models: '+modelText;
+      if(els.aiNote)els.aiNote.textContent='v2 complete · '+glossaryText+' · semantic/timing QC '+severe+' severe / '+warnings+' warnings · final repair '+state.qcFinalRepairCalls+' call(s) · '+credentialText+' · models: '+modelText;
       setProgress(total,total,'Complete · '+total+'/'+total+' segments');
       render();
-      setStatus((severe?'AI translation is complete. Final QC still has '+severe+' severe issue(s); use Retry final QC repair before TTS.':'AI dubbing adaptation complete and passed severe QC checks.')+' '+total+' segments updated.',severe?'error':'success');
+      setStatus((severe?'AI translation is complete. Final QC still has '+severe+' severe issue(s); use Retry final QC repair before TTS.':'AI v2 adaptation complete and passed severe semantic/timing QC checks.')+' '+total+' segments updated.',severe?'error':'success');
       await saveProject('AI adaptation complete',true);
     }catch(err){
       completed=state.segments.filter(s=>s.aiAdapted).length;
@@ -694,6 +731,8 @@
     state.segments.forEach((seg,i)=>{seg.translatedText=state.youtubeEnglish[i]||'';seg.aiAdapted=false});
     state.translationSource='YouTube machine translation';
     state.aiComplete=false;
+    state.pipelineVersion=1;
+    state.previousEnglishBackup=null;
     state.aiModels=[];
     state.qcIssues=[];
     state.qcRepairBatches=0;
