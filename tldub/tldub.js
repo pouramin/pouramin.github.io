@@ -352,38 +352,62 @@
   }
 
   async function runSemanticAudit(){
-    const auditSize=30,total=state.segments.length,totalAudits=Math.ceil(total/auditSize);
+    const auditSize=60,concurrency=3,total=state.segments.length,totalAudits=Math.ceil(total/auditSize);
+    const tasks=[];
     for(let offset=0,auditNo=1;offset<total;offset+=auditSize,auditNo++){
       const group=state.segments.slice(offset,offset+auditSize);
       if(group.every(seg=>seg.semanticAudited))continue;
-      setStatus('Semantic QC · group '+auditNo+'/'+totalAudits+' · segments '+(offset+1)+'-'+(offset+group.length)+'…');
-      const data=await sendSemanticAudit({videoTitle:state.title,glossary:state.glossary,segments:group},auditNo,totalAudits);
-      rememberCredentialSlot(data.credentialSlot);
-      if(data.resolvedModel&&!state.aiModels.includes(data.resolvedModel))state.aiModels.push(data.resolvedModel);
-      const byId=new Map((data.segments||[]).map(item=>[Number(item.index),String(item.translatedText||'').trim()]));
-      const ids=group.map(seg=>Number(seg.index));
-      state.qcIssues=state.qcIssues.filter(issue=>!ids.includes(Number(issue.id)));
-      const touched=[];
-      for(const seg of group){
-        const idx=state.segments.findIndex(item=>Number(item.index)===Number(seg.index));
-        if(idx<0)continue;
-        const text=byId.get(Number(seg.index));
-        if(text)state.segments[idx].translatedText=text;
-        state.segments[idx].semanticAudited=true;
-        state.segments[idx].qcIssues=[];
-        touched.push(idx);
-      }
-      for(const issue of (data.qc?.issues||[])){
-        const enriched={...issue,semanticAudit:true};
-        state.qcIssues.push(enriched);
-        const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
-        if(idx>=0)state.segments[idx].qcIssues.push(enriched);
-      }
-      updateEnglishFields(touched);
-      const done=state.segments.filter(seg=>seg.semanticAudited).length;
-      setProgress(done,total,'Semantic QC · '+auditNo+'/'+totalAudits+' · '+done+'/'+total+' segments');
-      await saveProject('semantic QC '+auditNo+'/'+totalAudits);
+      tasks.push({offset,auditNo,group});
     }
+
+    for(let waveStart=0;waveStart<tasks.length;waveStart+=concurrency){
+      const wave=tasks.slice(waveStart,waveStart+concurrency);
+      const labels=wave.map(task=>task.auditNo).join(', ');
+      setStatus('Semantic QC · parallel groups '+labels+' / '+totalAudits+'…');
+
+      const results=await Promise.allSettled(wave.map(task=>
+        sendSemanticAudit({videoTitle:state.title,glossary:state.glossary,segments:task.group},task.auditNo,totalAudits)
+      ));
+
+      let firstError=null;
+      for(let w=0;w<wave.length;w++){
+        const task=wave[w],result=results[w];
+        if(result.status!=='fulfilled'){
+          firstError=firstError||result.reason;
+          continue;
+        }
+        const data=result.value;
+        rememberCredentialSlot(data.credentialSlot);
+        if(data.resolvedModel&&!state.aiModels.includes(data.resolvedModel))state.aiModels.push(data.resolvedModel);
+
+        const byId=new Map((data.segments||[]).map(item=>[Number(item.index),String(item.translatedText||'').trim()]));
+        const ids=task.group.map(seg=>Number(seg.index));
+        state.qcIssues=state.qcIssues.filter(issue=>!ids.includes(Number(issue.id)));
+        const touched=[];
+        for(const seg of task.group){
+          const idx=state.segments.findIndex(item=>Number(item.index)===Number(seg.index));
+          if(idx<0)continue;
+          const text=byId.get(Number(seg.index));
+          if(text)state.segments[idx].translatedText=text;
+          state.segments[idx].semanticAudited=true;
+          state.segments[idx].qcIssues=[];
+          touched.push(idx);
+        }
+        for(const issue of (data.qc?.issues||[])){
+          const enriched={...issue,semanticAudit:true};
+          state.qcIssues.push(enriched);
+          const idx=state.segments.findIndex(seg=>Number(seg.index)===Number(issue.id));
+          if(idx>=0)state.segments[idx].qcIssues.push(enriched);
+        }
+        updateEnglishFields(touched);
+      }
+
+      const done=state.segments.filter(seg=>seg.semanticAudited).length;
+      setProgress(done,total,'Semantic QC · '+done+'/'+total+' segments');
+      await saveProject('semantic QC parallel wave');
+      if(firstError)throw firstError;
+    }
+
     state.semanticAuditComplete=state.segments.every(seg=>seg.semanticAudited);
     await saveProject('semantic QC complete',true);
     return state.semanticAuditComplete;
