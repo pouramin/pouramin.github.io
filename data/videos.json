@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-07T23:27:14+00:00",
+  "feedUpdatedAt": "2026-10-10T04:00:14+00:00",
   "videos": [
+    {
+      "videoId": "0rE86ZzjUAI",
+      "title": "کلاد ۱۰ برابر شد: قدرت ۱۰۰۰ ایجنت در یک کلیک! #کلاد #هوش_مصنوعی",
+      "publishedAt": "2026-10-10T04:00:14+00:00",
+      "updatedAt": "2026-10-10T04:00:14+00:00",
+      "url": "https://www.youtube.com/watch?v=0rE86ZzjUAI",
+      "thumbnail": "https://i.ytimg.com/vi/0rE86ZzjUAI/maxresdefault.jpg"
+    },
+    {
+      "videoId": "EZNnEa1a4MI",
+      "title": "هر ماه 100 میلیون توکن رایگان؟ | تست واقعی Mistral Large 4",
+      "publishedAt": "2026-10-09T15:19:57+00:00",
+      "updatedAt": "2026-10-09T15:54:23+00:00",
+      "url": "https://www.youtube.com/watch?v=EZNnEa1a4MI",
+      "thumbnail": "https://i.ytimg.com/vi/EZNnEa1a4MI/maxresdefault.jpg"
+    },
     {
       "videoId": "9YpPxLbEYg4",
       "title": "اعتبار API رایگان کلاد کد | پشت این Claude Code رایگان واقعاً چی بود؟",
@@ -80,25 +96,9 @@
       "videoId": "IDEG0bUYbyo",
       "title": "گوگل Claude Opus رو رایگان کرد؟ | تست واقعی Antigravity از صفر تا پروژه",
       "publishedAt": "2026-09-05T16:00:31+00:00",
-      "updatedAt": "2026-09-29T03:28:59+00:00",
+      "updatedAt": "2026-10-10T00:21:56+00:00",
       "url": "https://www.youtube.com/watch?v=IDEG0bUYbyo",
       "thumbnail": "https://i.ytimg.com/vi/IDEG0bUYbyo/maxresdefault.jpg"
-    },
-    {
-      "videoId": "7qrwLhAW4UQ",
-      "title": "آموزش پنل ثنایی بدون VPS و دامنه! | دیپلوی اصولی 3X-UI روی Railway",
-      "publishedAt": "2026-09-03T11:45:59+00:00",
-      "updatedAt": "2026-10-03T22:04:26+00:00",
-      "url": "https://www.youtube.com/watch?v=7qrwLhAW4UQ",
-      "thumbnail": "https://i.ytimg.com/vi/7qrwLhAW4UQ/maxresdefault.jpg"
-    },
-    {
-      "videoId": "0Z1COkBt3A4",
-      "title": "دسترسی رایگان به Claude Opus 5 | تست واقعی روی پروژه با JustDoWork",
-      "publishedAt": "2026-08-31T16:24:30+00:00",
-      "updatedAt": "2026-10-01T08:23:16+00:00",
-      "url": "https://www.youtube.com/watch?v=0Z1COkBt3A4",
-      "thumbnail": "https://i.ytimg.com/vi/0Z1COkBt3A4/maxresdefault.jpg"
     }
   ]
 }
