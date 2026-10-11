@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-10T04:00:14+00:00",
+  "feedUpdatedAt": "2026-10-11T04:00:38+00:00",
   "videos": [
+    {
+      "videoId": "ADLazzP3Feg",
+      "title": "کلاد خودش به پلیس گزارش جعلی داده!  | کاهش 76 برابری هزینه ایجنت‌های AI",
+      "publishedAt": "2026-10-11T04:00:37+00:00",
+      "updatedAt": "2026-10-11T04:00:38+00:00",
+      "url": "https://www.youtube.com/watch?v=ADLazzP3Feg",
+      "thumbnail": "https://i.ytimg.com/vi/ADLazzP3Feg/maxresdefault.jpg"
+    },
     {
       "videoId": "0rE86ZzjUAI",
       "title": "کلاد ۱۰ برابر شد: قدرت ۱۰۰۰ ایجنت در یک کلیک! #کلاد #هوش_مصنوعی",
@@ -32,7 +40,7 @@
       "videoId": "HWUuCjsnqlQ",
       "title": "چطور هزینه Claude Code و Codex رو کم کنیم؟ | با JEV Router",
       "publishedAt": "2026-10-05T16:30:05+00:00",
-      "updatedAt": "2026-10-07T23:27:14+00:00",
+      "updatedAt": "2026-10-09T09:30:47+00:00",
       "url": "https://www.youtube.com/watch?v=HWUuCjsnqlQ",
       "thumbnail": "https://i.ytimg.com/vi/HWUuCjsnqlQ/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-03T15:54:26+00:00",
       "url": "https://www.youtube.com/watch?v=1Pvs7qOg0zs",
       "thumbnail": "https://i.ytimg.com/vi/1Pvs7qOg0zs/maxresdefault.jpg"
-    },
-    {
-      "videoId": "IDEG0bUYbyo",
-      "title": "گوگل Claude Opus رو رایگان کرد؟ | تست واقعی Antigravity از صفر تا پروژه",
-      "publishedAt": "2026-09-05T16:00:31+00:00",
-      "updatedAt": "2026-10-10T00:21:56+00:00",
-      "url": "https://www.youtube.com/watch?v=IDEG0bUYbyo",
-      "thumbnail": "https://i.ytimg.com/vi/IDEG0bUYbyo/maxresdefault.jpg"
     }
   ]
 }
