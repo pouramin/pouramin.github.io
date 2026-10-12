@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-11T04:00:38+00:00",
+  "feedUpdatedAt": "2026-10-12T04:00:12+00:00",
   "videos": [
+    {
+      "videoId": "2_hggybJ6rk",
+      "title": "آپدیت جدید OpenCode؛ ارتقا به نسخه 2 ساده‌تر شد | آپدیت مهم copilot #هوش_مصنوعی #chatgpt",
+      "publishedAt": "2026-10-12T04:00:08+00:00",
+      "updatedAt": "2026-10-12T04:00:12+00:00",
+      "url": "https://www.youtube.com/watch?v=2_hggybJ6rk",
+      "thumbnail": "https://i.ytimg.com/vi/2_hggybJ6rk/maxresdefault.jpg"
+    },
     {
       "videoId": "ADLazzP3Feg",
       "title": "کلاد خودش به پلیس گزارش جعلی داده!  | کاهش 76 برابری هزینه ایجنت‌های AI",
@@ -91,14 +99,6 @@
       "updatedAt": "2026-09-26T12:57:36+00:00",
       "url": "https://www.youtube.com/watch?v=NNrZqsXSxbg",
       "thumbnail": "https://i.ytimg.com/vi/NNrZqsXSxbg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "1Pvs7qOg0zs",
-      "title": "آموزش OpenCode | جایگزین متن‌باز Claude Code و Codex با مدل رایگان",
-      "publishedAt": "2026-09-07T18:08:53+00:00",
-      "updatedAt": "2026-10-03T15:54:26+00:00",
-      "url": "https://www.youtube.com/watch?v=1Pvs7qOg0zs",
-      "thumbnail": "https://i.ytimg.com/vi/1Pvs7qOg0zs/maxresdefault.jpg"
     }
   ]
 }
