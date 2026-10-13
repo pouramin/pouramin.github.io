@@ -35,7 +35,11 @@
 
   function buildClientPersianSegments(input){
     const items=(Array.isArray(input)?input:[])
-      .map(seg=>({start:Number(seg.start),end:Number(seg.end),text:String(seg.sourceText||'').trim()}))
+      .map(seg=>({
+        start:Number(seg.start),
+        end:Number(seg.end),
+        text:String(seg.sourceText??seg.text??'').trim()
+      }))
       .filter(item=>Number.isFinite(item.start)&&Number.isFinite(item.end)&&item.end>item.start&&item.text)
       .sort((a,b)=>a.start-b.start);
     if(!items.length)return [];
@@ -66,13 +70,15 @@
       const chars=current.text.length;
       const strongEnd=/[.!?؟]+$/u.test(current.text);
       const softEnd=/[؛:،,]+$/u.test(current.text);
+      const openEnding=persianSegmentEndsOpen(current.text);
 
-      const hardPause=gap>=.85;
-      const sentenceBoundary=strongEnd&&duration>=1.6&&words>=3;
-      const naturalPause=gap>=.42&&duration>=2.4&&words>=5;
-      const targetBoundary=duration>=4.5&&words>=9&&(gap>=.18||softEnd);
-      const maxBoundary=duration>=6.6||words>=18||chars>=115;
-      if(hardPause||sentenceBoundary||naturalPause||targetBoundary||maxBoundary)push();
+      const hardPause=gap>=1.05;
+      const sentenceBoundary=strongEnd&&duration>=1.4&&words>=3;
+      const naturalPause=!openEnding&&gap>=.48&&duration>=2.5&&words>=5;
+      const targetBoundary=!openEnding&&duration>=4.8&&words>=10&&(gap>=.2||softEnd);
+      const maxBoundary=!openEnding&&(duration>=7.4||words>=20||chars>=130);
+      const emergencyBoundary=duration>=10.5||words>=30||chars>=190;
+      if(hardPause||sentenceBoundary||naturalPause||targetBoundary||maxBoundary||emergencyBoundary)push();
     }
 
     const merged=[];
@@ -84,11 +90,27 @@
       const gap=Math.max(0,seg.start-prev.end);
       const combined=seg.end-prev.start;
       const prevEnd=/[.!?؟]+$/u.test(prev.text);
-      if((duration<1.35||words<3)&&gap<.55&&combined<=7.2&&!prevEnd){
+      const prevOpen=persianSegmentEndsOpen(prev.text);
+
+      if((prevOpen&&gap<.8&&combined<=10.8)||((duration<1.35||words<3)&&gap<.55&&combined<=7.8&&!prevEnd)){
         prev.text=normalizePersianSegmentText(joinPersianSpeechText(prev.text,seg.text));
         prev.end=seg.end;
       }else merged.push({...seg});
     }
+
+    for(let i=0;i<merged.length-1;){
+      const current=merged[i],next=merged[i+1];
+      const gap=Math.max(0,next.start-current.end);
+      const combined=next.end-current.start;
+      if(persianSegmentEndsOpen(current.text)&&gap<.8&&combined<=10.8){
+        current.text=normalizePersianSegmentText(joinPersianSpeechText(current.text,next.text));
+        current.end=next.end;
+        merged.splice(i+1,1);
+        continue;
+      }
+      i++;
+    }
+
     return merged.map((seg,index)=>({
       index:index+1,
       start:seg.start,
@@ -102,9 +124,46 @@
     }));
   }
 
+  function persianSegmentEndsOpen(text){
+    const normalized=String(text||'')
+      .normalize('NFKC')
+      .toLowerCase()
+      .replace(/[\u200c\u200d\u200e\u200f]/g,'')
+      .replace(/ك/g,'ک')
+      .replace(/[يى]/g,'ی')
+      .replace(/[^\p{L}\p{N}]+/gu,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+    if(!normalized)return false;
+
+    const tokens=normalized.split(' ').filter(Boolean);
+    const last=tokens[tokens.length-1]||'';
+    const openWords=new Set([
+      'و','یا','که','به','با','از','برای','در','روی','تا','اگر','وقتی','چون','ولی','اما',
+      'حتی','فقط','دارای','مثل','بدون','بین','درباره','توسط','یعنی','ضمن','همراه','نسبت',
+      'داخل','خارج','بعد','قبل','مقابل','طبق','جهت'
+    ]);
+    if(openWords.has(last))return true;
+
+    const openPhrases=[
+      'به خاطر','به ازای','در مورد','از طریق','بر اساس','در برابر','نسبت به',
+      'با مدل','با مدلها','با مدلهای','با مدل های','در پروژه','در پروژه های',
+      'پلن های دارای','پلنهای دارای','نسخه های دارای','نسخههای دارای',
+      'یکی از','بخشی از','تعدادی از','مجموعه ای از'
+    ];
+    if(openPhrases.some(phrase=>normalized.endsWith(phrase)))return true;
+
+    if(tokens.length>=2){
+      const prev=tokens[tokens.length-2];
+      if(['با','از','به','برای','در','روی'].includes(prev)&&/(?:ها|های)$/u.test(last))return true;
+    }
+    return false;
+  }
+
   function needsPersianResegmentation(){
     if(state.sourceType!=='audio'||!state.segments.length)return false;
-    if(Number(state.audio?.segmentationVersion||0)>=2)return false;
+    if(Number(state.audio?.segmentationVersion||0)>=3)return false;
+    if(state.sourceWordTimings?.length)return true;
     const short=state.segments.filter(seg=>(Number(seg.end)-Number(seg.start))<1.35).length;
     return state.segments.length>=40&&short/state.segments.length>.55;
   }
@@ -888,14 +947,15 @@
         text:String(seg.sourceText||'')
       }));
     }
-    const rebuilt=buildClientPersianSegments(state.segments);
+    const rebuildSource=state.sourceWordTimings.length?state.sourceWordTimings:state.segments;
+    const rebuilt=buildClientPersianSegments(rebuildSource);
     if(!rebuilt.length||rebuilt.length>=before){
       setStatus('Sentence rebuild did not find useful boundaries. No changes were saved.','error');
       return;
     }
 
     state.segments=rebuilt;
-    state.audio={...(state.audio||{}),segmentationVersion:2,rawCueCount:before,mergedSegmentCount:rebuilt.length};
+    state.audio={...(state.audio||{}),segmentationVersion:3,rawCueCount:state.sourceWordTimings.length||before,mergedSegmentCount:rebuilt.length};
     state.translationSource='';
     state.youtubeEnglish=[];
     state.aiModels=[];
@@ -915,7 +975,7 @@
     hideProgress();
     render();
     await saveProject('rebuilt Persian sentences',true);
-    setStatus('Persian transcript rebuilt: '+before+' word-level segments → '+rebuilt.length+' sentence-level segments. No AI request used.','success');
+    setStatus('Persian sentence boundaries rebuilt: '+before+' current segments → '+rebuilt.length+' complete sentence-level segments. No AI request used.','success');
   });
 
   els.audioDropzone?.addEventListener('click',()=>els.audioFile?.click());
