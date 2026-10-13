@@ -83,11 +83,19 @@
         <p class="muted">This is required once, after your password is accepted.</p>
         <button class="button primary" type="button" data-auth-setup-start>Generate authenticator key</button>
         <div class="totp-setup-details" data-auth-setup-details hidden>
-          <span>Manual setup key</span>
-          <code data-auth-setup-secret></code>
-          <div class="auth-inline-actions">
-            <button class="button" type="button" data-auth-copy-secret>Copy key</button>
-            <a class="button" data-auth-open-app href="#">Open authenticator app</a>
+          <div class="totp-qr-copy">
+            <strong>Scan with your authenticator app</strong>
+            <span>Google Authenticator, Microsoft Authenticator, 1Password and other TOTP apps work.</span>
+          </div>
+          <div class="totp-qr-frame" data-auth-qr aria-label="TL-Dub authenticator setup QR code"></div>
+          <button class="button totp-manual-toggle" type="button" data-auth-manual-toggle>Can't scan? Show manual key</button>
+          <div class="totp-manual" data-auth-manual hidden>
+            <span>Manual setup key</span>
+            <code data-auth-setup-secret></code>
+            <div class="auth-inline-actions">
+              <button class="button" type="button" data-auth-copy-secret>Copy key</button>
+              <a class="button" data-auth-open-app href="#">Open authenticator app</a>
+            </div>
           </div>
           <form class="auth-form" data-auth-setup-form>
             <label class="field-label" for="tldub-setup-code">Enter the 6-digit code to confirm</label>
@@ -203,5 +211,5 @@
   </section>
 </main>
 <footer class="site-footer tldub-footer"><div class="site-shell footer-bottom"><span>TL-Dub · private beta</span><span>Built for pouramin.dev</span></div></footer>
-<script src="/assets/app.js" defer></script><script src="/tldub/tldub.js" defer></script>
+<script src="/assets/app.js" defer></script><script src="/tldub/vendor/qrcode.js" defer></script><script src="/tldub/tldub.js" defer></script>
 </body></html>
