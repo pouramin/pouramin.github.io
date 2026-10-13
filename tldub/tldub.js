@@ -1,6 +1,6 @@
 (() => {
   const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',sourceType:'youtube',audio:null,auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,transcriptionConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
-  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),authPasswordForm:$('[data-auth-password-form]'),authPassword:$('[data-auth-password]'),authMfa:$('[data-auth-mfa]'),authTotpForm:$('[data-auth-totp-form]'),authTotp:$('[data-auth-totp]'),authRecoveryForm:$('[data-auth-recovery-form]'),authRecovery:$('[data-auth-recovery]'),authSetup:$('[data-auth-setup]'),authSetupStart:$('[data-auth-setup-start]'),authSetupDetails:$('[data-auth-setup-details]'),authQr:$('[data-auth-qr]'),authManualToggle:$('[data-auth-manual-toggle]'),authManual:$('[data-auth-manual]'),authSetupSecret:$('[data-auth-setup-secret]'),authCopySecret:$('[data-auth-copy-secret]'),authOpenApp:$('[data-auth-open-app]'),authSetupForm:$('[data-auth-setup-form]'),authSetupCode:$('[data-auth-setup-code]'),authRecoveryCodes:$('[data-auth-recovery-codes]'),authRecoveryCodesList:$('[data-auth-recovery-codes-list]'),authCopyRecovery:$('[data-auth-copy-recovery]'),authFinishSetup:$('[data-auth-finish-setup]'),authUnlocked:$('[data-auth-unlocked]'),authError:$('[data-auth-error]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),legacyYoutubeConnect:$('[data-legacy-youtube-connect]'),legacyYoutubeState:$('[data-legacy-youtube-state]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
+  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),authPasswordForm:$('[data-auth-password-form]'),authPassword:$('[data-auth-password]'),authMfa:$('[data-auth-mfa]'),authTotpForm:$('[data-auth-totp-form]'),authTotp:$('[data-auth-totp]'),authRecoveryForm:$('[data-auth-recovery-form]'),authRecovery:$('[data-auth-recovery]'),authSetup:$('[data-auth-setup]'),authSetupStart:$('[data-auth-setup-start]'),authSetupDetails:$('[data-auth-setup-details]'),authQr:$('[data-auth-qr]'),authManualToggle:$('[data-auth-manual-toggle]'),authManual:$('[data-auth-manual]'),authSetupSecret:$('[data-auth-setup-secret]'),authCopySecret:$('[data-auth-copy-secret]'),authOpenApp:$('[data-auth-open-app]'),authSetupForm:$('[data-auth-setup-form]'),authSetupCode:$('[data-auth-setup-code]'),authRecoveryCodes:$('[data-auth-recovery-codes]'),authRecoveryCodesList:$('[data-auth-recovery-codes-list]'),authCopyRecovery:$('[data-auth-copy-recovery]'),authFinishSetup:$('[data-auth-finish-setup]'),authUnlocked:$('[data-auth-unlocked]'),authError:$('[data-auth-error]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),resegment:$('[data-resegment]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),legacyYoutubeConnect:$('[data-legacy-youtube-connect]'),legacyYoutubeState:$('[data-legacy-youtube-state]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,6 +11,103 @@
   const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=state.sourceType!=='youtube'||!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=state.sourceType!=='youtube'||!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
+
+  function countSpeechWords(text){
+    return String(text||'').trim().split(/\s+/).filter(Boolean).length;
+  }
+
+  function joinPersianSpeechText(left,right){
+    const a=String(left||'').trim(),b=String(right||'').trim();
+    if(!a)return b;
+    if(!b)return a;
+    if(/^[،؛:,.!?؟)\]»]/u.test(b))return a+b;
+    if(/[(\[«]$/u.test(a))return a+b;
+    return a+' '+b;
+  }
+
+  function normalizePersianSegmentText(text){
+    return String(text||'')
+      .replace(/\s+([،؛:,.!?؟])/gu,'$1')
+      .replace(/([(\[«])\s+/gu,'$1')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function buildClientPersianSegments(input){
+    const items=(Array.isArray(input)?input:[])
+      .map(seg=>({start:Number(seg.start),end:Number(seg.end),text:String(seg.sourceText||'').trim()}))
+      .filter(item=>Number.isFinite(item.start)&&Number.isFinite(item.end)&&item.end>item.start&&item.text)
+      .sort((a,b)=>a.start-b.start);
+    if(!items.length)return [];
+
+    const out=[];
+    let current=null;
+    const push=()=>{
+      if(!current)return;
+      current.text=normalizePersianSegmentText(current.text);
+      if(current.text)out.push({...current});
+      current=null;
+    };
+
+    for(let i=0;i<items.length;i++){
+      const item=items[i];
+      if(!current)current={start:item.start,end:item.end,text:item.text};
+      else{
+        current.text=joinPersianSpeechText(current.text,item.text);
+        current.end=Math.max(current.end,item.end);
+      }
+
+      const next=items[i+1];
+      if(!next){push();break}
+
+      const gap=Math.max(0,next.start-current.end);
+      const duration=Math.max(.1,current.end-current.start);
+      const words=countSpeechWords(current.text);
+      const chars=current.text.length;
+      const strongEnd=/[.!?؟]+$/u.test(current.text);
+      const softEnd=/[؛:،,]+$/u.test(current.text);
+
+      const hardPause=gap>=.85;
+      const sentenceBoundary=strongEnd&&duration>=1.6&&words>=3;
+      const naturalPause=gap>=.42&&duration>=2.4&&words>=5;
+      const targetBoundary=duration>=4.5&&words>=9&&(gap>=.18||softEnd);
+      const maxBoundary=duration>=6.6||words>=18||chars>=115;
+      if(hardPause||sentenceBoundary||naturalPause||targetBoundary||maxBoundary)push();
+    }
+
+    const merged=[];
+    for(const seg of out){
+      if(!merged.length){merged.push({...seg});continue}
+      const prev=merged[merged.length-1];
+      const duration=seg.end-seg.start;
+      const words=countSpeechWords(seg.text);
+      const gap=Math.max(0,seg.start-prev.end);
+      const combined=seg.end-prev.start;
+      const prevEnd=/[.!?؟]+$/u.test(prev.text);
+      if((duration<1.35||words<3)&&gap<.55&&combined<=7.2&&!prevEnd){
+        prev.text=normalizePersianSegmentText(joinPersianSpeechText(prev.text,seg.text));
+        prev.end=seg.end;
+      }else merged.push({...seg});
+    }
+    return merged.map((seg,index)=>({
+      index:index+1,
+      start:seg.start,
+      end:seg.end,
+      duration:Math.max(.1,seg.end-seg.start),
+      sourceText:seg.text,
+      translatedText:'',
+      aiAdapted:false,
+      semanticAudited:false,
+      qcIssues:[]
+    }));
+  }
+
+  function needsPersianResegmentation(){
+    if(state.sourceType!=='audio'||!state.segments.length)return false;
+    if(Number(state.audio?.segmentationVersion||0)>=2)return false;
+    const short=state.segments.filter(seg=>(Number(seg.end)-Number(seg.start))<1.35).length;
+    return state.segments.length>=40&&short/state.segments.length>.55;
+  }
 
   const PROJECT_DB='tldub-projects',PROJECT_STORE='projects',PROJECT_DB_VERSION=1;
   let projectDbPromise=null,autosaveTimer=null,selectedAudioFile=null,activeTotpSetup=null,recoveryCodesCache=[];
@@ -83,7 +180,7 @@
     const createdAt=state.projectCreatedAt||now;
     const folderName=state.projectFolderName||safeFolderName(state.title,state.videoId);
     return {
-      schemaVersion:1,
+      schemaVersion:2,
       videoId:state.videoId,
       title:state.title,
       folderName,
@@ -758,11 +855,53 @@
     const severeIds=new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)));
     els.body.innerHTML=state.segments.map((seg,i)=>`<tr data-segment-id="${seg.index}" class="${severeIds.has(Number(seg.index))?'needs-review':''}"><td>${i+1}</td><td class="time">${fmt(seg.start)}<br>→ ${fmt(seg.end)}</td><td><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea></td><td><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></td></tr>`).join('');
     els.mobile.innerHTML=state.segments.map((seg,i)=>`<article data-segment-id="${seg.index}" class="script-card ${severeIds.has(Number(seg.index))?'needs-review':''}"><div class="script-card-top"><span>#${i+1}</span><span>${fmt(seg.start)} → ${fmt(seg.end)}</span></div><label>Persian</label><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea><label>English</label><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></article>`).join('');
+    if(els.resegment){
+      const needs=needsPersianResegmentation();
+      els.resegment.hidden=!needs;
+      els.resegment.disabled=Boolean(state.aiRunning);
+    }
     els.results.hidden=false;
     refreshExportLabels();
+    if(els.aiTranslate&&needsPersianResegmentation()){
+      els.aiTranslate.disabled=true;
+      if(els.aiNote)els.aiNote.textContent='Persian transcript is word-by-word. Rebuild Persian sentences before English adaptation.';
+    }
   }
   function syncEdit(e){const t=e.target;if(!t.matches('textarea[data-index][data-field]'))return;const i=Number(t.dataset.index),field=t.dataset.field;if(!state.segments[i]||!field)return;state.segments[i][field]=t.value;if(field==='sourceText'){state.glossary=[];state.glossaryModel='';state.segments[i].aiAdapted=false;state.segments[i].semanticAudited=false;state.segments[i].qcIssues=[];state.aiComplete=false;state.semanticAuditComplete=false}document.querySelectorAll(`textarea[data-index="${i}"][data-field="${field}"]`).forEach(o=>{if(o!==t)o.value=t.value});refreshExportLabels();queueAutosave('manual edit')}
   els.body?.addEventListener('input',syncEdit);els.mobile?.addEventListener('input',syncEdit);
+  els.resegment?.addEventListener('click',async()=>{
+    if(state.aiRunning){setStatus('Wait for the current AI request to stop first.','error');return}
+    const before=state.segments.length;
+    const rebuilt=buildClientPersianSegments(state.segments);
+    if(!rebuilt.length||rebuilt.length>=before){
+      setStatus('Sentence rebuild did not find useful boundaries. No changes were saved.','error');
+      return;
+    }
+
+    state.segments=rebuilt;
+    state.audio={...(state.audio||{}),segmentationVersion:2,rawCueCount:before,mergedSegmentCount:rebuilt.length};
+    state.translationSource='';
+    state.youtubeEnglish=[];
+    state.aiModels=[];
+    state.aiCredentialSlotsUsed=[];
+    state.aiComplete=false;
+    state.aiRunning=false;
+    state.glossary=[];
+    state.glossaryModel='';
+    state.qcIssues=[];
+    state.qcRepairBatches=0;
+    state.qcRepairSkippedBatches=0;
+    state.qcFinalRepairCalls=0;
+    state.qcRepairFailed=false;
+    state.previousEnglishBackup=null;
+    state.semanticAuditComplete=false;
+    state.pipelineVersion=2;
+    hideProgress();
+    render();
+    await saveProject('rebuilt Persian sentences',true);
+    setStatus('Persian transcript rebuilt: '+before+' word-level segments → '+rebuilt.length+' sentence-level segments. No AI request used.','success');
+  });
+
   els.audioDropzone?.addEventListener('click',()=>els.audioFile?.click());
   els.audioDropzone?.addEventListener('dragover',event=>{
     event.preventDefault();
@@ -1059,6 +1198,10 @@
 
 
   els.aiTranslate?.addEventListener('click',async()=>{
+    if(needsPersianResegmentation()){
+      setStatus('Rebuild the Persian sentence segments first. This uses no AI quota.','error');
+      return;
+    }
     if(!state.segments.length){setStatus('Transcribe audio or load a saved timed script first.','error');return}
     if(!state.aiConfigured){setStatus('AI dubbing is not configured on the backend yet.','error');return}
     if(state.aiRunning)return;
