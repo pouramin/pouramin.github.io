@@ -48,16 +48,72 @@
     </div>
   </section>
   <section class="site-shell tldub-workspace">
-    <div class="tldub-control-card">
+    <div class="tldub-control-card auth-card">
       <div class="tldub-card-head">
-        <div><span class="micro">PRIVATE</span><h2>Private access</h2></div>
-        <span class="connection-pill" data-auth-pill>Not connected</span>
+        <div><span class="micro">PRIVATE</span><h2>Secure login</h2></div>
+        <span class="connection-pill" data-auth-pill>Locked</span>
       </div>
-      <p class="muted">This private session protects your saved projects and AI actions. Audio transcription itself does not use YouTube captions.</p>
-      <div class="control-actions">
-        <button class="button primary" type="button" data-connect>Unlock TL-Dub</button>
-        <button class="button" type="button" data-disconnect hidden>Lock session</button>
+      <p class="muted">Sign in with your TL-Dub admin password, then verify the 6-digit code from your authenticator app.</p>
+
+      <form class="auth-form" data-auth-password-form>
+        <label class="field-label" for="tldub-admin-password">Admin password</label>
+        <input class="auth-input" id="tldub-admin-password" data-auth-password type="password" autocomplete="current-password" placeholder="Enter your password">
+        <button class="button primary" type="submit">Continue</button>
+      </form>
+
+      <div class="auth-stage" data-auth-mfa hidden>
+        <strong>Second factor</strong>
+        <p class="muted">Enter the current 6-digit code from your authenticator app.</p>
+        <form class="auth-form" data-auth-totp-form>
+          <label class="field-label" for="tldub-totp-code">Authenticator code</label>
+          <input class="auth-input auth-code-input" id="tldub-totp-code" data-auth-totp inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+          <button class="button primary" type="submit">Verify code</button>
+        </form>
+        <details class="recovery-login">
+          <summary>Use a recovery code</summary>
+          <form class="auth-form" data-auth-recovery-form>
+            <input class="auth-input" data-auth-recovery autocomplete="off" placeholder="TL-XXXX-XXXX-XXXX">
+            <button class="button" type="submit">Use recovery code</button>
+          </form>
+        </details>
       </div>
+
+      <div class="auth-stage" data-auth-setup hidden>
+        <strong>Set up two-factor authentication</strong>
+        <p class="muted">This is required once, after your password is accepted.</p>
+        <button class="button primary" type="button" data-auth-setup-start>Generate authenticator key</button>
+        <div class="totp-setup-details" data-auth-setup-details hidden>
+          <span>Manual setup key</span>
+          <code data-auth-setup-secret></code>
+          <div class="auth-inline-actions">
+            <button class="button" type="button" data-auth-copy-secret>Copy key</button>
+            <a class="button" data-auth-open-app href="#">Open authenticator app</a>
+          </div>
+          <form class="auth-form" data-auth-setup-form>
+            <label class="field-label" for="tldub-setup-code">Enter the 6-digit code to confirm</label>
+            <input class="auth-input auth-code-input" id="tldub-setup-code" data-auth-setup-code inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+            <button class="button primary" type="submit">Enable authenticator</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="auth-stage" data-auth-recovery-codes hidden>
+        <strong>Save these recovery codes</strong>
+        <p class="muted">Each code works once if your authenticator is unavailable.</p>
+        <div class="recovery-code-grid" data-auth-recovery-codes-list></div>
+        <div class="auth-inline-actions">
+          <button class="button" type="button" data-auth-copy-recovery>Copy all</button>
+          <button class="button primary" type="button" data-auth-finish-setup>I've saved them</button>
+        </div>
+      </div>
+
+      <div class="auth-stage" data-auth-unlocked hidden>
+        <strong>TL-Dub is unlocked</strong>
+        <p class="muted">Your private session expires automatically after 12 hours.</p>
+        <button class="button" type="button" data-disconnect>Lock session</button>
+      </div>
+
+      <div class="auth-error" data-auth-error hidden></div>
       <div class="account-note" data-account-note></div>
     </div>
     <div class="tldub-control-card tldub-input-card" data-private-content hidden>
