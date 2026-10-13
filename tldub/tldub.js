@@ -8,7 +8,7 @@
   const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.pipelineVersion=1;state.previousEnglishBackup=null;state.semanticAuditComplete=false;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
-  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=state.sourceType!=='youtube'||!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=state.sourceType!=='youtube'||!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
+  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2,needsResegment=needsPersianResegmentation();if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=state.sourceType!=='youtube'||!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=state.sourceType!=='youtube'||!hasAI;if(els.aiTranslate){els.aiTranslate.disabled=!state.aiConfigured||state.aiRunning||needsResegment;if(!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'}};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
 
@@ -865,9 +865,14 @@
     }
     els.results.hidden=false;
     refreshExportLabels();
-    if(els.aiTranslate&&needsPersianResegmentation()){
-      els.aiTranslate.disabled=true;
-      if(els.aiNote)els.aiNote.textContent='Persian transcript is word-by-word. Rebuild Persian sentences before English adaptation.';
+    if(els.aiTranslate){
+      if(needsPersianResegmentation()){
+        if(els.aiNote)els.aiNote.textContent='Persian transcript is word-by-word. Rebuild Persian sentences before English adaptation.';
+      }else if(els.aiNote&&!state.aiRunning&&!state.aiComplete){
+        els.aiNote.textContent=state.aiConfigured
+          ? 'Persian sentence segmentation is ready · '+state.segments.length+' segments · ready for timing-aware English adaptation.'
+          : 'AI provider is not configured yet.';
+      }
     }
   }
   function syncEdit(e){const t=e.target;if(!t.matches('textarea[data-index][data-field]'))return;const i=Number(t.dataset.index),field=t.dataset.field;if(!state.segments[i]||!field)return;state.segments[i][field]=t.value;if(field==='sourceText'){state.glossary=[];state.glossaryModel='';state.segments[i].aiAdapted=false;state.segments[i].semanticAudited=false;state.segments[i].qcIssues=[];state.aiComplete=false;state.semanticAuditComplete=false}document.querySelectorAll(`textarea[data-index="${i}"][data-field="${field}"]`).forEach(o=>{if(o!==t)o.value=t.value});refreshExportLabels();queueAutosave('manual edit')}
