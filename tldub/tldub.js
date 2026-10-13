@@ -5,7 +5,7 @@
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.pipelineVersion=1;state.previousEnglishBackup=null;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
+  const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.pipelineVersion=1;state.previousEnglishBackup=null;state.semanticAuditComplete=false;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
   const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=state.sourceType!=='youtube'||!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=state.sourceType!=='youtube'||!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
@@ -712,6 +712,80 @@
   }
   function syncEdit(e){const t=e.target;if(!t.matches('textarea[data-index][data-field]'))return;const i=Number(t.dataset.index),field=t.dataset.field;if(!state.segments[i]||!field)return;state.segments[i][field]=t.value;if(field==='sourceText'){state.glossary=[];state.glossaryModel='';state.segments[i].aiAdapted=false;state.segments[i].semanticAudited=false;state.segments[i].qcIssues=[];state.aiComplete=false;state.semanticAuditComplete=false}document.querySelectorAll(`textarea[data-index="${i}"][data-field="${field}"]`).forEach(o=>{if(o!==t)o.value=t.value});refreshExportLabels();queueAutosave('manual edit')}
   els.body?.addEventListener('input',syncEdit);els.mobile?.addEventListener('input',syncEdit);
+  els.audioDropzone?.addEventListener('click',()=>els.audioFile?.click());
+  els.audioDropzone?.addEventListener('dragover',event=>{
+    event.preventDefault();
+    els.audioDropzone.classList.add('dragover');
+  });
+  els.audioDropzone?.addEventListener('dragleave',()=>els.audioDropzone.classList.remove('dragover'));
+  els.audioDropzone?.addEventListener('drop',event=>{
+    event.preventDefault();
+    els.audioDropzone.classList.remove('dragover');
+    const file=event.dataTransfer?.files?.[0];
+    if(file)setSelectedAudio(file);
+  });
+  els.audioFile?.addEventListener('change',()=>{
+    const file=els.audioFile.files?.[0];
+    if(file)setSelectedAudio(file);
+  });
+
+  els.audioTranscribe?.addEventListener('click',async()=>{
+    if(!selectedAudioFile){setStatus('Choose an audio file first.','error');return}
+    if(!state.transcriptionConfigured){setStatus('Workers AI transcription is not configured on the backend yet.','error');return}
+    const validation=validateAudioFile(selectedAudioFile);
+    if(validation){setStatus(validation,'error');return}
+
+    els.audioTranscribe.disabled=true;
+    els.audioDropzone.disabled=true;
+    const originalLabel=els.audioTranscribe.textContent;
+    els.audioTranscribe.textContent='Transcribing…';
+
+    try{
+      setStatus('Checking project memory for this exact audio file…');
+      const projectId=await audioProjectId(selectedAudioFile);
+      const saved=await getSavedProject(projectId);
+      if(saved){
+        restoreProject(saved);
+        await saveProject('reopened matching audio project',false);
+        await refreshProjectList(projectId);
+        setStatus('This audio already has a saved project. Loaded it without using transcription quota.','success');
+        return;
+      }
+
+      const form=new FormData();
+      form.append('audio',selectedAudioFile,selectedAudioFile.name);
+      form.append('projectId',projectId);
+      form.append('title',els.projectTitle?.value.trim()||selectedAudioFile.name.replace(/\.[^.]+$/,''));
+
+      setStatus('Uploading audio and transcribing Persian with timestamps…');
+      const data=await multipartFetch(API+'/audio/transcribe',form);
+      if(!data?.project?.segments?.length)throw new Error('Transcription returned no timed Persian segments.');
+
+      restoreProject(data.project);
+      state.sourceType='audio';
+      state.audio=data.project.audio||null;
+      state.youtubeEnglish=[];
+      state.translationSource='';
+      state.pipelineVersion=2;
+      state.semanticAuditComplete=false;
+      state.aiComplete=false;
+      hideProgress();
+      render();
+      await saveProject('Persian audio transcription complete',true);
+
+      const count=state.segments.length;
+      setStatus('Persian transcription complete · '+count+' timed segments saved to R2. Review the Persian text, then adapt to English.','success');
+      if(els.aiNote)els.aiNote.textContent='Persian transcript ready · review source text, then run English adaptation.';
+    }catch(err){
+      setStatus(err?.message||'Audio transcription failed.','error');
+      if(err?.status===401)await checkAuth();
+    }finally{
+      els.audioTranscribe.textContent=originalLabel;
+      els.audioDropzone.disabled=false;
+      els.audioTranscribe.disabled=!state.transcriptionConfigured||!selectedAudioFile;
+    }
+  });
+
   els.projectOpen?.addEventListener('click',async()=>{
     const id=els.projectList?.value||'';
     if(!id){setStatus('Choose a saved project first.','error');return}
@@ -744,7 +818,7 @@
   });
 
   els.connect?.addEventListener('click',()=>{location.href=`${API}/oauth/start?return_to=${encodeURIComponent('/tldub/')}`});
-  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/oauth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('Private session locked.')});
+  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/oauth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.auth=false;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('Private session locked.')});
   els.load?.addEventListener('click',async()=>{
     const url=els.videoUrl.value.trim();
     if(!url){setStatus('Paste a YouTube video URL first.','error');return}
@@ -770,6 +844,8 @@
       setStatus(forceRefresh?'Refreshing captions from YouTube…':'Reading caption tracks from YouTube…');
       const data=await jsonFetch(`${API}/transcript`,{method:'POST',body:JSON.stringify({url,sourceLanguage:'fa',targetLanguage:'en',translate:els.translate.checked})});
       state.segments=data.segments||[];
+      state.sourceType='youtube';
+      state.audio=null;
       state.videoId=data.videoId||videoId;
       state.title=data.title||'YouTube video';
       state.translationSource=data.translationSource||'';
