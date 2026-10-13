@@ -1,6 +1,6 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
-  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',sourceType:'youtube',audio:null,auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,transcriptionConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
+  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -8,12 +8,12 @@
   const snapshotYouTubeEnglish=()=>{state.youtubeEnglish=state.segments.map(s=>String(s.translatedText||''));state.segments.forEach(s=>{s.aiAdapted=false;s.qcIssues=[]});state.aiComplete=false;state.pipelineVersion=1;state.previousEnglishBackup=null;state.aiModels=[];state.glossary=[];state.glossaryModel='';state.qcIssues=[];state.qcRepairBatches=0;state.qcRepairSkippedBatches=0;state.qcFinalRepairCalls=0;state.qcRepairFailed=false;state.aiCredentialSlotsUsed=[]};
   const setProgress=(done,total,label='')=>{const pct=total?Math.round(done/total*100):0;if(els.aiProgressRow)els.aiProgressRow.hidden=false;if(els.aiProgress){els.aiProgress.max=100;els.aiProgress.value=pct}if(els.aiProgressText)els.aiProgressText.textContent=label||pct+'%'};
   const hideProgress=()=>{if(els.aiProgressRow)els.aiProgressRow.hidden=true};
-  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
+  const refreshExportLabels=()=>{const adapted=state.segments.filter(s=>s.aiAdapted).length,hasAI=adapted>0,allAdapted=hasAI&&adapted===state.segments.length,severe=state.qcIssues.filter(issue=>issue.severity==='severe').length,v2=Number(state.pipelineVersion||1)>=2;if(els.currentEnLabel)els.currentEnLabel.textContent=allAdapted?'AI English SRT':hasAI?'Partial AI SRT':'English SRT';if(els.currentVttLabel)els.currentVttLabel.textContent=allAdapted?'AI English VTT':hasAI?'Partial AI VTT':'English VTT';if(els.youtubeExport)els.youtubeExport.hidden=state.sourceType!=='youtube'||!hasAI;if(els.restoreYoutube)els.restoreYoutube.hidden=state.sourceType!=='youtube'||!hasAI;if(els.aiTranslate&&!state.aiRunning)els.aiTranslate.textContent=allAdapted&&v2&&!state.semanticAuditComplete?'Resume semantic QC':allAdapted&&severe>0&&state.qcFinalRepairCalls>=MAX_FINAL_REPAIR_CALLS?'Manual review needed':allAdapted&&severe>0?'Retry final QC repair':allAdapted?'Reprocess English v2':hasAI?(v2?'Resume v2 reprocess':'Reprocess English v2'):'Adapt English v2'};
   const updateEnglishFields=indexes=>{for(const i of indexes){document.querySelectorAll('textarea[data-index="'+i+'"][data-field="translatedText"]').forEach(el=>{el.value=state.segments[i]?.translatedText||''})}};
 
 
   const PROJECT_DB='tldub-projects',PROJECT_STORE='projects',PROJECT_DB_VERSION=1;
-  let projectDbPromise=null,autosaveTimer=null;
+  let projectDbPromise=null,autosaveTimer=null,selectedAudioFile=null;
 
   function openProjectDb(){
     if(projectDbPromise)return projectDbPromise;
@@ -47,23 +47,23 @@
   }
 
   function safeFolderName(title,videoId){
-    const cleaned=String(title||'YouTube video').normalize('NFKC').replace(/[<>:"/\\|?*\u0000-\u001F]/g,'-').replace(/\s+/g,' ').trim().slice(0,110);
-    return (cleaned||'YouTube video')+' -- '+String(videoId||'project');
+    const cleaned=String(title||'Audio project').normalize('NFKC').replace(/[<>:"/\\|?*\u0000-\u001F]/g,'-').replace(/\s+/g,' ').trim().slice(0,110);
+    return (cleaned||'Audio project')+' -- '+String(videoId||'project');
   }
 
   function currentProjectFiles(){
     if(!state.segments.length)return {};
     const sourceSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(s.sourceText||'')+'\n').join('\n');
-    const currentSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(s.translatedText||s.sourceText||'')+'\n').join('\n');
-    const currentVtt='WEBVTT\n\n'+state.segments.map(s=>fmt(s.start)+' --> '+fmt(s.end)+'\n'+(s.translatedText||s.sourceText||'')+'\n').join('\n');
-    const youtubeSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(state.youtubeEnglish[i]||s.sourceText||'')+'\n').join('\n');
-    return {
-      'source.fa.srt':sourceSrt,
-      'youtube.en.srt':youtubeSrt,
-      'current.en.srt':currentSrt,
-      'current.en.vtt':currentVtt,
-      'glossary.json':JSON.stringify(state.glossary||[],null,2),
-      'qc.json':JSON.stringify({
+    const sourceVtt='WEBVTT\n\n'+state.segments.map(s=>fmt(s.start)+' --> '+fmt(s.end)+'\n'+(s.sourceText||'')+'\n').join('\n');
+    const currentSrt=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(s.translatedText||'')+'\n').join('\n');
+    const currentVtt='WEBVTT\n\n'+state.segments.map(s=>fmt(s.start)+' --> '+fmt(s.end)+'\n'+(s.translatedText||'')+'\n').join('\n');
+    const files={
+      'transcript/fa.srt':sourceSrt,
+      'transcript/fa.vtt':sourceVtt,
+      'translation/en.srt':currentSrt,
+      'translation/en.vtt':currentVtt,
+      'translation/glossary.json':JSON.stringify(state.glossary||[],null,2),
+      'qc/qc.json':JSON.stringify({
         repairBatches:state.qcRepairBatches,
         repairSkippedBatches:state.qcRepairSkippedBatches,
         finalRepairCalls:state.qcFinalRepairCalls,
@@ -72,6 +72,10 @@
         issues:state.qcIssues||[]
       },null,2)
     };
+    if(state.sourceType==='youtube'&&state.youtubeEnglish.length){
+      files['translation/youtube.en.srt']=state.segments.map((s,i)=>(i+1)+'\n'+fmt(s.start,true)+' --> '+fmt(s.end,true)+'\n'+(state.youtubeEnglish[i]||'')+'\n').join('\n');
+    }
+    return files;
   }
 
   function buildProjectSnapshot(){
@@ -83,7 +87,9 @@
       videoId:state.videoId,
       title:state.title,
       folderName,
-      originalUrl:state.projectOriginalUrl||els.videoUrl?.value||'',
+      originalUrl:state.sourceType==='youtube'?(state.projectOriginalUrl||els.videoUrl?.value||''):'',
+      sourceType:state.sourceType||'youtube',
+      audio:state.audio||null,
       createdAt,
       updatedAt:now,
       translationSource:state.translationSource,
@@ -240,7 +246,9 @@
   function restoreProject(project){
     if(!project||!project.videoId||!Array.isArray(project.segments)||!project.segments.length)throw new Error('This TL-Dub project file is invalid.');
     state.videoId=project.videoId;
-    state.title=project.title||'YouTube video';
+    state.title=project.title||'Untitled project';
+    state.sourceType=project.sourceType||'youtube';
+    state.audio=project.audio||null;
     state.translationSource=project.translationSource||'';
     state.pipelineVersion=Number(project.pipelineVersion||1);
     state.previousEnglishBackup=project.previousEnglishBackup||null;
@@ -259,8 +267,9 @@
     state.segments=project.segments.map(seg=>({...seg,aiAdapted:Boolean(seg.aiAdapted),qcIssues:Array.isArray(seg.qcIssues)?seg.qcIssues:[]}));
     state.projectCreatedAt=project.createdAt||new Date().toISOString();
     state.projectFolderName=project.folderName||safeFolderName(state.title,state.videoId);
-    state.projectOriginalUrl=project.originalUrl||('https://www.youtube.com/watch?v='+state.videoId);
-    if(els.videoUrl)els.videoUrl.value=state.projectOriginalUrl;
+    state.projectOriginalUrl=project.originalUrl||(state.sourceType==='youtube'?('https://www.youtube.com/watch?v='+state.videoId):'');
+    if(els.videoUrl&&state.sourceType==='youtube')els.videoUrl.value=state.projectOriginalUrl;
+    if(els.projectTitle)els.projectTitle.value=state.title||'';
     render();
     const adapted=state.segments.filter(seg=>seg.aiAdapted).length;
     if(adapted) setProgress(adapted,state.segments.length,(adapted===state.segments.length?'Translation saved · ':'Saved progress · ')+adapted+'/'+state.segments.length+' segments');
@@ -580,15 +589,74 @@
     }
   }
 
+  async function audioProjectId(file){
+    const buffer=await file.arrayBuffer();
+    const digest=await crypto.subtle.digest('SHA-256',buffer);
+    const hex=[...new Uint8Array(digest)].map(value=>value.toString(16).padStart(2,'0')).join('');
+    return 'aud_'+hex.slice(0,24);
+  }
+
+  function validateAudioFile(file){
+    if(!file)return 'Choose an audio file first.';
+    const max=24*1024*1024;
+    if(file.size>max)return 'Audio is larger than 24 MB. Export a compressed MP3 or M4A under 24 MB.';
+    const ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(!['mp3','m4a','aac','wav','flac'].includes(ext))return 'Use MP3, M4A, AAC, WAV, or FLAC.';
+    return '';
+  }
+
+  function setSelectedAudio(file){
+    const error=validateAudioFile(file);
+    if(error){
+      selectedAudioFile=null;
+      if(els.audioFile)els.audioFile.value='';
+      if(els.audioFileNote)els.audioFileNote.textContent=error;
+      if(els.audioTranscribe)els.audioTranscribe.disabled=true;
+      setStatus(error,'error');
+      return false;
+    }
+    selectedAudioFile=file;
+    const mb=(file.size/1024/1024).toFixed(1);
+    if(els.audioFileNote)els.audioFileNote.textContent=file.name+' · '+mb+' MB';
+    if(els.projectTitle&&!els.projectTitle.value.trim())els.projectTitle.value=file.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ');
+    if(els.audioTranscribe)els.audioTranscribe.disabled=!state.transcriptionConfigured;
+    setStatus('Audio ready. Transcription will create a timed Persian project and save it to R2.');
+    return true;
+  }
+
+  async function multipartFetch(url,form){
+    const headers={};
+    if(state.csrf)headers['X-TL-Dub-CSRF']=state.csrf;
+    let response;
+    try{
+      response=await fetch(url,{method:'POST',credentials:'include',headers,body:form});
+    }catch(cause){
+      const error=new Error('Network request to TL-Dub API failed.');
+      error.code='NETWORK_FETCH_FAILED';
+      error.cause=cause;
+      throw error;
+    }
+    let data=null;
+    try{data=await response.json()}catch(_){data={error:'HTTP '+response.status}}
+    if(!response.ok){
+      const error=new Error(data?.error||data?.message||('HTTP '+response.status));
+      error.status=response.status;
+      throw error;
+    }
+    return data;
+  }
+
   async function checkBackend(){
     try{
       const data=await jsonFetch(`${API}/health`,{headers:{}});
       state.aiConfigured=Boolean(data.aiConfigured);
       state.aiCredentialCount=Number(data.aiCredentialSlots||0);
       state.projectStorage=Boolean(data.projectStorage);
+      state.transcriptionConfigured=Boolean(data.transcriptionConfigured);
       els.apiState.textContent=data?.status==='ok'?'Backend online':'Backend reachable';
       els.apiDot.style.background='#2bb673';
       if(els.aiTranslate)els.aiTranslate.disabled=!state.aiConfigured;
+      if(els.audioTranscribe)els.audioTranscribe.disabled=!state.transcriptionConfigured||!selectedAudioFile;
       if(els.aiNote)els.aiNote.textContent=state.aiConfigured?('Ready for timing-aware English rewrite · '+state.aiCredentialCount+' credential'+(state.aiCredentialCount===1?'':'s')+'.'):'AI provider is not configured yet.';
       if(els.projectMemoryNote)els.projectMemoryNote.textContent=state.projectStorage?'R2 cloud project storage ready.':'Cloud project storage not ready; local cache fallback active.';
       return true;
@@ -606,16 +674,14 @@
       state.auth=Boolean(data.connected);
       state.youtubeAccessValid=Boolean(data.youtubeAccessValid);
       state.csrf=data.csrfToken||null;
-      els.authPill.textContent=state.auth?(state.youtubeAccessValid?'Connected':'Project session active'):'Not connected';
+      els.authPill.textContent=state.auth?'Unlocked':'Locked';
       els.authPill.classList.toggle('connected',state.auth);
-      els.connect.hidden=state.youtubeAccessValid;
+      els.connect.hidden=state.auth;
       els.disconnect.hidden=!state.auth;
       els.privateContent.forEach(el=>{el.hidden=!state.auth});
       els.accountNote.textContent=state.auth
-        ? (state.youtubeAccessValid
-            ? (data.channel?.title?'Connected privately to '+data.channel.title+'. Project/AI session stays active for long jobs.':'Private project session is active.')
-            : 'Project/AI session is still active. Reconnect YouTube only before fetching fresh captions.')
-        : 'Private tool: connect the authorized YouTube account to unlock it.';
+        ? 'Private project session active. Audio transcription does not use YouTube captions.'
+        : 'Unlock this private TL-Dub instance to access audio transcription and saved projects.';
     }catch(_){
       state.auth=false;
       state.youtubeAccessValid=false;
@@ -628,10 +694,15 @@
   }
   function render(){
     els.count.textContent=`${state.segments.length} segments`;
-    els.title.textContent=state.title||'Untitled video';
+    els.title.textContent=state.title||'Untitled project';
     const meta=[];
-    if(state.videoId)meta.push(`Video ID: ${state.videoId}`);
-    if(state.translationSource)meta.push(`English: ${state.translationSource}`);
+    if(state.sourceType==='audio'){
+      if(state.audio?.filename)meta.push('Audio: '+state.audio.filename);
+      meta.push('Persian: Whisper timed transcription');
+    }else if(state.videoId){
+      meta.push('Video ID: '+state.videoId);
+    }
+    if(state.translationSource)meta.push('English: '+state.translationSource);
     els.meta.textContent=meta.join(' · ');
     const severeIds=new Set(state.qcIssues.filter(issue=>issue.severity==='severe').map(issue=>Number(issue.id)));
     els.body.innerHTML=state.segments.map((seg,i)=>`<tr data-segment-id="${seg.index}" class="${severeIds.has(Number(seg.index))?'needs-review':''}"><td>${i+1}</td><td class="time">${fmt(seg.start)}<br>→ ${fmt(seg.end)}</td><td><textarea dir="rtl" data-index="${i}" data-field="sourceText">${esc(seg.sourceText)}</textarea></td><td><textarea data-index="${i}" data-field="translatedText">${esc(seg.translatedText||'')}</textarea></td></tr>`).join('');
@@ -673,7 +744,7 @@
   });
 
   els.connect?.addEventListener('click',()=>{location.href=`${API}/oauth/start?return_to=${encodeURIComponent('/tldub/')}`});
-  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/oauth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('YouTube disconnected and access token revoked.')});
+  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/oauth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('Private session locked.')});
   els.load?.addEventListener('click',async()=>{
     const url=els.videoUrl.value.trim();
     if(!url){setStatus('Paste a YouTube video URL first.','error');return}
@@ -721,7 +792,7 @@
 
 
   els.aiTranslate?.addEventListener('click',async()=>{
-    if(!state.segments.length){setStatus('Load a timed script first.','error');return}
+    if(!state.segments.length){setStatus('Transcribe audio or load a saved timed script first.','error');return}
     if(!state.aiConfigured){setStatus('AI dubbing is not configured on the backend yet.','error');return}
     if(state.aiRunning)return;
 
