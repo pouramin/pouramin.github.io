@@ -14,3 +14,22 @@
 .legacy-import summary{cursor:pointer;color:var(--muted);font-size:10px;font-weight:800}
 .legacy-import-body{margin-top:10px}
 @media(max-width:760px){.audio-actions{align-items:stretch;flex-direction:column}.audio-actions .button{width:100%}}
+
+.auth-card{align-self:start}
+.auth-form{display:grid;gap:9px;margin-top:14px}
+.auth-input{width:100%;min-width:0;height:44px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:12px;padding:0 13px;outline:none}
+.auth-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 12%,transparent)}
+.auth-code-input{font:800 20px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.24em;text-align:center}
+.auth-stage{display:grid;gap:10px;margin-top:14px}
+.auth-stage>strong{font-size:13px}
+.auth-error{margin-top:12px;border:1px solid color-mix(in srgb,var(--red) 42%,var(--line));background:color-mix(in srgb,var(--red) 7%,var(--surface));color:var(--red);border-radius:11px;padding:9px 11px;font-size:10px;line-height:1.45}
+.recovery-login{margin-top:6px;border-top:1px solid var(--line);padding-top:10px}
+.recovery-login summary{cursor:pointer;color:var(--muted);font-size:10px;font-weight:800}
+.totp-setup-details{display:grid;gap:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:12px;margin-top:2px}
+.totp-setup-details>span{font-size:10px;color:var(--muted)}
+.totp-setup-details>code{display:block;overflow-wrap:anywhere;border:1px solid var(--line);background:var(--bg);padding:10px;border-radius:9px;font:750 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+.auth-inline-actions{display:flex;gap:7px;flex-wrap:wrap}
+.auth-inline-actions .button{width:auto}
+.recovery-code-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.recovery-code-grid code{border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:8px;text-align:center;font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+@media(max-width:760px){.recovery-code-grid{grid-template-columns:1fr}.auth-inline-actions{display:grid;grid-template-columns:1fr}.auth-inline-actions .button{width:100%}}
