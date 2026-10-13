@@ -2,13 +2,29 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-12T04:00:12+00:00",
+  "feedUpdatedAt": "2026-10-13T12:34:16+00:00",
   "videos": [
+    {
+      "videoId": "2s5qanvMZrg",
+      "title": "متا و مدلهای Muse Wonder و Muse Woder Full | رقیب تازه کلاد و GPT-6؟",
+      "publishedAt": "2026-10-13T04:00:15+00:00",
+      "updatedAt": "2026-10-13T12:34:16+00:00",
+      "url": "https://www.youtube.com/watch?v=2s5qanvMZrg",
+      "thumbnail": "https://i.ytimg.com/vi/2s5qanvMZrg/maxresdefault.jpg"
+    },
+    {
+      "videoId": "kR19gZ23vXQ",
+      "title": "- هوش مصنوعی رایگان 600 میلیاردی چقدر قدرتمنده؟ | مقایسه Step 5 با GPT-5.6",
+      "publishedAt": "2026-10-12T17:10:18+00:00",
+      "updatedAt": "2026-10-12T20:05:25+00:00",
+      "url": "https://www.youtube.com/watch?v=kR19gZ23vXQ",
+      "thumbnail": "https://i.ytimg.com/vi/kR19gZ23vXQ/maxresdefault.jpg"
+    },
     {
       "videoId": "2_hggybJ6rk",
       "title": "آپدیت جدید OpenCode؛ ارتقا به نسخه 2 ساده‌تر شد | آپدیت مهم copilot #هوش_مصنوعی #chatgpt",
       "publishedAt": "2026-10-12T04:00:08+00:00",
-      "updatedAt": "2026-10-12T04:00:12+00:00",
+      "updatedAt": "2026-10-12T17:19:01+00:00",
       "url": "https://www.youtube.com/watch?v=2_hggybJ6rk",
       "thumbnail": "https://i.ytimg.com/vi/2_hggybJ6rk/maxresdefault.jpg"
     },
@@ -16,7 +32,7 @@
       "videoId": "ADLazzP3Feg",
       "title": "کلاد خودش به پلیس گزارش جعلی داده!  | کاهش 76 برابری هزینه ایجنت‌های AI",
       "publishedAt": "2026-10-11T04:00:37+00:00",
-      "updatedAt": "2026-10-11T04:00:38+00:00",
+      "updatedAt": "2026-10-12T17:25:30+00:00",
       "url": "https://www.youtube.com/watch?v=ADLazzP3Feg",
       "thumbnail": "https://i.ytimg.com/vi/ADLazzP3Feg/maxresdefault.jpg"
     },
@@ -24,7 +40,7 @@
       "videoId": "0rE86ZzjUAI",
       "title": "کلاد ۱۰ برابر شد: قدرت ۱۰۰۰ ایجنت در یک کلیک! #کلاد #هوش_مصنوعی",
       "publishedAt": "2026-10-10T04:00:14+00:00",
-      "updatedAt": "2026-10-10T04:00:14+00:00",
+      "updatedAt": "2026-10-12T17:21:24+00:00",
       "url": "https://www.youtube.com/watch?v=0rE86ZzjUAI",
       "thumbnail": "https://i.ytimg.com/vi/0rE86ZzjUAI/maxresdefault.jpg"
     },
@@ -32,7 +48,7 @@
       "videoId": "EZNnEa1a4MI",
       "title": "هر ماه 100 میلیون توکن رایگان؟ | تست واقعی Mistral Large 4",
       "publishedAt": "2026-10-09T15:19:57+00:00",
-      "updatedAt": "2026-10-09T15:54:23+00:00",
+      "updatedAt": "2026-10-12T17:24:26+00:00",
       "url": "https://www.youtube.com/watch?v=EZNnEa1a4MI",
       "thumbnail": "https://i.ytimg.com/vi/EZNnEa1a4MI/maxresdefault.jpg"
     },
@@ -40,7 +56,7 @@
       "videoId": "9YpPxLbEYg4",
       "title": "اعتبار API رایگان کلاد کد | پشت این Claude Code رایگان واقعاً چی بود؟",
       "publishedAt": "2026-10-07T14:26:27+00:00",
-      "updatedAt": "2026-10-07T15:54:40+00:00",
+      "updatedAt": "2026-10-12T17:28:46+00:00",
       "url": "https://www.youtube.com/watch?v=9YpPxLbEYg4",
       "thumbnail": "https://i.ytimg.com/vi/9YpPxLbEYg4/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-09-30T22:36:19+00:00",
       "url": "https://www.youtube.com/watch?v=_Xla4w9Z2KM",
       "thumbnail": "https://i.ytimg.com/vi/_Xla4w9Z2KM/maxresdefault.jpg"
-    },
-    {
-      "videoId": "7ZcitKxHjuM",
-      "title": "دیپ‌سیک جایگزین Claude Code شده؟ | تست واقعی DeepSeek Harness",
-      "publishedAt": "2026-09-13T16:00:15+00:00",
-      "updatedAt": "2026-10-03T23:51:27+00:00",
-      "url": "https://www.youtube.com/watch?v=7ZcitKxHjuM",
-      "thumbnail": "https://i.ytimg.com/vi/7ZcitKxHjuM/maxresdefault.jpg"
-    },
-    {
-      "videoId": "NNrZqsXSxbg",
-      "title": "همه مدل‌های AI داخل Claude Code! | آموزش OmniRoute + مدل‌های رایگان",
-      "publishedAt": "2026-09-10T16:00:01+00:00",
-      "updatedAt": "2026-09-26T12:57:36+00:00",
-      "url": "https://www.youtube.com/watch?v=NNrZqsXSxbg",
-      "thumbnail": "https://i.ytimg.com/vi/NNrZqsXSxbg/maxresdefault.jpg"
     }
   ]
 }
