@@ -1,6 +1,6 @@
 (() => {
   const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',sourceType:'youtube',audio:null,auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,transcriptionConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
-  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
+  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),legacyYoutubeConnect:$('[data-legacy-youtube-connect]'),legacyYoutubeState:$('[data-legacy-youtube-state]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -670,7 +670,7 @@
   }
   async function checkAuth(){
     try{
-      const data=await jsonFetch(API+'/oauth/status',{headers:{}});
+      const data=await jsonFetch(API+'/session/status',{headers:{}});
       state.auth=Boolean(data.connected);
       state.youtubeAccessValid=Boolean(data.youtubeAccessValid);
       state.csrf=data.csrfToken||null;
@@ -680,8 +680,12 @@
       els.disconnect.hidden=!state.auth;
       els.privateContent.forEach(el=>{el.hidden=!state.auth});
       els.accountNote.textContent=state.auth
-        ? 'Private project session active. Audio transcription does not use YouTube captions.'
-        : 'Unlock this private TL-Dub instance to access audio transcription and saved projects.';
+        ? 'Private Cloudflare Access session active. Audio transcription and saved projects are unlocked.'
+        : 'Unlock this private TL-Dub instance with Cloudflare Access.';
+      if(els.legacyYoutubeConnect)els.legacyYoutubeConnect.hidden=state.youtubeAccessValid;
+      if(els.legacyYoutubeState)els.legacyYoutubeState.textContent=state.youtubeAccessValid
+        ? (data.channel?.title?'Connected: '+data.channel.title:'YouTube connected')
+        : 'YouTube not connected';
     }catch(_){
       state.auth=false;
       state.youtubeAccessValid=false;
@@ -690,6 +694,8 @@
       els.authPill.textContent='Backend required';
       els.connect.hidden=false;
       els.disconnect.hidden=true;
+      if(els.legacyYoutubeConnect)els.legacyYoutubeConnect.hidden=false;
+      if(els.legacyYoutubeState)els.legacyYoutubeState.textContent='YouTube not connected';
     }
   }
   function render(){
@@ -817,9 +823,15 @@
     els.load?.click();
   });
 
-  els.connect?.addEventListener('click',()=>{location.href=`${API}/oauth/start?return_to=${encodeURIComponent('/tldub/')}`});
-  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/oauth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.auth=false;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('Private session locked.')});
+  els.connect?.addEventListener('click',()=>{location.href=`${API}/session/start?return_to=${encodeURIComponent('/tldub/')}`});
+  els.legacyYoutubeConnect?.addEventListener('click',()=>{
+    if(!state.auth){setStatus('Unlock TL-Dub first.','error');return}
+    location.href=`${API}/oauth/start?return_to=${encodeURIComponent('/tldub/')}`;
+  });
+
+  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/session/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.auth=false;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('Private session locked.')});
   els.load?.addEventListener('click',async()=>{
+    if(!state.youtubeAccessValid){setStatus('Legacy YouTube import needs a separate YouTube connection. Use “Connect YouTube for legacy import” first.','error');return}
     const url=els.videoUrl.value.trim();
     if(!url){setStatus('Paste a YouTube video URL first.','error');return}
     const videoId=clientVideoId(url);
