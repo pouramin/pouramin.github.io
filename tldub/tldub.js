@@ -1,5 +1,5 @@
 (() => {
-  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',sourceType:'youtube',audio:null,auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,transcriptionConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
+  const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],sourceWordTimings:[],videoId:'',title:'',sourceType:'youtube',audio:null,auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,transcriptionConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
   const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),authPasswordForm:$('[data-auth-password-form]'),authPassword:$('[data-auth-password]'),authMfa:$('[data-auth-mfa]'),authTotpForm:$('[data-auth-totp-form]'),authTotp:$('[data-auth-totp]'),authRecoveryForm:$('[data-auth-recovery-form]'),authRecovery:$('[data-auth-recovery]'),authSetup:$('[data-auth-setup]'),authSetupStart:$('[data-auth-setup-start]'),authSetupDetails:$('[data-auth-setup-details]'),authQr:$('[data-auth-qr]'),authManualToggle:$('[data-auth-manual-toggle]'),authManual:$('[data-auth-manual]'),authSetupSecret:$('[data-auth-setup-secret]'),authCopySecret:$('[data-auth-copy-secret]'),authOpenApp:$('[data-auth-open-app]'),authSetupForm:$('[data-auth-setup-form]'),authSetupCode:$('[data-auth-setup-code]'),authRecoveryCodes:$('[data-auth-recovery-codes]'),authRecoveryCodesList:$('[data-auth-recovery-codes-list]'),authCopyRecovery:$('[data-auth-copy-recovery]'),authFinishSetup:$('[data-auth-finish-setup]'),authUnlocked:$('[data-auth-unlocked]'),authError:$('[data-auth-error]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),resegment:$('[data-resegment]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),legacyYoutubeConnect:$('[data-legacy-youtube-connect]'),legacyYoutubeState:$('[data-legacy-youtube-state]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
@@ -157,6 +157,7 @@
     const files={
       'transcript/fa.srt':sourceSrt,
       'transcript/fa.vtt':sourceVtt,
+      ...(state.sourceWordTimings.length?{'transcript/fa.words.json':JSON.stringify(state.sourceWordTimings,null,2)}:{}),
       'translation/en.srt':currentSrt,
       'translation/en.vtt':currentVtt,
       'translation/glossary.json':JSON.stringify(state.glossary||[],null,2),
@@ -187,6 +188,7 @@
       originalUrl:state.sourceType==='youtube'?(state.projectOriginalUrl||els.videoUrl?.value||''):'',
       sourceType:state.sourceType||'youtube',
       audio:state.audio||null,
+      sourceWordTimings:[...(state.sourceWordTimings||[])],
       createdAt,
       updatedAt:now,
       translationSource:state.translationSource,
@@ -346,6 +348,7 @@
     state.title=project.title||'Untitled project';
     state.sourceType=project.sourceType||'youtube';
     state.audio=project.audio||null;
+    state.sourceWordTimings=Array.isArray(project.sourceWordTimings)?project.sourceWordTimings:[];
     state.translationSource=project.translationSource||'';
     state.pipelineVersion=Number(project.pipelineVersion||1);
     state.previousEnglishBackup=project.previousEnglishBackup||null;
@@ -872,6 +875,14 @@
   els.resegment?.addEventListener('click',async()=>{
     if(state.aiRunning){setStatus('Wait for the current AI request to stop first.','error');return}
     const before=state.segments.length;
+    if(!state.sourceWordTimings.length){
+      state.sourceWordTimings=state.segments.map(seg=>({
+        index:Number(seg.index),
+        start:Number(seg.start),
+        end:Number(seg.end),
+        text:String(seg.sourceText||'')
+      }));
+    }
     const rebuilt=buildClientPersianSegments(state.segments);
     if(!rebuilt.length||rebuilt.length>=before){
       setStatus('Sentence rebuild did not find useful boundaries. No changes were saved.','error');
