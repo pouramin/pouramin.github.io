@@ -69,16 +69,17 @@
       const words=countSpeechWords(current.text);
       const chars=current.text.length;
       const strongEnd=/[.!?؟]+$/u.test(current.text);
-      const softEnd=/[؛:،,]+$/u.test(current.text);
+      const softEnd=/[؛:]+$/u.test(current.text);
       const openEnding=persianSegmentEndsOpen(current.text);
 
-      const hardPause=gap>=1.05;
-      const sentenceBoundary=strongEnd&&duration>=1.4&&words>=3;
-      const naturalPause=!openEnding&&gap>=.48&&duration>=2.5&&words>=5;
-      const targetBoundary=!openEnding&&duration>=4.8&&words>=10&&(gap>=.2||softEnd);
-      const maxBoundary=!openEnding&&(duration>=7.4||words>=20||chars>=130);
-      const emergencyBoundary=duration>=10.5||words>=30||chars>=190;
-      if(hardPause||sentenceBoundary||naturalPause||targetBoundary||maxBoundary||emergencyBoundary)push();
+      const sentenceBoundary=strongEnd&&duration>=1.0;
+      const softBoundary=softEnd&&duration>=3.0&&!openEnding;
+      const naturalPause=gap>=.75&&duration>=2.5&&!openEnding;
+      const hardPause=gap>=1.2;
+      const longFallback=(duration>=12||words>=35||chars>=240)&&gap>=.18&&!openEnding;
+      const emergencyFallback=duration>=15||words>=45||chars>=300;
+
+      if(sentenceBoundary||softBoundary||naturalPause||hardPause||longFallback||emergencyFallback)push();
     }
 
     const merged=[];
@@ -96,19 +97,6 @@
         prev.text=normalizePersianSegmentText(joinPersianSpeechText(prev.text,seg.text));
         prev.end=seg.end;
       }else merged.push({...seg});
-    }
-
-    for(let i=0;i<merged.length-1;){
-      const current=merged[i],next=merged[i+1];
-      const gap=Math.max(0,next.start-current.end);
-      const combined=next.end-current.start;
-      if(persianSegmentEndsOpen(current.text)&&gap<.8&&combined<=10.8){
-        current.text=normalizePersianSegmentText(joinPersianSpeechText(current.text,next.text));
-        current.end=next.end;
-        merged.splice(i+1,1);
-        continue;
-      }
-      i++;
     }
 
     return merged.map((seg,index)=>({
@@ -162,7 +150,7 @@
 
   function needsPersianResegmentation(){
     if(state.sourceType!=='audio'||!state.segments.length)return false;
-    if(Number(state.audio?.segmentationVersion||0)>=3)return false;
+    if(Number(state.audio?.segmentationVersion||0)>=4)return false;
     if(state.sourceWordTimings?.length)return true;
     const short=state.segments.filter(seg=>(Number(seg.end)-Number(seg.start))<1.35).length;
     return state.segments.length>=40&&short/state.segments.length>.55;
@@ -955,7 +943,7 @@
     }
 
     state.segments=rebuilt;
-    state.audio={...(state.audio||{}),segmentationVersion:3,rawCueCount:state.sourceWordTimings.length||before,mergedSegmentCount:rebuilt.length};
+    state.audio={...(state.audio||{}),segmentationVersion:4,rawCueCount:state.sourceWordTimings.length||before,mergedSegmentCount:rebuilt.length};
     state.translationSource='';
     state.youtubeEnglish=[];
     state.aiModels=[];
