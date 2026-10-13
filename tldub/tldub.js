@@ -1,6 +1,6 @@
 (() => {
   const API='https://tldub-api.pouramin.dev/tldub/api',$=(s,p=document)=>p.querySelector(s),state={segments:[],videoId:'',title:'',sourceType:'youtube',audio:null,auth:false,youtubeAccessValid:false,csrf:null,aiConfigured:false,aiCredentialCount:0,transcriptionConfigured:false,translationSource:'',youtubeEnglish:[],aiModels:[],aiCredentialSlotsUsed:[],aiComplete:false,aiRunning:false,glossary:[],glossaryModel:'',qcIssues:[],qcRepairBatches:0,qcRepairSkippedBatches:0,qcFinalRepairCalls:0,qcRepairFailed:false,projectCreatedAt:null,projectFolderName:'',projectOriginalUrl:'',forceYoutubeRefresh:false,projectStorage:false,pipelineVersion:1,previousEnglishBackup:null,semanticAuditComplete:false};
-  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),connect:$('[data-connect]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),legacyYoutubeConnect:$('[data-legacy-youtube-connect]'),legacyYoutubeState:$('[data-legacy-youtube-state]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
+  const els={apiState:$('[data-api-state]'),apiDot:$('[data-api-dot]'),authPill:$('[data-auth-pill]'),disconnect:$('[data-disconnect]'),accountNote:$('[data-account-note]'),authPasswordForm:$('[data-auth-password-form]'),authPassword:$('[data-auth-password]'),authMfa:$('[data-auth-mfa]'),authTotpForm:$('[data-auth-totp-form]'),authTotp:$('[data-auth-totp]'),authRecoveryForm:$('[data-auth-recovery-form]'),authRecovery:$('[data-auth-recovery]'),authSetup:$('[data-auth-setup]'),authSetupStart:$('[data-auth-setup-start]'),authSetupDetails:$('[data-auth-setup-details]'),authSetupSecret:$('[data-auth-setup-secret]'),authCopySecret:$('[data-auth-copy-secret]'),authOpenApp:$('[data-auth-open-app]'),authSetupForm:$('[data-auth-setup-form]'),authSetupCode:$('[data-auth-setup-code]'),authRecoveryCodes:$('[data-auth-recovery-codes]'),authRecoveryCodesList:$('[data-auth-recovery-codes-list]'),authCopyRecovery:$('[data-auth-copy-recovery]'),authFinishSetup:$('[data-auth-finish-setup]'),authUnlocked:$('[data-auth-unlocked]'),authError:$('[data-auth-error]'),videoUrl:$('[data-video-url]'),load:$('[data-load]'),translate:$('[data-translate]'),status:$('[data-status]'),results:$('[data-results]'),count:$('[data-segment-count]'),title:$('[data-video-title]'),meta:$('[data-video-meta]'),body:$('[data-script-body]'),mobile:$('[data-mobile-script]'),aiTranslate:$('[data-ai-translate]'),aiNote:$('[data-ai-note]'),aiProgressRow:$('[data-ai-progress-row]'),aiProgress:$('[data-ai-progress]'),aiProgressText:$('[data-ai-progress-text]'),restoreYoutube:$('[data-restore-youtube]'),youtubeExport:$('[data-youtube-export]'),currentEnLabel:$('[data-current-en-label]'),currentVttLabel:$('[data-current-vtt-label]'),projectMemoryNote:$('[data-project-memory-note]'),projectList:$('[data-project-list]'),projectOpen:$('[data-project-open]'),projectImport:$('[data-project-import]'),projectFile:$('[data-project-file]'),projectRefresh:$('[data-project-refresh]'),projectTitle:$('[data-project-title]'),audioFile:$('[data-audio-file]'),audioDropzone:$('[data-audio-dropzone]'),audioFileNote:$('[data-audio-file-note]'),audioTranscribe:$('[data-audio-transcribe]'),legacyYoutubeConnect:$('[data-legacy-youtube-connect]'),legacyYoutubeState:$('[data-legacy-youtube-state]'),privateContent:[...document.querySelectorAll('[data-private-content]')]};
   const setStatus=(text,kind='')=>{els.status.textContent=text;els.status.className='status-box'+(kind?' '+kind:'')};
   const fmt=(sec,comma=false)=>{const ms=Math.max(0,Math.round(Number(sec||0)*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000,sep=comma?',':'.';return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${sep}${String(x).padStart(3,'0')}`};
   const esc=text=>String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -13,7 +13,7 @@
 
 
   const PROJECT_DB='tldub-projects',PROJECT_STORE='projects',PROJECT_DB_VERSION=1;
-  let projectDbPromise=null,autosaveTimer=null,selectedAudioFile=null;
+  let projectDbPromise=null,autosaveTimer=null,selectedAudioFile=null,activeTotpSetup=null,recoveryCodesCache=[];
 
   function openProjectDb(){
     if(projectDbPromise)return projectDbPromise;
@@ -668,34 +668,56 @@
       return false;
     }
   }
+  function setAuthError(message=''){
+    if(!els.authError)return;
+    els.authError.textContent=message;
+    els.authError.hidden=!message;
+  }
+
+  function showAuthStage(stage){
+    if(els.authPasswordForm)els.authPasswordForm.hidden=stage!=='password';
+    if(els.authMfa)els.authMfa.hidden=stage!=='mfa';
+    if(els.authSetup)els.authSetup.hidden=stage!=='setup';
+    if(els.authRecoveryCodes)els.authRecoveryCodes.hidden=stage!=='recovery-codes';
+    if(els.authUnlocked)els.authUnlocked.hidden=stage!=='unlocked';
+    setAuthError('');
+  }
+
   async function checkAuth(){
     try{
-      const data=await jsonFetch(API+'/session/status',{headers:{}});
-      state.auth=Boolean(data.connected);
+      const data=await jsonFetch(API+'/auth/status',{headers:{}});
+      state.auth=Boolean(data.authenticated);
       state.youtubeAccessValid=Boolean(data.youtubeAccessValid);
       state.csrf=data.csrfToken||null;
       els.authPill.textContent=state.auth?'Unlocked':'Locked';
       els.authPill.classList.toggle('connected',state.auth);
-      els.connect.hidden=state.auth;
-      els.disconnect.hidden=!state.auth;
       els.privateContent.forEach(el=>{el.hidden=!state.auth});
-      els.accountNote.textContent=state.auth
-        ? 'Private Cloudflare Access session active. Audio transcription and saved projects are unlocked.'
-        : 'Unlock this private TL-Dub instance with Cloudflare Access.';
+      if(state.auth){
+        showAuthStage('unlocked');
+        els.accountNote.textContent='Password + authenticator verified. Private session active.';
+      }else{
+        showAuthStage('password');
+        els.accountNote.textContent=data.setupRequired
+          ? 'Enter the admin password. Two-factor setup will follow.'
+          : 'Enter the admin password, then verify your authenticator code.';
+      }
       if(els.legacyYoutubeConnect)els.legacyYoutubeConnect.hidden=state.youtubeAccessValid;
       if(els.legacyYoutubeState)els.legacyYoutubeState.textContent=state.youtubeAccessValid
         ? (data.channel?.title?'Connected: '+data.channel.title:'YouTube connected')
         : 'YouTube not connected';
-    }catch(_){
+      return data;
+    }catch(err){
       state.auth=false;
       state.youtubeAccessValid=false;
       state.csrf=null;
       els.privateContent.forEach(el=>{el.hidden=true});
-      els.authPill.textContent='Backend required';
-      els.connect.hidden=false;
-      els.disconnect.hidden=true;
+      els.authPill.textContent='Locked';
+      showAuthStage('password');
+      els.accountNote.textContent='Secure login is unavailable until the backend admin password is configured.';
+      setAuthError(err?.message||'Could not check login status.');
       if(els.legacyYoutubeConnect)els.legacyYoutubeConnect.hidden=false;
       if(els.legacyYoutubeState)els.legacyYoutubeState.textContent='YouTube not connected';
+      return null;
     }
   }
   function render(){
@@ -822,14 +844,138 @@
     state.forceYoutubeRefresh=true;
     els.load?.click();
   });
+  els.authPasswordForm?.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const password=els.authPassword?.value||'';
+    if(!password)return;
+    setAuthError('');
+    const button=els.authPasswordForm.querySelector('button[type="submit"]');
+    if(button){button.disabled=true;button.textContent='Checking…'}
+    try{
+      const result=await jsonFetch(API+'/auth/login',{method:'POST',body:JSON.stringify({password})});
+      if(els.authPassword)els.authPassword.value='';
+      if(result.setupRequired){
+        showAuthStage('setup');
+      }else{
+        showAuthStage('mfa');
+        els.authTotp?.focus();
+      }
+    }catch(err){
+      setAuthError(err?.message||'Login failed.');
+    }finally{
+      if(button){button.disabled=false;button.textContent='Continue'}
+    }
+  });
 
-  els.connect?.addEventListener('click',()=>{location.href=`${API}/session/start?return_to=${encodeURIComponent('/tldub/')}`});
+  els.authTotpForm?.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const code=(els.authTotp?.value||'').replace(/\D/g,'').slice(0,6);
+    if(code.length!==6)return;
+    setAuthError('');
+    const button=els.authTotpForm.querySelector('button[type="submit"]');
+    if(button){button.disabled=true;button.textContent='Verifying…'}
+    try{
+      await jsonFetch(API+'/auth/totp',{method:'POST',body:JSON.stringify({code})});
+      if(els.authTotp)els.authTotp.value='';
+      await checkAuth();
+      await refreshProjectList();
+      await restoreLastProject();
+      setStatus('Secure login complete.','success');
+    }catch(err){
+      setAuthError(err?.message||'Authenticator verification failed.');
+    }finally{
+      if(button){button.disabled=false;button.textContent='Verify code'}
+    }
+  });
+
+  els.authRecoveryForm?.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const code=(els.authRecovery?.value||'').trim();
+    if(!code)return;
+    setAuthError('');
+    try{
+      await jsonFetch(API+'/auth/recovery',{method:'POST',body:JSON.stringify({code})});
+      if(els.authRecovery)els.authRecovery.value='';
+      await checkAuth();
+      await refreshProjectList();
+      await restoreLastProject();
+      setStatus('Recovery code accepted. Secure login complete.','success');
+    }catch(err){
+      setAuthError(err?.message||'Recovery code failed.');
+    }
+  });
+
+  els.authSetupStart?.addEventListener('click',async()=>{
+    setAuthError('');
+    els.authSetupStart.disabled=true;
+    els.authSetupStart.textContent='Generating…';
+    try{
+      activeTotpSetup=await jsonFetch(API+'/auth/setup/totp/start',{method:'POST',body:'{}'});
+      if(els.authSetupSecret)els.authSetupSecret.textContent=activeTotpSetup.secret||'';
+      if(els.authOpenApp)els.authOpenApp.href=activeTotpSetup.otpauthUri||'#';
+      if(els.authSetupDetails)els.authSetupDetails.hidden=false;
+      els.authSetupCode?.focus();
+    }catch(err){
+      setAuthError(err?.message||'Could not start authenticator setup.');
+    }finally{
+      els.authSetupStart.disabled=false;
+      els.authSetupStart.textContent='Generate authenticator key';
+    }
+  });
+
+  els.authCopySecret?.addEventListener('click',async()=>{
+    const secret=activeTotpSetup?.secret||'';
+    if(!secret)return;
+    try{await navigator.clipboard.writeText(secret);els.authCopySecret.textContent='Copied';setTimeout(()=>{els.authCopySecret.textContent='Copy key'},1400)}catch(_){}
+  });
+
+  els.authSetupCode?.addEventListener('input',()=>{
+    els.authSetupCode.value=els.authSetupCode.value.replace(/\D/g,'').slice(0,6);
+  });
+  els.authTotp?.addEventListener('input',()=>{
+    els.authTotp.value=els.authTotp.value.replace(/\D/g,'').slice(0,6);
+  });
+
+  els.authSetupForm?.addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!activeTotpSetup?.challengeId){setAuthError('Generate the authenticator key first.');return}
+    const code=(els.authSetupCode?.value||'').replace(/\D/g,'').slice(0,6);
+    if(code.length!==6)return;
+    setAuthError('');
+    const button=els.authSetupForm.querySelector('button[type="submit"]');
+    if(button){button.disabled=true;button.textContent='Enabling…'}
+    try{
+      const result=await jsonFetch(API+'/auth/setup/totp/finish',{method:'POST',body:JSON.stringify({challengeId:activeTotpSetup.challengeId,code})});
+      recoveryCodesCache=Array.isArray(result.recoveryCodes)?result.recoveryCodes:[];
+      if(els.authRecoveryCodesList)els.authRecoveryCodesList.innerHTML=recoveryCodesCache.map(code=>'<code>'+esc(code)+'</code>').join('');
+      showAuthStage('recovery-codes');
+    }catch(err){
+      setAuthError(err?.message||'Could not enable authenticator.');
+    }finally{
+      if(button){button.disabled=false;button.textContent='Enable authenticator'}
+    }
+  });
+
+  els.authCopyRecovery?.addEventListener('click',async()=>{
+    if(!recoveryCodesCache.length)return;
+    try{await navigator.clipboard.writeText(recoveryCodesCache.join('\n'));els.authCopyRecovery.textContent='Copied';setTimeout(()=>{els.authCopyRecovery.textContent='Copy all'},1400)}catch(_){}
+  });
+
+  els.authFinishSetup?.addEventListener('click',async()=>{
+    activeTotpSetup=null;
+    recoveryCodesCache=[];
+    await checkAuth();
+    await refreshProjectList();
+    await restoreLastProject();
+    setStatus('Two-factor authentication enabled. TL-Dub is unlocked.','success');
+  });
+
   els.legacyYoutubeConnect?.addEventListener('click',()=>{
     if(!state.auth){setStatus('Unlock TL-Dub first.','error');return}
     location.href=`${API}/oauth/start?return_to=${encodeURIComponent('/tldub/')}`;
   });
 
-  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/session/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.auth=false;state.segments=[];els.results.hidden=true;await checkAuth();setStatus('Private session locked.')});
+  els.disconnect?.addEventListener('click',async()=>{try{await jsonFetch(`${API}/auth/logout`,{method:'POST',body:'{}'})}catch(_){}state.csrf=null;state.auth=false;state.segments=[];els.results.hidden=true;activeTotpSetup=null;recoveryCodesCache=[];await checkAuth();setStatus('Private session locked.')});
   els.load?.addEventListener('click',async()=>{
     if(!state.youtubeAccessValid){setStatus('Legacy YouTube import needs a separate YouTube connection. Use “Connect YouTube for legacy import” first.','error');return}
     const url=els.videoUrl.value.trim();
