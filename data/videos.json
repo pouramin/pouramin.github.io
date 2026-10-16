@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-15T11:13:11+00:00",
+  "feedUpdatedAt": "2026-10-16T04:00:31+00:00",
   "videos": [
+    {
+      "videoId": "2zC7WKdROsM",
+      "title": "3 مدل مهم در یک روز منتشر شدن ! Meta, Step5 و Nvidia  #هوش_مصنوعی",
+      "publishedAt": "2026-10-16T04:00:31+00:00",
+      "updatedAt": "2026-10-16T04:00:31+00:00",
+      "url": "https://www.youtube.com/watch?v=2zC7WKdROsM",
+      "thumbnail": "https://i.ytimg.com/vi/2zC7WKdROsM/maxresdefault.jpg"
+    },
     {
       "videoId": "rxlR-uSFd_c",
       "title": "ایجنت هوش مصنوعی بدون اینترنت؟  #هوش_مصنوعی",
@@ -24,7 +32,7 @@
       "videoId": "lSIFKxjJVtk",
       "title": "جمنای 4 آرگون منتشر شد ! Gemini 4 Argon #هوش_مصنوعی",
       "publishedAt": "2026-10-14T04:00:32+00:00",
-      "updatedAt": "2026-10-14T08:22:37+00:00",
+      "updatedAt": "2026-10-15T17:04:40+00:00",
       "url": "https://www.youtube.com/watch?v=lSIFKxjJVtk",
       "thumbnail": "https://i.ytimg.com/vi/lSIFKxjJVtk/maxresdefault.jpg"
     },
@@ -48,7 +56,7 @@
       "videoId": "2_hggybJ6rk",
       "title": "آپدیت جدید OpenCode؛ ارتقا به نسخه 2 ساده‌تر شد | آپدیت مهم copilot #هوش_مصنوعی #chatgpt",
       "publishedAt": "2026-10-12T04:00:08+00:00",
-      "updatedAt": "2026-10-12T17:19:01+00:00",
+      "updatedAt": "2026-10-15T03:29:27+00:00",
       "url": "https://www.youtube.com/watch?v=2_hggybJ6rk",
       "thumbnail": "https://i.ytimg.com/vi/2_hggybJ6rk/maxresdefault.jpg"
     },
@@ -56,7 +64,7 @@
       "videoId": "ADLazzP3Feg",
       "title": "کلاد خودش به پلیس گزارش جعلی داده!  | کاهش 76 برابری هزینه ایجنت‌های AI",
       "publishedAt": "2026-10-11T04:00:37+00:00",
-      "updatedAt": "2026-10-12T17:25:30+00:00",
+      "updatedAt": "2026-10-14T03:53:26+00:00",
       "url": "https://www.youtube.com/watch?v=ADLazzP3Feg",
       "thumbnail": "https://i.ytimg.com/vi/ADLazzP3Feg/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-09T09:30:47+00:00",
       "url": "https://www.youtube.com/watch?v=HWUuCjsnqlQ",
       "thumbnail": "https://i.ytimg.com/vi/HWUuCjsnqlQ/maxresdefault.jpg"
-    },
-    {
-      "videoId": "-eGhXkPRYOQ",
-      "title": "بررسی کامل OpenAI Dots | ایجنت جدید OpenAI با GPT-6 Astra",
-      "publishedAt": "2026-10-01T15:11:12+00:00",
-      "updatedAt": "2026-10-04T23:43:31+00:00",
-      "url": "https://www.youtube.com/watch?v=-eGhXkPRYOQ",
-      "thumbnail": "https://i.ytimg.com/vi/-eGhXkPRYOQ/maxresdefault.jpg"
     }
   ]
 }
