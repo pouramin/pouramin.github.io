@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-16T04:00:31+00:00",
+  "feedUpdatedAt": "2026-10-17T04:00:37+00:00",
   "videos": [
+    {
+      "videoId": "hHRnu8Vv_tg",
+      "title": "پاسپورت برای ایجنت‌های هوش مصنوعی؟! داستان چیه؟ #هوش_مصنوعی",
+      "publishedAt": "2026-10-17T04:00:37+00:00",
+      "updatedAt": "2026-10-17T04:00:37+00:00",
+      "url": "https://www.youtube.com/watch?v=hHRnu8Vv_tg",
+      "thumbnail": "https://i.ytimg.com/vi/hHRnu8Vv_tg/maxresdefault.jpg"
+    },
     {
       "videoId": "2zC7WKdROsM",
       "title": "3 مدل مهم در یک روز منتشر شدن ! Meta, Step5 و Nvidia  #هوش_مصنوعی",
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-12T17:28:46+00:00",
       "url": "https://www.youtube.com/watch?v=9YpPxLbEYg4",
       "thumbnail": "https://i.ytimg.com/vi/9YpPxLbEYg4/maxresdefault.jpg"
-    },
-    {
-      "videoId": "HWUuCjsnqlQ",
-      "title": "چطور هزینه Claude Code و Codex رو کم کنیم؟ | با JEV Router",
-      "publishedAt": "2026-10-05T16:30:05+00:00",
-      "updatedAt": "2026-10-09T09:30:47+00:00",
-      "url": "https://www.youtube.com/watch?v=HWUuCjsnqlQ",
-      "thumbnail": "https://i.ytimg.com/vi/HWUuCjsnqlQ/maxresdefault.jpg"
     }
   ]
 }
