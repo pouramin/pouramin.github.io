@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-18T04:00:02+00:00",
+  "feedUpdatedAt": "2026-10-19T04:00:09+00:00",
   "videos": [
+    {
+      "videoId": "DPRHDK0l8SE",
+      "title": "دیپ‌سیک قوی‌تر شد! مدل جدید برای کدنویسی  #هوش_مصنوعی",
+      "publishedAt": "2026-10-19T04:00:09+00:00",
+      "updatedAt": "2026-10-19T04:00:09+00:00",
+      "url": "https://www.youtube.com/watch?v=DPRHDK0l8SE",
+      "thumbnail": "https://i.ytimg.com/vi/DPRHDK0l8SE/maxresdefault.jpg"
+    },
+    {
+      "videoId": "iHeLVF3ph5Y",
+      "title": "مهندسی معکوس نرم‌افزار با هوش مصنوعی! | تست REA و Codex",
+      "publishedAt": "2026-10-18T15:00:14+00:00",
+      "updatedAt": "2026-10-18T15:00:15+00:00",
+      "url": "https://www.youtube.com/watch?v=iHeLVF3ph5Y",
+      "thumbnail": "https://i.ytimg.com/vi/iHeLVF3ph5Y/maxresdefault.jpg"
+    },
     {
       "videoId": "uhc0TI9Eet0",
       "title": "سایت‌های بزرگ دارن ایجنت‌های هوش مصنوعی رو بلاک می‌کنن!  #هوش_مصنوعی",
@@ -83,22 +99,6 @@
       "updatedAt": "2026-10-14T03:53:26+00:00",
       "url": "https://www.youtube.com/watch?v=ADLazzP3Feg",
       "thumbnail": "https://i.ytimg.com/vi/ADLazzP3Feg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "0rE86ZzjUAI",
-      "title": "کلاد ۱۰ برابر شد: قدرت ۱۰۰۰ ایجنت در یک کلیک! #کلاد #هوش_مصنوعی",
-      "publishedAt": "2026-10-10T04:00:14+00:00",
-      "updatedAt": "2026-10-13T02:48:29+00:00",
-      "url": "https://www.youtube.com/watch?v=0rE86ZzjUAI",
-      "thumbnail": "https://i.ytimg.com/vi/0rE86ZzjUAI/maxresdefault.jpg"
-    },
-    {
-      "videoId": "EZNnEa1a4MI",
-      "title": "هر ماه 100 میلیون توکن رایگان؟ | تست واقعی Mistral Large 4",
-      "publishedAt": "2026-10-09T15:19:57+00:00",
-      "updatedAt": "2026-10-13T02:43:22+00:00",
-      "url": "https://www.youtube.com/watch?v=EZNnEa1a4MI",
-      "thumbnail": "https://i.ytimg.com/vi/EZNnEa1a4MI/maxresdefault.jpg"
     }
   ]
 }
