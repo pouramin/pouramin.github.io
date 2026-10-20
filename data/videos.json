@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-19T04:00:09+00:00",
+  "feedUpdatedAt": "2026-10-20T04:39:35+00:00",
   "videos": [
+    {
+      "videoId": "mcVLB8m-wpQ",
+      "title": "گوگل ابزار خودبهینه‌سازی ایجنت‌ها( Harness2) رو متن‌باز کرد!  #هوش_مصنوعی",
+      "publishedAt": "2026-10-20T04:00:11+00:00",
+      "updatedAt": "2026-10-20T04:00:12+00:00",
+      "url": "https://www.youtube.com/watch?v=mcVLB8m-wpQ",
+      "thumbnail": "https://i.ytimg.com/vi/mcVLB8m-wpQ/maxresdefault.jpg"
+    },
+    {
+      "videoId": "kK1G2OoicqA",
+      "title": "بهترین هوش مصنوعی ساخت ویدیو کدومه؟ تست واقعی 8 مدل با یک پرامپت!",
+      "publishedAt": "2026-10-19T15:00:26+00:00",
+      "updatedAt": "2026-10-20T04:39:35+00:00",
+      "url": "https://www.youtube.com/watch?v=kK1G2OoicqA",
+      "thumbnail": "https://i.ytimg.com/vi/kK1G2OoicqA/maxresdefault.jpg"
+    },
     {
       "videoId": "DPRHDK0l8SE",
       "title": "دیپ‌سیک قوی‌تر شد! مدل جدید برای کدنویسی  #هوش_مصنوعی",
@@ -40,7 +56,7 @@
       "videoId": "2zC7WKdROsM",
       "title": "3 مدل مهم در یک روز منتشر شدن ! Meta, Step5 و Nvidia  #هوش_مصنوعی",
       "publishedAt": "2026-10-16T04:00:31+00:00",
-      "updatedAt": "2026-10-16T04:00:31+00:00",
+      "updatedAt": "2026-10-18T21:52:07+00:00",
       "url": "https://www.youtube.com/watch?v=2zC7WKdROsM",
       "thumbnail": "https://i.ytimg.com/vi/2zC7WKdROsM/maxresdefault.jpg"
     },
@@ -48,7 +64,7 @@
       "videoId": "rxlR-uSFd_c",
       "title": "ایجنت هوش مصنوعی بدون اینترنت؟  #هوش_مصنوعی",
       "publishedAt": "2026-10-15T04:00:26+00:00",
-      "updatedAt": "2026-10-15T10:10:10+00:00",
+      "updatedAt": "2026-10-18T00:43:48+00:00",
       "url": "https://www.youtube.com/watch?v=rxlR-uSFd_c",
       "thumbnail": "https://i.ytimg.com/vi/rxlR-uSFd_c/maxresdefault.jpg"
     },
@@ -56,7 +72,7 @@
       "videoId": "9sIDakDOVyY",
       "title": "تست واقعی Gemini 4 Argon؛ ازش خواستم بازی سه‌بعدی بسازه! نتیجه چی شد؟",
       "publishedAt": "2026-10-14T15:30:53+00:00",
-      "updatedAt": "2026-10-15T11:13:11+00:00",
+      "updatedAt": "2026-10-18T01:05:57+00:00",
       "url": "https://www.youtube.com/watch?v=9sIDakDOVyY",
       "thumbnail": "https://i.ytimg.com/vi/9sIDakDOVyY/maxresdefault.jpg"
     },
@@ -64,7 +80,7 @@
       "videoId": "lSIFKxjJVtk",
       "title": "جمنای 4 آرگون منتشر شد ! Gemini 4 Argon #هوش_مصنوعی",
       "publishedAt": "2026-10-14T04:00:32+00:00",
-      "updatedAt": "2026-10-15T17:04:40+00:00",
+      "updatedAt": "2026-10-18T00:46:21+00:00",
       "url": "https://www.youtube.com/watch?v=lSIFKxjJVtk",
       "thumbnail": "https://i.ytimg.com/vi/lSIFKxjJVtk/maxresdefault.jpg"
     },
@@ -72,7 +88,7 @@
       "videoId": "2s5qanvMZrg",
       "title": "متا و مدلهای Muse Wonder و Muse Woder Full | رقیب تازه کلاد و GPT-6؟",
       "publishedAt": "2026-10-13T04:00:15+00:00",
-      "updatedAt": "2026-10-13T12:34:16+00:00",
+      "updatedAt": "2026-10-18T01:08:43+00:00",
       "url": "https://www.youtube.com/watch?v=2s5qanvMZrg",
       "thumbnail": "https://i.ytimg.com/vi/2s5qanvMZrg/maxresdefault.jpg"
     },
@@ -80,25 +96,9 @@
       "videoId": "kR19gZ23vXQ",
       "title": "- هوش مصنوعی رایگان 600 میلیاردی چقدر قدرتمنده؟ | مقایسه Step 5 با GPT-5.6",
       "publishedAt": "2026-10-12T17:10:18+00:00",
-      "updatedAt": "2026-10-12T20:05:25+00:00",
+      "updatedAt": "2026-10-18T00:51:58+00:00",
       "url": "https://www.youtube.com/watch?v=kR19gZ23vXQ",
       "thumbnail": "https://i.ytimg.com/vi/kR19gZ23vXQ/maxresdefault.jpg"
-    },
-    {
-      "videoId": "2_hggybJ6rk",
-      "title": "آپدیت جدید OpenCode؛ ارتقا به نسخه 2 ساده‌تر شد | آپدیت مهم copilot #هوش_مصنوعی #chatgpt",
-      "publishedAt": "2026-10-12T04:00:08+00:00",
-      "updatedAt": "2026-10-15T03:29:27+00:00",
-      "url": "https://www.youtube.com/watch?v=2_hggybJ6rk",
-      "thumbnail": "https://i.ytimg.com/vi/2_hggybJ6rk/maxresdefault.jpg"
-    },
-    {
-      "videoId": "ADLazzP3Feg",
-      "title": "کلاد خودش به پلیس گزارش جعلی داده!  | کاهش 76 برابری هزینه ایجنت‌های AI",
-      "publishedAt": "2026-10-11T04:00:37+00:00",
-      "updatedAt": "2026-10-14T03:53:26+00:00",
-      "url": "https://www.youtube.com/watch?v=ADLazzP3Feg",
-      "thumbnail": "https://i.ytimg.com/vi/ADLazzP3Feg/maxresdefault.jpg"
     }
   ]
 }
