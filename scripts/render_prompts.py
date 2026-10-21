@@ -30,11 +30,10 @@ for item in entries:
     desc = html.escape(item.get("description") or item.get("headline") or "Prompts and companion resources for a TunnelLab video.")
     site = html.escape(item.get("siteUrl", ""), quote=True)
     repo = html.escape(item.get("repo", ""))
-    date = html.escape(date_label(item.get("createdAt", "")))
     cards.append(f'''<a class="prompt-item" href="{site}" target="_blank" rel="noreferrer">
   <span class="prompt-icon" aria-hidden="true">✦</span>
   <span class="prompt-copy">
-    <span class="micro">VIDEO PROMPTS · {date}</span>
+    <span class="micro">VIDEO PROMPTS</span>
     <strong>{title}</strong>
     <small>{desc}</small>
     <span class="prompt-meta">{repo}</span>
