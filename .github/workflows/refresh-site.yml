@@ -10,6 +10,9 @@ on:
       - "scripts/update_videos.py"
       - "scripts/generate_social_preview.py"
       - "scripts/render_videos.py"
+      - "scripts/update_prompts.py"
+      - "scripts/render_prompts.py"
+      - "prompts/index.html"
 
 permissions:
   contents: write
@@ -39,18 +42,24 @@ jobs:
       - name: Render TunnelLab videos into static HTML
         run: python scripts/render_videos.py
 
+      - name: Refresh prompt library
+        run: python scripts/update_prompts.py
+
+      - name: Render prompt library into static HTML
+        run: python scripts/render_prompts.py
+
       - name: Generate social preview
         run: python scripts/generate_social_preview.py
 
       - name: Commit changed generated files
         shell: bash
         run: |
-          if git diff --quiet -- data/videos.json assets/social-preview.png videos/index.html index.html; then
+          if git diff --quiet -- data/videos.json data/prompts.json assets/social-preview.png videos/index.html prompts/index.html index.html; then
             echo "Generated files are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/videos.json assets/social-preview.png videos/index.html index.html
+          git add data/videos.json data/prompts.json assets/social-preview.png videos/index.html prompts/index.html index.html
           git commit -m "chore: refresh dynamic site data"
           git push
