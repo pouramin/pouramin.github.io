@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-20T04:39:35+00:00",
+  "feedUpdatedAt": "2026-10-21T04:00:25+00:00",
   "videos": [
+    {
+      "videoId": "vjznLgt3ePg",
+      "title": "شرکت Antropic برای سم عقرب مولکول طراحی کرده | #هوش_مصنوعی",
+      "publishedAt": "2026-10-21T04:00:24+00:00",
+      "updatedAt": "2026-10-21T04:00:25+00:00",
+      "url": "https://www.youtube.com/watch?v=vjznLgt3ePg",
+      "thumbnail": "https://i.ytimg.com/vi/vjznLgt3ePg/maxresdefault.jpg"
+    },
     {
       "videoId": "mcVLB8m-wpQ",
       "title": "گوگل ابزار خودبهینه‌سازی ایجنت‌ها( Harness2) رو متن‌باز کرد!  #هوش_مصنوعی",
@@ -16,7 +24,7 @@
       "videoId": "kK1G2OoicqA",
       "title": "بهترین هوش مصنوعی ساخت ویدیو کدومه؟ تست واقعی 8 مدل با یک پرامپت!",
       "publishedAt": "2026-10-19T15:00:26+00:00",
-      "updatedAt": "2026-10-20T04:39:35+00:00",
+      "updatedAt": "2026-10-20T22:33:47+00:00",
       "url": "https://www.youtube.com/watch?v=kK1G2OoicqA",
       "thumbnail": "https://i.ytimg.com/vi/kK1G2OoicqA/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-18T01:08:43+00:00",
       "url": "https://www.youtube.com/watch?v=2s5qanvMZrg",
       "thumbnail": "https://i.ytimg.com/vi/2s5qanvMZrg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "kR19gZ23vXQ",
-      "title": "- هوش مصنوعی رایگان 600 میلیاردی چقدر قدرتمنده؟ | مقایسه Step 5 با GPT-5.6",
-      "publishedAt": "2026-10-12T17:10:18+00:00",
-      "updatedAt": "2026-10-18T00:51:58+00:00",
-      "url": "https://www.youtube.com/watch?v=kR19gZ23vXQ",
-      "thumbnail": "https://i.ytimg.com/vi/kR19gZ23vXQ/maxresdefault.jpg"
     }
   ]
 }
