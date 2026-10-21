@@ -1,0 +1,27 @@
+{
+  "owner": "pouramin",
+  "generatedFrom": "public TunnelLab companion repositories",
+  "count": 2,
+  "entries": [
+    {
+      "repo": "AiVideo",
+      "title": "AI Video Showdown — TunnelLab",
+      "headline": "Which AI makes the best video?",
+      "description": "Explore identical prompts and real AI-generated videos from eight models. A transparent AI video comparison by TunnelLab.",
+      "siteUrl": "https://pouramin.dev/AiVideo/",
+      "repoUrl": "https://github.com/pouramin/AiVideo",
+      "createdAt": "2026-10-18T12:52:38Z",
+      "updatedAt": "2026-10-19T11:40:27Z"
+    },
+    {
+      "repo": "REA-Codex",
+      "title": "REA + Codex | Practical Reverse Engineering Guide",
+      "headline": "From reverse engineering to building a real app",
+      "description": "An English REA + Codex tutorial with ASAR discovery, MCP setup, copy-ready prompts, independent app development, and testing.",
+      "siteUrl": "https://pouramin.dev/REA-Codex/",
+      "repoUrl": "https://github.com/pouramin/REA-Codex",
+      "createdAt": "2026-10-18T09:25:43Z",
+      "updatedAt": "2026-10-18T19:42:13Z"
+    }
+  ]
+}
