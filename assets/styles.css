@@ -72,3 +72,23 @@ html[data-theme="dark"]{--bg:#111315;--surface:#181b1e;--surface-2:#202428;--tex
 .command-empty{padding:22px 12px;text-align:center;color:var(--muted);font-size:11px}
 .command-list kbd{white-space:nowrap;min-width:34px;text-align:center}
 .command-list [data-command-item]:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:-2px;background:var(--surface-2)}
+
+
+/* Prompt library */
+.prompt-list{display:grid;gap:12px}
+.prompt-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:20px;text-decoration:none;transition:.2s}
+.prompt-item:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--accent) 28%,var(--line))}
+.prompt-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:19px;font-weight:900}
+.prompt-copy{display:grid;gap:6px;min-width:0}
+.prompt-copy strong{font-size:20px;line-height:1.2;letter-spacing:-.025em}
+.prompt-copy small{color:var(--muted);font-size:13px;line-height:1.55;max-width:850px}
+.prompt-meta{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);margin-top:2px}
+.prompt-arrow{font-size:20px;color:var(--muted);transition:.2s}
+.prompt-item:hover .prompt-arrow{transform:translate(2px,-2px);color:var(--accent)}
+@media(max-width:640px){
+  .prompt-item{grid-template-columns:auto minmax(0,1fr);padding:16px;gap:13px}
+  .prompt-arrow{display:none}
+  .prompt-icon{width:40px;height:40px;border-radius:12px}
+  .prompt-copy strong{font-size:17px}
+  .prompt-copy small{font-size:12px}
+}
