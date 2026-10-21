@@ -12,7 +12,6 @@ on:
       - "scripts/render_videos.py"
       - "scripts/update_prompts.py"
       - "scripts/render_prompts.py"
-      - "prompts/index.html"
 
 permissions:
   contents: write
