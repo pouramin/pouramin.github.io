@@ -1,0 +1,51 @@
+name: Refresh prompt library
+
+on:
+  schedule:
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/refresh-prompts.yml"
+      - "scripts/update_prompts.py"
+      - "scripts/render_prompts.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-prompt-library
+  cancel-in-progress: true
+
+jobs:
+  refresh-prompts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out site
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Discover TunnelLab prompt companions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/update_prompts.py
+
+      - name: Render prompt library
+        run: python scripts/render_prompts.py
+
+      - name: Commit prompt index changes
+        shell: bash
+        run: |
+          if git diff --quiet -- data/prompts.json prompts/index.html; then
+            echo "Prompt library is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/prompts.json prompts/index.html
+          git commit -m "chore: refresh prompt library"
+          git push
