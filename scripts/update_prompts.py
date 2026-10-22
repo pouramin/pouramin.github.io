@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import re
 import urllib.error
 import urllib.request
@@ -11,7 +12,13 @@ OUT = Path("data/prompts.json")
 USER_AGENT = "pouramin.dev prompt library refresh/1.0"
 
 def get_text(url):
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    headers = {"User-Agent": USER_AGENT}
+    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    if token and "api.github.com" in url:
+        headers["Authorization"] = f"Bearer {token}"
+        headers["Accept"] = "application/vnd.github+json"
+        headers["X-GitHub-Api-Version"] = "2022-11-28"
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=25) as response:
         return response.read().decode("utf-8", errors="replace")
 
