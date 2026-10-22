@@ -1,8 +1,18 @@
 {
   "owner": "pouramin",
   "generatedFrom": "public TunnelLab companion repositories",
-  "count": 2,
+  "count": 3,
   "entries": [
+    {
+      "repo": "FindSkill",
+      "title": "FindSkill — The Agent Skills Experiment",
+      "headline": "Can an agent find its own skills?",
+      "description": "Four real Codex skill-discovery experiments. Explore live AERON storefronts, prompts, source code and verified findings.",
+      "siteUrl": "https://pouramin.dev/FindSkill/",
+      "repoUrl": "https://github.com/pouramin/FindSkill",
+      "createdAt": "2026-10-22T02:09:09Z",
+      "updatedAt": "2026-10-22T02:37:51Z"
+    },
     {
       "repo": "AiVideo",
       "title": "AI Video Showdown — TunnelLab",
