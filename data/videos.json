@@ -2,13 +2,21 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-23T04:00:33+00:00",
+  "feedUpdatedAt": "2026-10-24T04:00:02+00:00",
   "videos": [
+    {
+      "videoId": "2gGRb_zGmno",
+      "title": "مدل OpenAI محدودیت اینترنت رو دور زد!  #هوش_مصنوعی",
+      "publishedAt": "2026-10-24T04:00:01+00:00",
+      "updatedAt": "2026-10-24T04:00:02+00:00",
+      "url": "https://www.youtube.com/watch?v=2gGRb_zGmno",
+      "thumbnail": "https://i.ytimg.com/vi/2gGRb_zGmno/maxresdefault.jpg"
+    },
     {
       "videoId": "OI9ji_dha7I",
       "title": "ایجنت‌ها دارن خرید اینترنتی رو تغییر می‌دن! + خبر جدید Chat-GPT  #هوش_مصنوعی",
       "publishedAt": "2026-10-23T04:00:33+00:00",
-      "updatedAt": "2026-10-23T04:00:33+00:00",
+      "updatedAt": "2026-10-24T01:12:20+00:00",
       "url": "https://www.youtube.com/watch?v=OI9ji_dha7I",
       "thumbnail": "https://i.ytimg.com/vi/OI9ji_dha7I/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-18T21:52:07+00:00",
       "url": "https://www.youtube.com/watch?v=2zC7WKdROsM",
       "thumbnail": "https://i.ytimg.com/vi/2zC7WKdROsM/maxresdefault.jpg"
-    },
-    {
-      "videoId": "rxlR-uSFd_c",
-      "title": "ایجنت هوش مصنوعی بدون اینترنت؟  #هوش_مصنوعی",
-      "publishedAt": "2026-10-15T04:00:26+00:00",
-      "updatedAt": "2026-10-18T00:43:48+00:00",
-      "url": "https://www.youtube.com/watch?v=rxlR-uSFd_c",
-      "thumbnail": "https://i.ytimg.com/vi/rxlR-uSFd_c/maxresdefault.jpg"
     }
   ]
 }
