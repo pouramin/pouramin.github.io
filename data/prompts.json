@@ -1,8 +1,18 @@
 {
   "owner": "pouramin",
   "generatedFrom": "public TunnelLab companion repositories",
-  "count": 3,
+  "count": 4,
   "entries": [
+    {
+      "repo": "AWCT",
+      "title": "AWCT · AI Website Cloning Tests — TunnelLab",
+      "headline": "Can AI clone any website from just a URL ?",
+      "description": "AWCT by TunnelLab: four documented AI website cloning experiments with original prompts, screenshot comparisons, source code and known limitations.",
+      "siteUrl": "https://pouramin.dev/AWCT/",
+      "repoUrl": "https://github.com/pouramin/AWCT",
+      "createdAt": "2026-10-24T11:13:46Z",
+      "updatedAt": "2026-10-25T01:13:32Z"
+    },
     {
       "repo": "FindSkill",
       "title": "FindSkill — The Agent Skills Experiment",
