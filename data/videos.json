@@ -2,13 +2,29 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-24T04:00:02+00:00",
+  "feedUpdatedAt": "2026-10-26T03:30:14+00:00",
   "videos": [
+    {
+      "videoId": "pzkLaBkKaew",
+      "title": "گراک جمهوری‌خواه، جی‌پی‌تی دموکرات؟ |  #هوش_مصنوعی",
+      "publishedAt": "2026-10-26T03:30:13+00:00",
+      "updatedAt": "2026-10-26T03:30:14+00:00",
+      "url": "https://www.youtube.com/watch?v=pzkLaBkKaew",
+      "thumbnail": "https://i.ytimg.com/vi/pzkLaBkKaew/maxresdefault.jpg"
+    },
+    {
+      "videoId": "jbt5d6f8gsM",
+      "title": "مهندسی معکوس هر سایتی فقط با یک پرامپت؟! 😱 تست واقعی Codex و Claude",
+      "publishedAt": "2026-10-25T15:30:24+00:00",
+      "updatedAt": "2026-10-26T00:46:50+00:00",
+      "url": "https://www.youtube.com/watch?v=jbt5d6f8gsM",
+      "thumbnail": "https://i.ytimg.com/vi/jbt5d6f8gsM/maxresdefault.jpg"
+    },
     {
       "videoId": "2gGRb_zGmno",
       "title": "مدل OpenAI محدودیت اینترنت رو دور زد!  #هوش_مصنوعی",
       "publishedAt": "2026-10-24T04:00:01+00:00",
-      "updatedAt": "2026-10-24T04:00:02+00:00",
+      "updatedAt": "2026-10-25T12:47:01+00:00",
       "url": "https://www.youtube.com/watch?v=2gGRb_zGmno",
       "thumbnail": "https://i.ytimg.com/vi/2gGRb_zGmno/maxresdefault.jpg"
     },
@@ -32,7 +48,7 @@
       "videoId": "Y1QW94J_MiY",
       "title": "همکاری Google با Open AI | معرفی Claude Duet  #هوش_مصنوعی",
       "publishedAt": "2026-10-22T04:00:00+00:00",
-      "updatedAt": "2026-10-22T23:26:09+00:00",
+      "updatedAt": "2026-10-24T22:09:58+00:00",
       "url": "https://www.youtube.com/watch?v=Y1QW94J_MiY",
       "thumbnail": "https://i.ytimg.com/vi/Y1QW94J_MiY/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-10-21T03:07:35+00:00",
       "url": "https://www.youtube.com/watch?v=uhc0TI9Eet0",
       "thumbnail": "https://i.ytimg.com/vi/uhc0TI9Eet0/maxresdefault.jpg"
-    },
-    {
-      "videoId": "hHRnu8Vv_tg",
-      "title": "پاسپورت برای ایجنت‌های هوش مصنوعی؟! داستان چیه؟ #هوش_مصنوعی",
-      "publishedAt": "2026-10-17T04:00:37+00:00",
-      "updatedAt": "2026-10-21T03:05:50+00:00",
-      "url": "https://www.youtube.com/watch?v=hHRnu8Vv_tg",
-      "thumbnail": "https://i.ytimg.com/vi/hHRnu8Vv_tg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "2zC7WKdROsM",
-      "title": "3 مدل مهم در یک روز منتشر شدن ! Meta, Step5 و Nvidia  #هوش_مصنوعی",
-      "publishedAt": "2026-10-16T04:00:31+00:00",
-      "updatedAt": "2026-10-18T21:52:07+00:00",
-      "url": "https://www.youtube.com/watch?v=2zC7WKdROsM",
-      "thumbnail": "https://i.ytimg.com/vi/2zC7WKdROsM/maxresdefault.jpg"
     }
   ]
 }
