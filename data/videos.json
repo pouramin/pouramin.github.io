@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-27T03:00:35+00:00",
+  "feedUpdatedAt": "2026-10-28T03:30:02+00:00",
   "videos": [
+    {
+      "videoId": "0hO_OTtjM6E",
+      "title": "کلاد برای کروم، اندروید و لینوکس راه نفوذ ساخت! |  #هوش_مصنوعی",
+      "publishedAt": "2026-10-28T03:30:02+00:00",
+      "updatedAt": "2026-10-28T03:30:02+00:00",
+      "url": "https://www.youtube.com/watch?v=0hO_OTtjM6E",
+      "thumbnail": "https://i.ytimg.com/vi/0hO_OTtjM6E/maxresdefault.jpg"
+    },
+    {
+      "videoId": "8FuohGwk8hY",
+      "title": "آموزش و تست Kling 4.0 در Higgsfield | با عکس خودم فیلم ساختم!",
+      "publishedAt": "2026-10-27T15:00:04+00:00",
+      "updatedAt": "2026-10-27T23:48:18+00:00",
+      "url": "https://www.youtube.com/watch?v=8FuohGwk8hY",
+      "thumbnail": "https://i.ytimg.com/vi/8FuohGwk8hY/maxresdefault.jpg"
+    },
     {
       "videoId": "3RMyTYUkxbw",
       "title": "مدل جدید OpenAI به اسم GPT-6.1 Terra همه رو شوکه کرد |  #هوش_مصنوعی",
@@ -32,7 +48,7 @@
       "videoId": "2gGRb_zGmno",
       "title": "مدل OpenAI محدودیت اینترنت رو دور زد!  #هوش_مصنوعی",
       "publishedAt": "2026-10-24T04:00:01+00:00",
-      "updatedAt": "2026-10-25T12:47:01+00:00",
+      "updatedAt": "2026-10-27T03:41:28+00:00",
       "url": "https://www.youtube.com/watch?v=2gGRb_zGmno",
       "thumbnail": "https://i.ytimg.com/vi/2gGRb_zGmno/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-10-20T22:33:47+00:00",
       "url": "https://www.youtube.com/watch?v=kK1G2OoicqA",
       "thumbnail": "https://i.ytimg.com/vi/kK1G2OoicqA/maxresdefault.jpg"
-    },
-    {
-      "videoId": "DPRHDK0l8SE",
-      "title": "دیپ‌سیک قوی‌تر شد! مدل جدید برای کدنویسی  #هوش_مصنوعی",
-      "publishedAt": "2026-10-19T04:00:09+00:00",
-      "updatedAt": "2026-10-22T23:28:51+00:00",
-      "url": "https://www.youtube.com/watch?v=DPRHDK0l8SE",
-      "thumbnail": "https://i.ytimg.com/vi/DPRHDK0l8SE/maxresdefault.jpg"
-    },
-    {
-      "videoId": "iHeLVF3ph5Y",
-      "title": "مهندسی معکوس نرم‌افزار با هوش مصنوعی! | تست REA و Codex",
-      "publishedAt": "2026-10-18T15:00:14+00:00",
-      "updatedAt": "2026-10-22T23:34:37+00:00",
-      "url": "https://www.youtube.com/watch?v=iHeLVF3ph5Y",
-      "thumbnail": "https://i.ytimg.com/vi/iHeLVF3ph5Y/maxresdefault.jpg"
     }
   ]
 }
