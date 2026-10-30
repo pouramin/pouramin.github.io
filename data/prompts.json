@@ -1,8 +1,18 @@
 {
   "owner": "pouramin",
   "generatedFrom": "public TunnelLab companion repositories",
-  "count": 5,
+  "count": 6,
   "entries": [
+    {
+      "repo": "Mercury",
+      "title": "Mercury 3 — Coding Experiment | TunnelLab",
+      "headline": "Mercury 3. Four prompts. Real results.",
+      "description": "Mercury 3 coding experiment by TunnelLab. Four original prompts, 3 output collections, 11 saved results and interactive browser demos.",
+      "siteUrl": "https://pouramin.dev/Mercury/",
+      "repoUrl": "https://github.com/pouramin/Mercury",
+      "createdAt": "2026-10-30T13:26:48Z",
+      "updatedAt": "2026-10-30T14:02:37Z"
+    },
     {
       "repo": "Kling4",
       "title": "The Final Hand — Kling 4.0 | TunnelLab",
