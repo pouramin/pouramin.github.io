@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-29T03:30:07+00:00",
+  "feedUpdatedAt": "2026-10-31T03:00:05+00:00",
   "videos": [
+    {
+      "videoId": "psnGjfRMvTg",
+      "title": "گوگل توی مدار زمین هوش مصنوعی اجرا کرد! ماجرای ماهواره سان‌کچر  #هوش_مصنوعی",
+      "publishedAt": "2026-10-31T03:00:05+00:00",
+      "updatedAt": "2026-10-31T03:00:05+00:00",
+      "url": "https://www.youtube.com/watch?v=psnGjfRMvTg",
+      "thumbnail": "https://i.ytimg.com/vi/psnGjfRMvTg/maxresdefault.jpg"
+    },
+    {
+      "videoId": "CBSdN0Jzj7M",
+      "title": "100 میلیون توکن رایگان! رقیب جدید GPT و Claude؟ | Mercury 3",
+      "publishedAt": "2026-10-30T15:38:10+00:00",
+      "updatedAt": "2026-10-30T16:32:27+00:00",
+      "url": "https://www.youtube.com/watch?v=CBSdN0Jzj7M",
+      "thumbnail": "https://i.ytimg.com/vi/CBSdN0Jzj7M/maxresdefault.jpg"
+    },
     {
       "videoId": "m64lQPnELkI",
       "title": "گوگل  Gemini 4 Carbon رو رونمایی کرد | #هوش_مصنوعی",
@@ -24,7 +40,7 @@
       "videoId": "8FuohGwk8hY",
       "title": "ساخت فیلم سینمایی فقط با یک عکس تست قابلیتهای جدیدKling 4.0",
       "publishedAt": "2026-10-27T15:00:04+00:00",
-      "updatedAt": "2026-10-28T16:46:00+00:00",
+      "updatedAt": "2026-10-30T16:14:09+00:00",
       "url": "https://www.youtube.com/watch?v=8FuohGwk8hY",
       "thumbnail": "https://i.ytimg.com/vi/8FuohGwk8hY/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-10-24T22:09:58+00:00",
       "url": "https://www.youtube.com/watch?v=Y1QW94J_MiY",
       "thumbnail": "https://i.ytimg.com/vi/Y1QW94J_MiY/maxresdefault.jpg"
-    },
-    {
-      "videoId": "vjznLgt3ePg",
-      "title": "شرکت Antropic برای سم عقرب مولکول طراحی کرده | #هوش_مصنوعی",
-      "publishedAt": "2026-10-21T04:00:24+00:00",
-      "updatedAt": "2026-10-23T23:05:49+00:00",
-      "url": "https://www.youtube.com/watch?v=vjznLgt3ePg",
-      "thumbnail": "https://i.ytimg.com/vi/vjznLgt3ePg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "mcVLB8m-wpQ",
-      "title": "گوگل ابزار خودبهینه‌سازی ایجنت‌ها( Harness2) رو متن‌باز کرد!  #هوش_مصنوعی",
-      "publishedAt": "2026-10-20T04:00:11+00:00",
-      "updatedAt": "2026-10-23T02:58:52+00:00",
-      "url": "https://www.youtube.com/watch?v=mcVLB8m-wpQ",
-      "thumbnail": "https://i.ytimg.com/vi/mcVLB8m-wpQ/maxresdefault.jpg"
     }
   ]
 }
