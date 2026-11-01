@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-10-31T03:00:05+00:00",
+  "feedUpdatedAt": "2026-11-01T03:00:02+00:00",
   "videos": [
+    {
+      "videoId": "voWpNRoscZ4",
+      "title": "سهمیه Codex وChat GPT یکی می‌شه! | هشدار امنیتی claude code  #هوش_مصنوعی",
+      "publishedAt": "2026-11-01T03:00:01+00:00",
+      "updatedAt": "2026-11-01T03:00:02+00:00",
+      "url": "https://www.youtube.com/watch?v=voWpNRoscZ4",
+      "thumbnail": "https://i.ytimg.com/vi/voWpNRoscZ4/maxresdefault.jpg"
+    },
     {
       "videoId": "psnGjfRMvTg",
       "title": "گوگل توی مدار زمین هوش مصنوعی اجرا کرد! ماجرای ماهواره سان‌کچر  #هوش_مصنوعی",
@@ -32,7 +40,7 @@
       "videoId": "0hO_OTtjM6E",
       "title": "کلاد برای کروم، اندروید و لینوکس راه نفوذ ساخت! |  #هوش_مصنوعی",
       "publishedAt": "2026-10-28T03:30:02+00:00",
-      "updatedAt": "2026-10-28T03:30:02+00:00",
+      "updatedAt": "2026-10-31T04:27:38+00:00",
       "url": "https://www.youtube.com/watch?v=0hO_OTtjM6E",
       "thumbnail": "https://i.ytimg.com/vi/0hO_OTtjM6E/maxresdefault.jpg"
     },
@@ -48,7 +56,7 @@
       "videoId": "3RMyTYUkxbw",
       "title": "مدل جدید OpenAI به اسم GPT-6.1 Terra همه رو شوکه کرد |  #هوش_مصنوعی",
       "publishedAt": "2026-10-27T03:00:34+00:00",
-      "updatedAt": "2026-10-27T03:00:35+00:00",
+      "updatedAt": "2026-10-30T10:06:54+00:00",
       "url": "https://www.youtube.com/watch?v=3RMyTYUkxbw",
       "thumbnail": "https://i.ytimg.com/vi/3RMyTYUkxbw/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-25T21:36:03+00:00",
       "url": "https://www.youtube.com/watch?v=WBDls-G_kXo",
       "thumbnail": "https://i.ytimg.com/vi/WBDls-G_kXo/maxresdefault.jpg"
-    },
-    {
-      "videoId": "Y1QW94J_MiY",
-      "title": "همکاری Google با Open AI | معرفی Claude Duet  #هوش_مصنوعی",
-      "publishedAt": "2026-10-22T04:00:00+00:00",
-      "updatedAt": "2026-10-24T22:09:58+00:00",
-      "url": "https://www.youtube.com/watch?v=Y1QW94J_MiY",
-      "thumbnail": "https://i.ytimg.com/vi/Y1QW94J_MiY/maxresdefault.jpg"
     }
   ]
 }
