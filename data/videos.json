@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-01T03:00:02+00:00",
+  "feedUpdatedAt": "2026-11-02T03:00:26+00:00",
   "videos": [
+    {
+      "videoId": "r_XDwyX7MfY",
+      "title": "اپل مدل چینی Qwen رو وارد Siri می‌کنه! | همکاری با علی‌بابا #هوش_مصنوعی",
+      "publishedAt": "2026-11-02T03:00:25+00:00",
+      "updatedAt": "2026-11-02T03:00:26+00:00",
+      "url": "https://www.youtube.com/watch?v=r_XDwyX7MfY",
+      "thumbnail": "https://i.ytimg.com/vi/r_XDwyX7MfY/maxresdefault.jpg"
+    },
     {
       "videoId": "voWpNRoscZ4",
       "title": "سهمیه Codex وChat GPT یکی می‌شه! | هشدار امنیتی claude code  #هوش_مصنوعی",
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-25T21:26:19+00:00",
       "url": "https://www.youtube.com/watch?v=OI9ji_dha7I",
       "thumbnail": "https://i.ytimg.com/vi/OI9ji_dha7I/maxresdefault.jpg"
-    },
-    {
-      "videoId": "WBDls-G_kXo",
-      "title": "ایجنتت (Codex, Claude) خودش مهارت پیدا می‌کنه؟ تست Find-Skills با 4 پروژه واقعی!",
-      "publishedAt": "2026-10-22T15:30:38+00:00",
-      "updatedAt": "2026-10-25T21:36:03+00:00",
-      "url": "https://www.youtube.com/watch?v=WBDls-G_kXo",
-      "thumbnail": "https://i.ytimg.com/vi/WBDls-G_kXo/maxresdefault.jpg"
     }
   ]
 }
