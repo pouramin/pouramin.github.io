@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-02T03:00:26+00:00",
+  "feedUpdatedAt": "2026-11-03T03:30:11+00:00",
   "videos": [
+    {
+      "videoId": "8diHfA3pGHU",
+      "title": "ایجنت کدنویسی جدید DeepSeek پروژه متن‌باز SuperAgent  #هوش_مصنوعی",
+      "publishedAt": "2026-11-03T03:30:10+00:00",
+      "updatedAt": "2026-11-03T03:30:11+00:00",
+      "url": "https://www.youtube.com/watch?v=8diHfA3pGHU",
+      "thumbnail": "https://i.ytimg.com/vi/8diHfA3pGHU/maxresdefault.jpg"
+    },
+    {
+      "videoId": "ZJgb1OqMnfg",
+      "title": "چطور پرامپت حرفه‌ای بنویسیم؟ (آپدیت نوامبر 2026)",
+      "publishedAt": "2026-11-02T17:12:22+00:00",
+      "updatedAt": "2026-11-02T17:12:23+00:00",
+      "url": "https://www.youtube.com/watch?v=ZJgb1OqMnfg",
+      "thumbnail": "https://i.ytimg.com/vi/ZJgb1OqMnfg/maxresdefault.jpg"
+    },
     {
       "videoId": "r_XDwyX7MfY",
       "title": "اپل مدل چینی Qwen رو وارد Siri می‌کنه! | همکاری با علی‌بابا #هوش_مصنوعی",
@@ -40,7 +56,7 @@
       "videoId": "m64lQPnELkI",
       "title": "گوگل  Gemini 4 Carbon رو رونمایی کرد | #هوش_مصنوعی",
       "publishedAt": "2026-10-29T03:30:06+00:00",
-      "updatedAt": "2026-10-29T03:30:07+00:00",
+      "updatedAt": "2026-11-02T00:35:28+00:00",
       "url": "https://www.youtube.com/watch?v=m64lQPnELkI",
       "thumbnail": "https://i.ytimg.com/vi/m64lQPnELkI/maxresdefault.jpg"
     },
@@ -56,7 +72,7 @@
       "videoId": "8FuohGwk8hY",
       "title": "ساخت فیلم سینمایی فقط با یک عکس تست قابلیتهای جدیدKling 4.0",
       "publishedAt": "2026-10-27T15:00:04+00:00",
-      "updatedAt": "2026-10-30T16:14:09+00:00",
+      "updatedAt": "2026-11-02T00:40:05+00:00",
       "url": "https://www.youtube.com/watch?v=8FuohGwk8hY",
       "thumbnail": "https://i.ytimg.com/vi/8FuohGwk8hY/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-10-29T03:28:03+00:00",
       "url": "https://www.youtube.com/watch?v=jbt5d6f8gsM",
       "thumbnail": "https://i.ytimg.com/vi/jbt5d6f8gsM/maxresdefault.jpg"
-    },
-    {
-      "videoId": "2gGRb_zGmno",
-      "title": "مدل OpenAI محدودیت اینترنت رو دور زد!  #هوش_مصنوعی",
-      "publishedAt": "2026-10-24T04:00:01+00:00",
-      "updatedAt": "2026-10-27T03:41:28+00:00",
-      "url": "https://www.youtube.com/watch?v=2gGRb_zGmno",
-      "thumbnail": "https://i.ytimg.com/vi/2gGRb_zGmno/maxresdefault.jpg"
-    },
-    {
-      "videoId": "OI9ji_dha7I",
-      "title": "ایجنت‌ها دارن خرید اینترنتی رو تغییر می‌دن! + خبر جدید Chat-GPT  #هوش_مصنوعی",
-      "publishedAt": "2026-10-23T04:00:33+00:00",
-      "updatedAt": "2026-10-25T21:26:19+00:00",
-      "url": "https://www.youtube.com/watch?v=OI9ji_dha7I",
-      "thumbnail": "https://i.ytimg.com/vi/OI9ji_dha7I/maxresdefault.jpg"
     }
   ]
 }
