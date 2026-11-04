@@ -1,8 +1,18 @@
 {
   "owner": "pouramin",
   "generatedFrom": "public TunnelLab companion repositories",
-  "count": 6,
+  "count": 7,
   "entries": [
+    {
+      "repo": "dshsuperagent",
+      "title": "DeepSeek Super Agent — Installation Guide | TunnelLab",
+      "headline": "Your project. Always monitored. Carefully automated.",
+      "description": "Complete DeepSeek Super Agent installation guide: agent-assisted and manual, Windows 11 + external SSD + WSL2 + OpenRouter.",
+      "siteUrl": "https://pouramin.dev/dshsuperagent/",
+      "repoUrl": "https://github.com/pouramin/dshsuperagent",
+      "createdAt": "2026-11-03T23:32:52Z",
+      "updatedAt": "2026-11-03T23:52:57Z"
+    },
     {
       "repo": "Mercury",
       "title": "Mercury 3 — Coding Experiment | TunnelLab",
