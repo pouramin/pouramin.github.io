@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-03T03:30:11+00:00",
+  "feedUpdatedAt": "2026-11-04T03:30:24+00:00",
   "videos": [
+    {
+      "videoId": "foY5c2rtErQ",
+      "title": "ایجنت‌های هوش مصنوعی زیر کنترل! قابلیت تازه Snowflake  #هوش_مصنوعی",
+      "publishedAt": "2026-11-04T03:30:23+00:00",
+      "updatedAt": "2026-11-04T03:30:24+00:00",
+      "url": "https://www.youtube.com/watch?v=foY5c2rtErQ",
+      "thumbnail": "https://i.ytimg.com/vi/foY5c2rtErQ/maxresdefault.jpg"
+    },
     {
       "videoId": "8diHfA3pGHU",
       "title": "ایجنت کدنویسی جدید DeepSeek پروژه متن‌باز SuperAgent  #هوش_مصنوعی",
@@ -14,9 +22,9 @@
     },
     {
       "videoId": "ZJgb1OqMnfg",
-      "title": "چطور پرامپت حرفه‌ای بنویسیم؟ (آپدیت نوامبر 2026)",
+      "title": "تکنیک‌های طلایی پرامپت‌نویسی: از OpenAI تا Claude",
       "publishedAt": "2026-11-02T17:12:22+00:00",
-      "updatedAt": "2026-11-02T17:12:23+00:00",
+      "updatedAt": "2026-11-03T14:09:53+00:00",
       "url": "https://www.youtube.com/watch?v=ZJgb1OqMnfg",
       "thumbnail": "https://i.ytimg.com/vi/ZJgb1OqMnfg/maxresdefault.jpg"
     },
@@ -40,7 +48,7 @@
       "videoId": "psnGjfRMvTg",
       "title": "گوگل توی مدار زمین هوش مصنوعی اجرا کرد! ماجرای ماهواره سان‌کچر  #هوش_مصنوعی",
       "publishedAt": "2026-10-31T03:00:05+00:00",
-      "updatedAt": "2026-10-31T03:00:05+00:00",
+      "updatedAt": "2026-11-03T03:23:07+00:00",
       "url": "https://www.youtube.com/watch?v=psnGjfRMvTg",
       "thumbnail": "https://i.ytimg.com/vi/psnGjfRMvTg/maxresdefault.jpg"
     },
@@ -48,7 +56,7 @@
       "videoId": "CBSdN0Jzj7M",
       "title": "100 میلیون توکن رایگان! رقیب جدید GPT و Claude؟ | Mercury 3",
       "publishedAt": "2026-10-30T15:38:10+00:00",
-      "updatedAt": "2026-10-30T16:32:27+00:00",
+      "updatedAt": "2026-11-03T03:21:37+00:00",
       "url": "https://www.youtube.com/watch?v=CBSdN0Jzj7M",
       "thumbnail": "https://i.ytimg.com/vi/CBSdN0Jzj7M/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-29T03:29:29+00:00",
       "url": "https://www.youtube.com/watch?v=pzkLaBkKaew",
       "thumbnail": "https://i.ytimg.com/vi/pzkLaBkKaew/maxresdefault.jpg"
-    },
-    {
-      "videoId": "jbt5d6f8gsM",
-      "title": "مهندسی معکوس هر سایتی فقط با یک پرامپت؟! 😱 تست واقعی Codex و Claude",
-      "publishedAt": "2026-10-25T15:30:24+00:00",
-      "updatedAt": "2026-10-29T03:28:03+00:00",
-      "url": "https://www.youtube.com/watch?v=jbt5d6f8gsM",
-      "thumbnail": "https://i.ytimg.com/vi/jbt5d6f8gsM/maxresdefault.jpg"
     }
   ]
 }
