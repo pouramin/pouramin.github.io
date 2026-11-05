@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-04T03:30:24+00:00",
+  "feedUpdatedAt": "2026-11-05T03:30:10+00:00",
   "videos": [
+    {
+      "videoId": "ulCYr2JhwW8",
+      "title": "ابزار جدید Google برای ساخت مدل سه‌بعدی و واقعیت افزوده!",
+      "publishedAt": "2026-11-05T03:30:10+00:00",
+      "updatedAt": "2026-11-05T03:30:10+00:00",
+      "url": "https://www.youtube.com/watch?v=ulCYr2JhwW8",
+      "thumbnail": "https://i.ytimg.com/vi/ulCYr2JhwW8/maxresdefault.jpg"
+    },
     {
       "videoId": "foY5c2rtErQ",
       "title": "ایجنت‌های هوش مصنوعی زیر کنترل! قابلیت تازه Snowflake  #هوش_مصنوعی",
@@ -40,7 +48,7 @@
       "videoId": "voWpNRoscZ4",
       "title": "سهمیه Codex وChat GPT یکی می‌شه! | هشدار امنیتی claude code  #هوش_مصنوعی",
       "publishedAt": "2026-11-01T03:00:01+00:00",
-      "updatedAt": "2026-11-01T03:00:02+00:00",
+      "updatedAt": "2026-11-04T02:20:34+00:00",
       "url": "https://www.youtube.com/watch?v=voWpNRoscZ4",
       "thumbnail": "https://i.ytimg.com/vi/voWpNRoscZ4/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-10-30T10:06:54+00:00",
       "url": "https://www.youtube.com/watch?v=3RMyTYUkxbw",
       "thumbnail": "https://i.ytimg.com/vi/3RMyTYUkxbw/maxresdefault.jpg"
-    },
-    {
-      "videoId": "pzkLaBkKaew",
-      "title": "گراک جمهوری‌خواه، جی‌پی‌تی دموکرات؟ |  #هوش_مصنوعی",
-      "publishedAt": "2026-10-26T03:30:13+00:00",
-      "updatedAt": "2026-10-29T03:29:29+00:00",
-      "url": "https://www.youtube.com/watch?v=pzkLaBkKaew",
-      "thumbnail": "https://i.ytimg.com/vi/pzkLaBkKaew/maxresdefault.jpg"
     }
   ]
 }
