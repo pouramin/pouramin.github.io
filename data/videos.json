@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-05T03:30:10+00:00",
+  "feedUpdatedAt": "2026-11-06T03:30:34+00:00",
   "videos": [
+    {
+      "videoId": "p_CID_sAa0Q",
+      "title": "مدل جدید GPT-6 Cyber منتشر شد؛ با دسترسی محدود",
+      "publishedAt": "2026-11-06T03:30:33+00:00",
+      "updatedAt": "2026-11-06T03:30:34+00:00",
+      "url": "https://www.youtube.com/watch?v=p_CID_sAa0Q",
+      "thumbnail": "https://i.ytimg.com/vi/p_CID_sAa0Q/maxresdefault.jpg"
+    },
+    {
+      "videoId": "d4GZRUp6l6I",
+      "title": "آموزش جامع OmniRoute | بخش Providers, Modelsو API Keys (قسمت 1)",
+      "publishedAt": "2026-11-05T15:55:14+00:00",
+      "updatedAt": "2026-11-05T16:48:31+00:00",
+      "url": "https://www.youtube.com/watch?v=d4GZRUp6l6I",
+      "thumbnail": "https://i.ytimg.com/vi/d4GZRUp6l6I/maxresdefault.jpg"
+    },
     {
       "videoId": "ulCYr2JhwW8",
       "title": "ابزار جدید Google برای ساخت مدل سه‌بعدی و واقعیت افزوده!",
@@ -40,7 +56,7 @@
       "videoId": "r_XDwyX7MfY",
       "title": "اپل مدل چینی Qwen رو وارد Siri می‌کنه! | همکاری با علی‌بابا #هوش_مصنوعی",
       "publishedAt": "2026-11-02T03:00:25+00:00",
-      "updatedAt": "2026-11-02T03:00:26+00:00",
+      "updatedAt": "2026-11-05T04:13:05+00:00",
       "url": "https://www.youtube.com/watch?v=r_XDwyX7MfY",
       "thumbnail": "https://i.ytimg.com/vi/r_XDwyX7MfY/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-10-31T04:27:38+00:00",
       "url": "https://www.youtube.com/watch?v=0hO_OTtjM6E",
       "thumbnail": "https://i.ytimg.com/vi/0hO_OTtjM6E/maxresdefault.jpg"
-    },
-    {
-      "videoId": "8FuohGwk8hY",
-      "title": "ساخت فیلم سینمایی فقط با یک عکس تست قابلیتهای جدیدKling 4.0",
-      "publishedAt": "2026-10-27T15:00:04+00:00",
-      "updatedAt": "2026-11-02T00:40:05+00:00",
-      "url": "https://www.youtube.com/watch?v=8FuohGwk8hY",
-      "thumbnail": "https://i.ytimg.com/vi/8FuohGwk8hY/maxresdefault.jpg"
-    },
-    {
-      "videoId": "3RMyTYUkxbw",
-      "title": "مدل جدید OpenAI به اسم GPT-6.1 Terra همه رو شوکه کرد |  #هوش_مصنوعی",
-      "publishedAt": "2026-10-27T03:00:34+00:00",
-      "updatedAt": "2026-10-30T10:06:54+00:00",
-      "url": "https://www.youtube.com/watch?v=3RMyTYUkxbw",
-      "thumbnail": "https://i.ytimg.com/vi/3RMyTYUkxbw/maxresdefault.jpg"
     }
   ]
 }
