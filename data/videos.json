@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-06T03:30:34+00:00",
+  "feedUpdatedAt": "2026-11-07T03:30:10+00:00",
   "videos": [
+    {
+      "videoId": "BwbgoUFlQtE",
+      "title": "حافظه هوش مصنوعی Meta قوی‌تر شد | Meta Active Memory",
+      "publishedAt": "2026-11-07T03:30:09+00:00",
+      "updatedAt": "2026-11-07T03:30:10+00:00",
+      "url": "https://www.youtube.com/watch?v=BwbgoUFlQtE",
+      "thumbnail": "https://i.ytimg.com/vi/BwbgoUFlQtE/maxresdefault.jpg"
+    },
     {
       "videoId": "p_CID_sAa0Q",
       "title": "مدل جدید GPT-6 Cyber منتشر شد؛ با دسترسی محدود",
@@ -91,14 +99,6 @@
       "updatedAt": "2026-11-02T00:35:28+00:00",
       "url": "https://www.youtube.com/watch?v=m64lQPnELkI",
       "thumbnail": "https://i.ytimg.com/vi/m64lQPnELkI/maxresdefault.jpg"
-    },
-    {
-      "videoId": "0hO_OTtjM6E",
-      "title": "کلاد برای کروم، اندروید و لینوکس راه نفوذ ساخت! |  #هوش_مصنوعی",
-      "publishedAt": "2026-10-28T03:30:02+00:00",
-      "updatedAt": "2026-10-31T04:27:38+00:00",
-      "url": "https://www.youtube.com/watch?v=0hO_OTtjM6E",
-      "thumbnail": "https://i.ytimg.com/vi/0hO_OTtjM6E/maxresdefault.jpg"
     }
   ]
 }
