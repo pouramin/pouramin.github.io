@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-07T03:30:10+00:00",
+  "feedUpdatedAt": "2026-11-08T03:30:23+00:00",
   "videos": [
+    {
+      "videoId": "e3rigqZ5Dfk",
+      "title": "سرمایه‌گذاری میلیاردی تازه روی Open AI  #هوش_مصنوعی",
+      "publishedAt": "2026-11-08T03:30:19+00:00",
+      "updatedAt": "2026-11-08T03:30:23+00:00",
+      "url": "https://www.youtube.com/watch?v=e3rigqZ5Dfk",
+      "thumbnail": "https://i.ytimg.com/vi/e3rigqZ5Dfk/maxresdefault.jpg"
+    },
     {
       "videoId": "BwbgoUFlQtE",
       "title": "حافظه هوش مصنوعی Meta قوی‌تر شد | Meta Active Memory",
@@ -48,7 +56,7 @@
       "videoId": "8diHfA3pGHU",
       "title": "ایجنت کدنویسی جدید DeepSeek پروژه متن‌باز SuperAgent  #هوش_مصنوعی",
       "publishedAt": "2026-11-03T03:30:10+00:00",
-      "updatedAt": "2026-11-03T03:30:11+00:00",
+      "updatedAt": "2026-11-06T01:47:44+00:00",
       "url": "https://www.youtube.com/watch?v=8diHfA3pGHU",
       "thumbnail": "https://i.ytimg.com/vi/8diHfA3pGHU/maxresdefault.jpg"
     },
@@ -56,7 +64,7 @@
       "videoId": "ZJgb1OqMnfg",
       "title": "تکنیک‌های طلایی پرامپت‌نویسی: از OpenAI تا Claude",
       "publishedAt": "2026-11-02T17:12:22+00:00",
-      "updatedAt": "2026-11-03T14:09:53+00:00",
+      "updatedAt": "2026-11-06T01:52:52+00:00",
       "url": "https://www.youtube.com/watch?v=ZJgb1OqMnfg",
       "thumbnail": "https://i.ytimg.com/vi/ZJgb1OqMnfg/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-11-03T03:21:37+00:00",
       "url": "https://www.youtube.com/watch?v=CBSdN0Jzj7M",
       "thumbnail": "https://i.ytimg.com/vi/CBSdN0Jzj7M/maxresdefault.jpg"
-    },
-    {
-      "videoId": "m64lQPnELkI",
-      "title": "گوگل  Gemini 4 Carbon رو رونمایی کرد | #هوش_مصنوعی",
-      "publishedAt": "2026-10-29T03:30:06+00:00",
-      "updatedAt": "2026-11-02T00:35:28+00:00",
-      "url": "https://www.youtube.com/watch?v=m64lQPnELkI",
-      "thumbnail": "https://i.ytimg.com/vi/m64lQPnELkI/maxresdefault.jpg"
     }
   ]
 }
