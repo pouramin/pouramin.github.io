@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-08T15:00:26+00:00",
+  "feedUpdatedAt": "2026-11-10T03:30:20+00:00",
   "videos": [
+    {
+      "videoId": "pkHXhSC7XGg",
+      "title": "مدل جدید متا Muse Ember: همه رقبا رو شکست داد؟ #هوش_مصنوعی #تکنولوژی",
+      "publishedAt": "2026-11-10T03:30:19+00:00",
+      "updatedAt": "2026-11-10T03:30:20+00:00",
+      "url": "https://www.youtube.com/watch?v=pkHXhSC7XGg",
+      "thumbnail": "https://i.ytimg.com/vi/pkHXhSC7XGg/maxresdefault.jpg"
+    },
     {
       "videoId": "f5s_BpzwklM",
       "title": "سوپر ایجنت DeepSeek چیه؟ آموزش کامل + تست واقعی ساخت پروژه با GitHub!",
@@ -32,7 +40,7 @@
       "videoId": "p_CID_sAa0Q",
       "title": "مدل جدید GPT-6 Cyber منتشر شد؛ با دسترسی محدود",
       "publishedAt": "2026-11-06T03:30:33+00:00",
-      "updatedAt": "2026-11-06T03:30:34+00:00",
+      "updatedAt": "2026-11-08T22:01:28+00:00",
       "url": "https://www.youtube.com/watch?v=p_CID_sAa0Q",
       "thumbnail": "https://i.ytimg.com/vi/p_CID_sAa0Q/maxresdefault.jpg"
     },
@@ -40,7 +48,7 @@
       "videoId": "d4GZRUp6l6I",
       "title": "آموزش جامع OmniRoute | بخش Providers, Modelsو API Keys (قسمت 1)",
       "publishedAt": "2026-11-05T15:55:14+00:00",
-      "updatedAt": "2026-11-05T16:48:31+00:00",
+      "updatedAt": "2026-11-08T22:05:39+00:00",
       "url": "https://www.youtube.com/watch?v=d4GZRUp6l6I",
       "thumbnail": "https://i.ytimg.com/vi/d4GZRUp6l6I/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-11-04T02:20:34+00:00",
       "url": "https://www.youtube.com/watch?v=voWpNRoscZ4",
       "thumbnail": "https://i.ytimg.com/vi/voWpNRoscZ4/maxresdefault.jpg"
-    },
-    {
-      "videoId": "psnGjfRMvTg",
-      "title": "گوگل توی مدار زمین هوش مصنوعی اجرا کرد! ماجرای ماهواره سان‌کچر  #هوش_مصنوعی",
-      "publishedAt": "2026-10-31T03:00:05+00:00",
-      "updatedAt": "2026-11-03T03:23:07+00:00",
-      "url": "https://www.youtube.com/watch?v=psnGjfRMvTg",
-      "thumbnail": "https://i.ytimg.com/vi/psnGjfRMvTg/maxresdefault.jpg"
     }
   ]
 }
