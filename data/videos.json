@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-10T03:30:20+00:00",
+  "feedUpdatedAt": "2026-11-11T03:30:18+00:00",
   "videos": [
+    {
+      "videoId": "YdKbPKSZBro",
+      "title": "نبرد غول‌ها: Claude Mythos در برابر Google Carbon #ClaudeAI #Google",
+      "publishedAt": "2026-11-11T03:30:17+00:00",
+      "updatedAt": "2026-11-11T03:30:18+00:00",
+      "url": "https://www.youtube.com/watch?v=YdKbPKSZBro",
+      "thumbnail": "https://i.ytimg.com/vi/YdKbPKSZBro/maxresdefault.jpg"
+    },
     {
       "videoId": "pkHXhSC7XGg",
       "title": "مدل جدید متا Muse Ember: همه رقبا رو شکست داد؟ #هوش_مصنوعی #تکنولوژی",
@@ -32,7 +40,7 @@
       "videoId": "BwbgoUFlQtE",
       "title": "حافظه هوش مصنوعی Meta قوی‌تر شد | Meta Active Memory",
       "publishedAt": "2026-11-07T03:30:09+00:00",
-      "updatedAt": "2026-11-07T03:30:10+00:00",
+      "updatedAt": "2026-11-09T23:40:26+00:00",
       "url": "https://www.youtube.com/watch?v=BwbgoUFlQtE",
       "thumbnail": "https://i.ytimg.com/vi/BwbgoUFlQtE/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-11-05T04:13:05+00:00",
       "url": "https://www.youtube.com/watch?v=r_XDwyX7MfY",
       "thumbnail": "https://i.ytimg.com/vi/r_XDwyX7MfY/maxresdefault.jpg"
-    },
-    {
-      "videoId": "voWpNRoscZ4",
-      "title": "سهمیه Codex وChat GPT یکی می‌شه! | هشدار امنیتی claude code  #هوش_مصنوعی",
-      "publishedAt": "2026-11-01T03:00:01+00:00",
-      "updatedAt": "2026-11-04T02:20:34+00:00",
-      "url": "https://www.youtube.com/watch?v=voWpNRoscZ4",
-      "thumbnail": "https://i.ytimg.com/vi/voWpNRoscZ4/maxresdefault.jpg"
     }
   ]
 }
