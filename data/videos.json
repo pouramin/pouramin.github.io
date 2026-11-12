@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-11T03:30:18+00:00",
+  "feedUpdatedAt": "2026-11-12T03:30:39+00:00",
   "videos": [
+    {
+      "videoId": "C8wZxrfdB2c",
+      "title": "گوگل مدل های جدید Gemini-Decisions 1 و AlphaGenome 2 رو معرفی کرد",
+      "publishedAt": "2026-11-12T03:30:38+00:00",
+      "updatedAt": "2026-11-12T03:30:39+00:00",
+      "url": "https://www.youtube.com/watch?v=C8wZxrfdB2c",
+      "thumbnail": "https://i.ytimg.com/vi/C8wZxrfdB2c/maxresdefault.jpg"
+    },
+    {
+      "videoId": "ZT4ZK5kjGGQ",
+      "title": "آموزش جامع OmniRoute | بخش Combos و Combo Studio (قسمت 2)",
+      "publishedAt": "2026-11-11T14:34:44+00:00",
+      "updatedAt": "2026-11-11T14:34:45+00:00",
+      "url": "https://www.youtube.com/watch?v=ZT4ZK5kjGGQ",
+      "thumbnail": "https://i.ytimg.com/vi/ZT4ZK5kjGGQ/maxresdefault.jpg"
+    },
     {
       "videoId": "YdKbPKSZBro",
       "title": "نبرد غول‌ها: Claude Mythos در برابر Google Carbon #ClaudeAI #Google",
@@ -32,7 +48,7 @@
       "videoId": "e3rigqZ5Dfk",
       "title": "سرمایه‌گذاری میلیاردی تازه روی Open AI  #هوش_مصنوعی",
       "publishedAt": "2026-11-08T03:30:19+00:00",
-      "updatedAt": "2026-11-08T03:30:23+00:00",
+      "updatedAt": "2026-11-10T22:40:24+00:00",
       "url": "https://www.youtube.com/watch?v=e3rigqZ5Dfk",
       "thumbnail": "https://i.ytimg.com/vi/e3rigqZ5Dfk/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-11-06T01:47:44+00:00",
       "url": "https://www.youtube.com/watch?v=8diHfA3pGHU",
       "thumbnail": "https://i.ytimg.com/vi/8diHfA3pGHU/maxresdefault.jpg"
-    },
-    {
-      "videoId": "ZJgb1OqMnfg",
-      "title": "تکنیک‌های طلایی پرامپت‌نویسی: از OpenAI تا Claude",
-      "publishedAt": "2026-11-02T17:12:22+00:00",
-      "updatedAt": "2026-11-06T01:52:52+00:00",
-      "url": "https://www.youtube.com/watch?v=ZJgb1OqMnfg",
-      "thumbnail": "https://i.ytimg.com/vi/ZJgb1OqMnfg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "r_XDwyX7MfY",
-      "title": "اپل مدل چینی Qwen رو وارد Siri می‌کنه! | همکاری با علی‌بابا #هوش_مصنوعی",
-      "publishedAt": "2026-11-02T03:00:25+00:00",
-      "updatedAt": "2026-11-05T04:13:05+00:00",
-      "url": "https://www.youtube.com/watch?v=r_XDwyX7MfY",
-      "thumbnail": "https://i.ytimg.com/vi/r_XDwyX7MfY/maxresdefault.jpg"
     }
   ]
 }
