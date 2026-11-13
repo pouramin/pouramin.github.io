@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-12T03:30:39+00:00",
+  "feedUpdatedAt": "2026-11-13T03:30:24+00:00",
   "videos": [
+    {
+      "videoId": "o1n93OGJUBg",
+      "title": "گوگل مدل جدید هیدروژن رو منتشر کرد! ایجنت‌های سریع‌تر با هزینه کمتر",
+      "publishedAt": "2026-11-13T03:30:24+00:00",
+      "updatedAt": "2026-11-13T03:30:24+00:00",
+      "url": "https://www.youtube.com/watch?v=o1n93OGJUBg",
+      "thumbnail": "https://i.ytimg.com/vi/o1n93OGJUBg/maxresdefault.jpg"
+    },
     {
       "videoId": "C8wZxrfdB2c",
       "title": "گوگل مدل های جدید Gemini-Decisions 1 و AlphaGenome 2 رو معرفی کرد",
@@ -40,7 +48,7 @@
       "videoId": "f5s_BpzwklM",
       "title": "سوپر ایجنت DeepSeek چیه؟ آموزش کامل + تست واقعی ساخت پروژه با GitHub!",
       "publishedAt": "2026-11-08T15:00:26+00:00",
-      "updatedAt": "2026-11-08T15:00:26+00:00",
+      "updatedAt": "2026-11-11T23:29:51+00:00",
       "url": "https://www.youtube.com/watch?v=f5s_BpzwklM",
       "thumbnail": "https://i.ytimg.com/vi/f5s_BpzwklM/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-11-07T00:15:51+00:00",
       "url": "https://www.youtube.com/watch?v=foY5c2rtErQ",
       "thumbnail": "https://i.ytimg.com/vi/foY5c2rtErQ/maxresdefault.jpg"
-    },
-    {
-      "videoId": "8diHfA3pGHU",
-      "title": "ایجنت کدنویسی جدید DeepSeek پروژه متن‌باز SuperAgent  #هوش_مصنوعی",
-      "publishedAt": "2026-11-03T03:30:10+00:00",
-      "updatedAt": "2026-11-06T01:47:44+00:00",
-      "url": "https://www.youtube.com/watch?v=8diHfA3pGHU",
-      "thumbnail": "https://i.ytimg.com/vi/8diHfA3pGHU/maxresdefault.jpg"
     }
   ]
 }
