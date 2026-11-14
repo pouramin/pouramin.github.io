@@ -1,8 +1,18 @@
 {
   "owner": "pouramin",
   "generatedFrom": "public TunnelLab companion repositories",
-  "count": 7,
+  "count": 8,
   "entries": [
+    {
+      "repo": "Security-Audit-Cloudflare",
+      "title": "Security Audit · Codex × Cloudflare — TunnelLab",
+      "headline": "Can AI really find real security bugs?",
+      "description": "TunnelLab: a bilingual, source-only comparison of Codex security review with and without Cloudflare Security Audit Skill. Original prompts, installation steps and honest results.",
+      "siteUrl": "https://pouramin.dev/Security-Audit-Cloudflare/",
+      "repoUrl": "https://github.com/pouramin/Security-Audit-Cloudflare",
+      "createdAt": "2026-11-14T13:27:39Z",
+      "updatedAt": "2026-11-14T13:38:34Z"
+    },
     {
       "repo": "dshsuperagent",
       "title": "DeepSeek Super Agent — Installation Guide | TunnelLab",
