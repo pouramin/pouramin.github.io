@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f9fd">
+<meta name="pouramin-prompt-hub" content="include">
+<meta name="description" content="TunnelLab: a bilingual, source-only comparison of Codex security review with and without Cloudflare Security Audit Skill. Original prompts, installation steps and honest results.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TunnelLab">
+<meta property="og:title" content="Codex × Cloudflare Security Audit | TunnelLab">
+<meta property="og:description" content="Original Codex prompts, Cloudflare skill installation, and the real outcomes of an incomplete source-only audit.">
+<meta property="og:url" content="https://pouramin.dev/Security-Audit-Cloudflare/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://pouramin.dev/Security-Audit-Cloudflare/">
+<title>Security Audit · Codex × Cloudflare — TunnelLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f9fd;--white:#fff;--ink:#172640;--muted:#6c7b94;--line:#e1e8f3;--blue:#375bda;--orange:#f47b46;--green:#13876a;--shadow:0 22px 65px rgba(29,55,100,.075)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:110px}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.85 Vazirmatn,Tahoma,sans-serif;-webkit-font-smoothing:antialiased}html[lang=en] body{font-family:Inter,Arial,sans-serif;line-height:1.75}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}a:focus-visible,button:focus-visible{outline:3px solid #ffa566;outline-offset:3px}h1,h2,h3,p{margin-top:0}h1,h2,h3{line-height:1.35}html[lang=en] h1,html[lang=en] h2{letter-spacing:-.04em} .shell{width:min(1160px,calc(100% - 42px));margin-inline:auto}
+.topline{background:#152842;color:#d8e5ff;font:700 10px/1.5 Inter,sans-serif;letter-spacing:.13em}.topline .shell{height:30px;display:flex;align-items:center;gap:10px}.pulse{width:8px;height:8px;background:var(--orange);border-radius:50%;box-shadow:0 0 0 4px #f47b4626}.topline span:last-child{margin-inline-start:auto;color:#a6b7d4}
+.header{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:#f7f9fdeb;border-bottom:1px solid var(--line)}.headinner{min-height:74px;display:flex;align-items:center;gap:24px}.brand{display:flex;align-items:center;gap:11px;white-space:nowrap;direction:ltr}.brandmark{display:grid;place-items:center;background:var(--blue);color:#fff;border-radius:12px;width:43px;height:43px;font:900 19px Inter,sans-serif;letter-spacing:-.08em}.brandtext{display:flex;flex-direction:column;gap:0;line-height:1.25}.brandtext b{font:850 20px Inter,sans-serif;letter-spacing:-.07em}.brandtext small{font:700 9px Inter,sans-serif;color:#8798af;letter-spacing:.14em}.navlinks{display:flex;align-items:center;gap:26px;margin-inline:auto}.navlinks a{font-size:12px;font-weight:800;color:#5e6e87}.navlinks a:hover{color:var(--blue)}.langswitch{display:flex;align-items:center;gap:4px;direction:ltr;border:1px solid var(--line);background:#fff;padding:4px;border-radius:11px;margin-inline-start:auto}.langswitch button{border:0;background:transparent;border-radius:7px;color:#7787a0;font-size:11px;font-weight:800;padding:8px 12px}.langswitch button.active{background:#203b6c;color:#fff}
+.hero{display:grid;grid-template-columns:1.06fr .94fr;gap:45px;align-items:center;padding:80px 0 60px}.eyebrow{display:inline-flex;align-items:center;gap:9px;color:#3455b8;font:800 11px Inter,sans-serif;letter-spacing:.09em;direction:ltr;text-align:left}.eyebrow .edot{width:8px;height:8px;background:#f18449;border-radius:50%}h1{font-size:clamp(36px,4.7vw,63px);font-weight:900;margin:16px 0 19px;line-height:1.3}h1 em{font-style:normal;color:var(--orange)}html[lang=en] h1{line-height:1.13}.lead{font-size:16px;color:#64758f;line-height:2;max-width:580px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 19px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:12px;font-weight:800;transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px #1b335020}.btn.primary{background:var(--orange);border-color:var(--orange);color:#fff}.micro{font-size:11px;color:#8492a8;margin-top:22px}
+.visual{border-radius:27px;padding:18px;background:radial-gradient(circle at 70% 5%,#e1e8ff,#eef2ff 54%,#f4f6fc);border:1px solid #e1e8f4;position:relative;box-shadow:var(--shadow);overflow:hidden}.visual:before{content:"";position:absolute;width:175px;height:175px;border-radius:50%;background:#ffe1d4;filter:blur(65px);inset:auto auto -70px -55px}.v-top{display:flex;justify-content:space-between;gap:10px;align-items:center;position:relative;font:750 12px Inter,sans-serif;direction:ltr;color:#7182a0;padding:5px 7px 15px}.window-dots{display:flex;gap:5px}.window-dots i{width:9px;height:9px;border-radius:100%;background:#ff8b7d}.window-dots i:nth-child(2){background:#f0cc7c}.window-dots i:nth-child(3){background:#70cdb2}
+.screen{background:#fff;border-radius:17px;border:1px solid #e4eaf5;padding:21px;position:relative;box-shadow:0 14px 37px #243f7413;direction:ltr;text-align:left}.screen-top{font:800 11px Inter,sans-serif;color:#8190ab;letter-spacing:.12em;display:flex;justify-content:space-between;gap:9px}.screen h3{font:800 22px Inter,sans-serif;margin:12px 0 10px;color:#172c4e}.scanline{height:11px;border-radius:6px;background:#e8edf7;margin-top:11px;position:relative;overflow:hidden}.scanline.short{width:75%}.scanline span{display:block;width:61%;height:100%;background:linear-gradient(90deg,#ffab7a,#f47b46);border-radius:7px}.statusmini{display:flex;gap:9px;align-items:center;justify-content:space-between;margin-top:19px;font:750 11px Inter,sans-serif}.statusmini b{color:#c05d31;background:#fff0e8;border-radius:8px;padding:6px 10px}.v-bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;margin-top:12px;direction:ltr}.v-card{border-radius:15px;border:1px solid #e2e8f2;background:#fff;padding:19px 13px;box-shadow:0 8px 28px #243c6a14;text-align:center}.v-card strong{display:block;font:900 35px Inter,sans-serif;letter-spacing:-.07em}.v-card span{display:block;font:700 10px Inter,sans-serif;color:#7383a0;margin-top:2px}.v-card.skill strong{color:var(--blue)}.v-card.base strong{color:#e87942}
+section{padding:56px 0}.sectionhead{display:flex;gap:20px;align-items:flex-end;justify-content:space-between;margin-bottom:25px}.sectionhead h2{font-size:clamp(26px,3vw,37px);font-weight:900;margin:7px 0}.sectionhead p{color:var(--muted);font-size:14px;max-width:680px;margin:0}.kicker{color:#e7753e;font:800 11px Inter,sans-serif;letter-spacing:.12em;direction:ltr;text-align:start}.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.stat{border:1px solid var(--line);border-radius:18px;padding:25px 24px;background:white;box-shadow:0 8px 28px #1d385309}.stat strong{display:block;font:850 37px Inter,sans-serif;letter-spacing:-.07em}.stat span{font-size:13px;color:#687993;font-weight:750}.stat small{display:block;margin-top:7px;color:#8b98ac;font-size:11px}
+.notice{background:#fef8f0;border:1px solid #f8debd;border-inline-start:4px solid var(--orange);padding:17px 20px;border-radius:13px;font-size:13px;color:#7b5734;margin-top:18px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px;min-height:165px}.stepnum{display:grid;place-items:center;width:35px;height:35px;background:#eaf0ff;color:#345dd0;border-radius:11px;font:850 14px Inter,sans-serif;margin-bottom:14px}.step h3{font-size:15px;margin:0 0 7px}.step p{font-size:12px;color:#75849c;line-height:1.85;margin:0}.step code{font-size:11px}
+.install{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;margin-top:17px}.note-card{border-radius:20px;background:#1b2b48;color:#fff;padding:27px}.note-card h3{font-size:19px}.note-card p{font-size:13px;color:#c7d5ed;line-height:1.95}.note-card .pill{display:inline-block;border-radius:8px;padding:6px 11px;background:#ffffff14;color:#ffb38c;font:700 10px Inter,sans-serif}.codecard{border-radius:20px;background:white;border:1px solid var(--line);overflow:hidden;box-shadow:0 9px 30px #1b35540d}.codehead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #eaf0f6;gap:12px}.codehead strong{font-size:14px}.codehead small{display:block;color:#8b9ab0;font-size:11px;font-weight:600}.copybtn{border:1px solid var(--line);background:#fff;color:#38516f;padding:8px 12px;font-size:11px;font-weight:850;border-radius:9px;white-space:nowrap}.copybtn:hover{border-color:#ee8757;color:#d3632c}.codebox{direction:ltr;text-align:left;white-space:pre-wrap;overflow:auto;max-height:380px;margin:0;padding:22px;background:#f9fbff;color:#31415d;font:12.4px/1.9 ui-monospace,SFMono-Regular,Consolas,Monaco,monospace;unicode-bidi:plaintext;word-break:break-word}.codebox.single{max-height:none;font-size:12px;padding:25px}.prompts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.promptnote{font-size:12px;color:#8390a6;margin-top:11px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.resultcard{border:1px solid var(--line);border-radius:20px;padding:26px;background:#fff}.resultcard h3{font-size:20px}.bigscore{font:850 55px Inter,sans-serif;letter-spacing:-.07em;line-height:1.3;color:#de7949}.resultcard.skill .bigscore{color:#315ac6}.resultcard ul{padding-inline-start:20px;font-size:13px;line-height:2;color:#61718b;margin-bottom:0}.resultcard li{margin-bottom:5px}
+.topicgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.topic{display:flex;align-items:start;gap:13px;border-radius:15px;border:1px solid var(--line);padding:17px;background:#fff}.topic-n{font:850 12px Inter,sans-serif;color:#d86b37;background:#fff0e7;border-radius:7px;min-width:30px;text-align:center;padding:7px 5px}.topic h3{font-size:13px;margin:0 0 5px}.topic p{font-size:11px;color:#7b8ba1;margin:0;line-height:1.7}.status-dot{height:7px;width:7px;background:#eab168;border-radius:50%;margin-inline-start:auto;flex-shrink:0;margin-top:10px}
+.tablebox{border:1px solid var(--line);background:#fff;border-radius:19px;overflow:auto}.tablebox table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}.tablebox td,.tablebox th{border-bottom:1px solid #ebeff6;padding:16px 19px;text-align:start}.tablebox tr:last-child td{border-bottom:0}.tablebox th{background:#f7f9fe;color:#53667f;font-size:11px}.tablebox td:first-child{font-weight:750}.fineprint{font-size:12px;line-height:2;color:#7b899f}.footer{margin-top:60px;border-top:1px solid var(--line);padding:28px 0 42px}.footin{display:flex;align-items:center;justify-content:space-between;gap:25px}.footer p{margin:0;color:#8190a8;font:600 11px Inter,sans-serif;direction:ltr}.footlinks{display:flex;gap:16px;font-size:12px;font-weight:800;color:#516482}
+html[lang=fa] .kicker{font-family:Inter,sans-serif}
+@media(max-width:920px){.hero{grid-template-columns:1fr;gap:25px;padding:52px 0}.visual{max-width:600px;width:100%;margin:auto}.navlinks{gap:13px}.prompts,.install,.result-grid{grid-template-columns:1fr}.topicgrid,.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.shell{width:min(100% - 28px,1160px)}.topline{font-size:9px}.headinner{min-height:66px}.navlinks{display:none}h1{font-size:clamp(34px,8vw,47px)}.hero{padding-top:38px}.lead{font-size:14px}.sectionhead{display:block}section{padding:35px 0}.cards3,.steps,.topicgrid{grid-template-columns:1fr}.stat{padding:21px}.resultcard{padding:21px}.footin{flex-direction:column;align-items:flex-start}.visual{padding:12px}.screen{padding:16px}.v-card{padding:13px 8px}.v-card strong{font-size:27px}.codebox{padding:16px;font-size:11px}.codehead{padding:14px}.topic{padding:15px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body>
+<div class="topline"><div class="shell"><span class="pulse"></span><span>TUNNELLAB / AI CODING EXPERIMENTS</span><span>SOURCE-ONLY · NOV 2026</span></div></div>
+<header class="header"><div class="shell headinner">
+<a class="brand" href="https://pouramin.dev/" aria-label="TunnelLab"><span class="brandmark">TL</span><span class="brandtext"><b>TunnelLab</b><small>RESEARCH NOTES</small></span></a>
+<nav class="navlinks" aria-label="Sections"><a href="#overview" class="tr" data-fa="معرفی" data-en="Overview">معرفی</a><a href="#setup" class="tr" data-fa="آماده‌سازی" data-en="Setup">آماده‌سازی</a><a href="#prompts" class="tr" data-fa="پرامپت‌ها" data-en="Prompts">پرامپت‌ها</a><a href="#results" class="tr" data-fa="نتایج" data-en="Results">نتایج</a></nav>
+<div class="langswitch" role="group" aria-label="Language"><button type="button" data-set-lang="fa" class="active" aria-pressed="true">فارسی</button><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
+</div></header>
+<main id="overview" class="shell">
+<div class="hero">
+<div>
+<div class="eyebrow"><span class="edot"></span> CODEX × CLOUDFLARE SECURITY AUDIT</div>
+<h1><span class="tr" data-fa="آیا هوش مصنوعی" data-en="Can AI really">آیا هوش مصنوعی</span><br><em class="tr" data-fa="باگ امنیتی واقعی" data-en="find real security bugs?">باگ امنیتی واقعی</em><br><span class="tr" data-fa="پیدا می‌کنه؟" data-en="">پیدا می‌کنه؟</span></h1>
+<p class="lead tr" data-fa="یک نرم‌افزار حرفه‌ای و متن‌باز رو با 2 روش بررسی کردیم: کدکس معمولی و کدکس با اسکیل ممیزی امنیتی کلادفلر. اینجا پرامپت‌های دقیق، روش نصب و نتیجه‌ی واقعی آزمایش رو می‌بینی." data-en="We reviewed a real, production-grade open-source app in two separate runs: plain Codex and Codex with Cloudflare’s Security Audit skill. Explore the exact prompts, setup steps, and what the experiment actually showed.">یک نرم‌افزار حرفه‌ای و متن‌باز رو با 2 روش بررسی کردیم: کدکس معمولی و کدکس با اسکیل ممیزی امنیتی کلادفلر. اینجا پرامپت‌های دقیق، روش نصب و نتیجه‌ی واقعی آزمایش رو می‌بینی.</p>
+<div class="actions"><a class="btn primary tr" href="#prompts" data-fa="مشاهده و کپی پرامپت‌ها" data-en="View & copy prompts">مشاهده و کپی پرامپت‌ها</a><a class="btn tr" href="#results" data-fa="نتایج آزمایش" data-en="See the actual results">نتایج آزمایش</a></div>
+<p class="micro tr" data-fa="پروژه‌ی آزمایشی: Twenty CRM · نسخه‌ی 2.46.0 · بررسی فقط از روی سورس‌کد" data-en="Test subject: Twenty CRM · version 2.46.0 · source-only review">پروژه‌ی آزمایشی: Twenty CRM · نسخه‌ی 2.46.0 · بررسی فقط از روی سورس‌کد</p>
+</div>
+<div class="visual" aria-label="Illustrative audit comparison">
+<div class="v-top"><span class="window-dots"><i></i><i></i><i></i></span><span>SECURITY REVIEW / WORKBENCH</span></div>
+<div class="screen"><div class="screen-top"><span>CODEBASE REVIEW</span><span>READ ONLY</span></div><h3>Twenty CRM <span style="color:#f47b46">/</span> v2.46.0</h3><div class="scanline"><span></span></div><div class="scanline short"><span style="width:82%;background:#c9d8fa"></span></div><div class="scanline" style="width:63%"><span style="width:91%;background:#d8e3f9"></span></div><div class="statusmini"><span>Independent source review</span><b>INCOMPLETE FULL AUDIT</b></div></div>
+<div class="v-bottom"><div class="v-card base"><strong>5</strong><span>BASELINE REPORT ITEMS</span></div><div class="v-card skill"><strong>11</strong><span>SKILL CANDIDATES</span></div></div>
+</div>
+</div>
+<section id="summary" aria-labelledby="summaryhead"><div class="sectionhead"><div><div class="kicker">01 / AT A GLANCE</div><h2 id="summaryhead" class="tr" data-fa="عددها چی می‌گن؟" data-en="What do the numbers say?">عددها چی می‌گن؟</h2><p class="tr" data-fa="این‌ها تعداد یافته‌ها یا فرضیه‌ها هستن، نه تعداد باگ‌های اثبات‌شده." data-en="These are reported findings and hypotheses — not demonstrated vulnerabilities.">این‌ها تعداد یافته‌ها یا فرضیه‌ها هستن، نه تعداد باگ‌های اثبات‌شده.</p></div></div>
+<div class="cards3">
+<div class="stat"><strong>5</strong><span class="tr" data-fa="موارد گزارش کدکس معمولی" data-en="Plain Codex report items">موارد گزارش کدکس معمولی</span><small class="tr" data-fa="4 یافته با شواهد کدی + 1 فرضیه" data-en="4 source-supported + 1 policy-dependent">4 یافته با شواهد کدی + 1 فرضیه</small></div>
+<div class="stat"><strong>11</strong><span class="tr" data-fa="کاندیداهای اسکیل" data-en="Skill-generated candidates">کاندیداهای اسکیل</span><small class="tr" data-fa="9 فرضیه باقی موند، 2 مورد رد شد" data-en="9 retained hypotheses, 2 rejected">9 فرضیه باقی موند، 2 مورد رد شد</small></div>
+<div class="stat"><strong>0</strong><span class="tr" data-fa="آسیب‌پذیری تأییدشده در اجرا" data-en="Runtime-confirmed vulnerabilities">آسیب‌پذیری تأییدشده در اجرا</span><small class="tr" data-fa="هیچ آزمایش عملی انجام نشد" data-en="No runtime validation or exploit tests">هیچ آزمایش عملی انجام نشد</small></div>
+</div>
+<div class="notice tr" data-fa="مهم: اسکیل در حالت Full Audit Mode فراخوانی شد، اما ممیزی 6 مرحله‌ای کامل نشد. جست‌وجوی بعضی بخش‌ها عقب افتاد، اعتبارسنج‌های اصلی اجرا نشدن و بازبینی نهایی انجام نشد." data-en="Important: Full Audit Mode was requested, but the six-phase workflow was not completed. Some coverage was deferred, native validators were unavailable, and final independent record verification was not performed.">مهم: اسکیل در حالت Full Audit Mode فراخوانی شد، اما ممیزی 6 مرحله‌ای کامل نشد. جست‌وجوی بعضی بخش‌ها عقب افتاد، اعتبارسنج‌های اصلی اجرا نشدن و بازبینی نهایی انجام نشد.</div>
+</section>
+<section id="setup" aria-labelledby="setuphead"><div class="sectionhead"><div><div class="kicker">02 / REPRODUCE THE SETUP</div><h2 id="setuphead" class="tr" data-fa="راه‌اندازی قدم‌به‌قدم" data-en="Recreate the setup">راه‌اندازی قدم‌به‌قدم</h2><p class="tr" data-fa="برای مقایسه‌ی منصفانه، هر آزمایش روی کپی مستقل از یک نسخه‌ی یکسان انجام شد." data-en="For a fair comparison, both runs used separate clean copies of the exact same source version.">برای مقایسه‌ی منصفانه، هر آزمایش روی کپی مستقل از یک نسخه‌ی یکسان انجام شد.</p></div></div>
+<div class="steps">
+<div class="step"><span class="stepnum">01</span><h3 class="tr" data-fa="سورس یکسان" data-en="Same source version">سورس یکسان</h3><p class="tr" data-fa="فایل Source code (zip) نسخه‌ی 2.46.0 از Twenty CRM رو بگیر و استخراج کن." data-en="Download and extract the Twenty CRM v2.46.0 source archive.">فایل Source code (zip) نسخه‌ی 2.46.0 از Twenty CRM رو بگیر و استخراج کن.</p></div>
+<div class="step"><span class="stepnum">02</span><h3 class="tr" data-fa="2 کپی جدا" data-en="Two clean copies">2 کپی جدا</h3><p class="tr" data-fa="دو پوشه بساز: یکی برای بررسی معمولی و یکی برای بررسی با اسکیل. هیچ یافته‌ای رو بین جلسه‌ها منتقل نکن." data-en="Use separate folders and fresh conversations; do not share findings between runs.">دو پوشه بساز: یکی برای بررسی معمولی و یکی برای بررسی با اسکیل. هیچ یافته‌ای رو بین جلسه‌ها منتقل نکن.</p></div>
+<div class="step"><span class="stepnum">03</span><h3 class="tr" data-fa="آزمایش اول" data-en="Baseline first">آزمایش اول</h3><p class="tr" data-fa="پرامپت اول رو قبل از نصب اسکیل اجرا کن؛ مدل و سطح تفکر رو ثبت کن." data-en="Run the baseline prompt before installing the skill. Record model and reasoning settings.">پرامپت اول رو قبل از نصب اسکیل اجرا کن؛ مدل و سطح تفکر رو ثبت کن.</p></div>
+<div class="step"><span class="stepnum">04</span><h3 class="tr" data-fa="اسکیل رو نصب کن" data-en="Install the skill">اسکیل رو نصب کن</h3><p class="tr" data-fa="با دستور رسمی زیر اسکیل رو برای کدکس نصب کن؛ در صورت نیاز یک جلسه‌ی تازه باز کن." data-en="Use the official Skills CLI command below, then start a fresh Codex session if needed.">با دستور رسمی زیر اسکیل رو برای کدکس نصب کن؛ در صورت نیاز یک جلسه‌ی تازه باز کن.</p></div>
+<div class="step"><span class="stepnum">05</span><h3 class="tr" data-fa="آزمایش دوم" data-en="Skill-powered run">آزمایش دوم</h3><p class="tr" data-fa="پرامپت دوم رو با مدل و محدوده‌ی بررسی مشابه اجرا کن و فایل‌های گزارش رو نگه دار." data-en="Run the skill prompt with comparable settings and preserve its audit artifacts.">پرامپت دوم رو با مدل و محدوده‌ی بررسی مشابه اجرا کن و فایل‌های گزارش رو نگه دار.</p></div>
+<div class="step"><span class="stepnum">06</span><h3 class="tr" data-fa="داوری بدون اغراق" data-en="Evaluate carefully">داوری بدون اغراق</h3><p class="tr" data-fa="یافته‌های مشترک، موارد ردشده و مشکلات بدون تأیید عملی رو جدا ثبت کن." data-en="Separate overlap, independently rejected claims, and items without runtime confirmation.">یافته‌های مشترک، موارد ردشده و مشکلات بدون تأیید عملی رو جدا ثبت کن.</p></div>
+</div>
+<div class="install"><div class="note-card"><span class="pill">OFFICIAL INSTALL METHOD</span><h3 class="tr" data-fa="نصب اسکیل کلادفلر" data-en="Install Cloudflare's skill">نصب اسکیل کلادفلر</h3><p class="tr" data-fa="اول Node.js رو نصب کن. بعد دستور رسمی رو در ترمینال اجرا کن و کدکس رو به‌عنوان ایجنت انتخاب کن. گزینه‌ی global باعث می‌شه اسکیل برای پروژه‌های دیگه هم در دسترس باشه. قبل از نصب، محتوای اسکیل رو بررسی کن." data-en="Install Node.js, run the official command in a terminal, and select Codex as your agent if prompted. The global option installs for all projects. Review the skill instructions before installing.">اول Node.js رو نصب کن. بعد دستور رسمی رو در ترمینال اجرا کن و کدکس رو به‌عنوان ایجنت انتخاب کن. گزینه‌ی global باعث می‌شه اسکیل برای پروژه‌های دیگه هم در دسترس باشه. قبل از نصب، محتوای اسکیل رو بررسی کن.</p><p class="tr" style="margin:0" data-fa="اجرای کد هدف فقط در محیط ایزوله‌ی واقعی مجازه. توی آزمایش ما اجرای برنامه ممنوع بود." data-en="Run target code only in a properly isolated sandbox. Our experiment prohibited target execution.">اجرای کد هدف فقط در محیط ایزوله‌ی واقعی مجازه. توی آزمایش ما اجرای برنامه ممنوع بود.</p></div>
+<div class="codecard"><div class="codehead"><div><strong class="tr" data-fa="دستور نصب رسمی" data-en="Official installation command">دستور نصب رسمی</strong><small>Skills CLI · global installation</small></div><button class="copybtn tr" type="button" data-copy="install-command" data-fa="کپی دستور" data-en="Copy command">کپی دستور</button></div><pre id="install-command" class="codebox single">npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit --global</pre></div></div>
+</section>
+<section id="prompts" aria-labelledby="prompthead"><div class="sectionhead"><div><div class="kicker">03 / ORIGINAL PROMPTS</div><h2 id="prompthead" class="tr" data-fa="2 پرامپت دقیقِ آزمایش" data-en="The two original prompts">2 پرامپت دقیقِ آزمایش</h2><p class="tr" data-fa="پرامپت‌ها عین نسخه‌ی انگلیسی قابل‌کپی نگه داشته شدن تا رفتار ایجنت تغییر نکنه." data-en="Prompts are preserved in their original English form for reproducibility.">پرامپت‌ها عین نسخه‌ی انگلیسی قابل‌کپی نگه داشته شدن تا رفتار ایجنت تغییر نکنه.</p></div></div>
+<div class="prompts">
+<article class="codecard"><div class="codehead"><div><strong class="tr" data-fa="آزمایش 1 — بدون اسکیل" data-en="Run 1 — Plain Codex">آزمایش 1 — بدون اسکیل</strong><small>READ-ONLY · SOURCE REVIEW</small></div><button class="copybtn tr" type="button" data-copy="prompt-one" data-fa="کپی پرامپت" data-en="Copy prompt">کپی پرامپت</button></div><pre id="prompt-one" class="codebox">Perform a thorough, READ-ONLY security audit of this local codebase.
+
+Focus on server-side authorization, privilege boundaries, and cross-workspace data isolation. Inspect all related source files necessary to understand complete authorization paths.
+
+Rules:
+- Do not use any additional security audit skills.
+- Do not browse the web or consult CVEs, advisories, issues, changelogs, or newer versions.
+- Do not install dependencies, execute target code, or contact any endpoint.
+- Do not modify application source files.
+- Do not assume a suspicious code pattern is an exploitable vulnerability.
+- Inspect relevant guards, validators, services, and other security controls before reaching a conclusion.
+
+Complete the audit rather than stopping after planning.
+
+For every finding, provide:
+1. A unique identifier.
+2. A precise file and line reference.
+3. The affected security boundary.
+4. The relevant code path and supporting evidence.
+5. Potential impact and necessary assumptions.
+6. A clear validation status.
+7. Possible reasons the finding could be a false positive.
+
+Separate source-supported findings, unverified hypotheses, and hardening suggestions.
+
+At the end, provide a summary table and clearly state any coverage gaps or validation limitations.
+
+Do not claim that exploitation was demonstrated unless it was actually validated in a suitable isolated environment.</pre></article>
+<article class="codecard"><div class="codehead"><div><strong class="tr" data-fa="آزمایش 2 — با اسکیل" data-en="Run 2 — With Cloudflare skill">آزمایش 2 — با اسکیل</strong><small>FULL AUDIT REQUESTED · SOURCE-ONLY</small></div><button class="copybtn tr" type="button" data-copy="prompt-two" data-fa="کپی پرامپت" data-en="Copy prompt">کپی پرامپت</button></div><pre id="prompt-two" class="codebox">$security-audit
+
+Perform a thorough, READ-ONLY security audit of this local codebase.
+
+Focus on server-side authorization, privilege boundaries, and cross-workspace data isolation. Inspect all related source files necessary to understand complete authorization paths.
+
+Use the Cloudflare Security Audit Skill in FULL AUDIT MODE.
+
+Follow its six-phase workflow, including independent verification, coverage tracking, structured findings, and final reporting.
+
+Rules:
+- Do not browse the web or consult CVEs, advisories, issues, changelogs, or newer versions.
+- Do not import findings or context from previous audit runs.
+- Do not modify application source files.
+- Do not install dependencies or execute target code.
+- Do not contact external or deployed services.
+- If proper sandbox controls are unavailable, do not execute the target. Record the validation blocker instead.
+- Distinguish source-supported findings, unverified hypotheses, rejected candidates, and hardening recommendations.
+- Never claim an exploit was demonstrated without actual bounded validation.
+
+Complete all phases supported by the environment.
+
+Produce the skill's structured findings and reports in an explicitly permitted output directory.
+
+Summarize:
+1. Findings and supporting source locations.
+2. Validation status for each finding.
+3. Independently rejected candidates.
+4. Coverage limitations.
+5. Elapsed time and measurable resource consumption.
+6. Any phases that could not be completed.</pre></article>
+</div><p class="promptnote tr" data-fa="مهم: «Full Audit» در پرامپت دوم درخواست شد، اما به‌خاطر محدودیت‌های محیط و اعتبارسنجی، همه‌ی مراحلش کامل نشد." data-en="Note: Full Audit was explicitly requested, but environment and validation restrictions prevented the complete workflow.">مهم: «Full Audit» در پرامپت دوم درخواست شد، اما به‌خاطر محدودیت‌های محیط و اعتبارسنجی، همه‌ی مراحلش کامل نشد.</p>
+</section>
+<section id="results" aria-labelledby="resulthead"><div class="sectionhead"><div><div class="kicker">04 / REAL TEST RESULTS</div><h2 id="resulthead" class="tr" data-fa="نتیجه‌ی واقعی: کدوم بهتر بود؟" data-en="Actual results: which performed better?">نتیجه‌ی واقعی: کدوم بهتر بود؟</h2><p class="tr" data-fa="پایان آزمایش در 14 نوامبر 2026؛ هیچ بهره‌برداری یا تست عملی روی پروژه انجام نشد." data-en="Final recorded status: November 14, 2026. No exploitation, app execution, or runtime validation occurred.">پایان آزمایش در 14 نوامبر 2026؛ هیچ بهره‌برداری یا تست عملی روی پروژه انجام نشد.</p></div></div>
+<div class="result-grid">
+<div class="resultcard"><div class="kicker">BASELINE / CODEX</div><div class="bigscore">4 + 1</div><h3 class="tr" data-fa="کدکس بدون اسکیل" data-en="Codex without the skill">کدکس بدون اسکیل</h3><ul><li class="tr" data-fa="4 یافته با شواهد ایستای کد و 1 فرضیه‌ی وابسته به سیاست مجوزها" data-en="4 source-supported static findings and 1 policy-dependent hypothesis">4 یافته با شواهد ایستای کد و 1 فرضیه‌ی وابسته به سیاست مجوزها</li><li class="tr" data-fa="2 پیشنهاد سخت‌سازی جدا از یافته‌ها" data-en="2 additional hardening suggestions (not vulnerabilities)">2 پیشنهاد سخت‌سازی جدا از یافته‌ها</li><li class="tr" data-fa="مسیر موضوع دعوت کاربران را شناسایی کرد" data-en="Recognized the invitation-role issue in source">مسیر موضوع دعوت کاربران را شناسایی کرد</li><li class="tr" data-fa="گزارش نهایی ایستا تولید شد؛ تأیید عملی انجام نشد" data-en="Completed a static report; no runtime confirmation">گزارش نهایی ایستا تولید شد؛ تأیید عملی انجام نشد</li></ul></div>
+<div class="resultcard skill"><div class="kicker">CODEX / CLOUDFLARE SKILL</div><div class="bigscore">11 → 9</div><h3 class="tr" data-fa="کدکس با اسکیل کلادفلر" data-en="Codex with Cloudflare skill">کدکس با اسکیل کلادفلر</h3><ul><li class="tr" data-fa="11 کاندیدا و بررسی مستقل همه‌ی آن‌ها در سطح سورس" data-en="11 candidates, all independently source-reviewed">11 کاندیدا و بررسی مستقل همه‌ی آن‌ها در سطح سورس</li><li class="tr" data-fa="9 فرضیه نیازمند تأیید؛ 2 ادعا ردشده" data-en="9 hypotheses needing validation; 2 claims rejected">9 فرضیه نیازمند تأیید؛ 2 ادعا ردشده</li><li class="tr" data-fa="2 موضوع مشترک با گزارش پایه؛ 7 فرضیه‌ی اختصاصی" data-en="2 overlapping topics; 7 hypotheses unique to this report">2 موضوع مشترک با گزارش پایه؛ 7 فرضیه‌ی اختصاصی</li><li class="tr" data-fa="ممیزی جامع ناتمام و گزارش نهایی استاندارد تولید نشد" data-en="Full Audit incomplete; canonical final report not produced">ممیزی جامع ناتمام و گزارش نهایی استاندارد تولید نشد</li></ul></div>
+</div>
+<div class="notice tr" data-fa="عدد 11 یعنی «11 مورد مشکوک بررسی‌شده»، نه 11 باگ قطعی. عدد 9 هم فقط فرضیه‌های باقی‌مانده‌ست. هیچ آسیب‌پذیری از نظر اجرا تأیید نشده." data-en="11 means candidate findings, not 11 proven bugs. The remaining 9 are still hypotheses. Zero vulnerabilities were runtime-confirmed.">عدد 11 یعنی «11 مورد مشکوک بررسی‌شده»، نه 11 باگ قطعی. عدد 9 هم فقط فرضیه‌های باقی‌مانده‌ست. هیچ آسیب‌پذیری از نظر اجرا تأیید نشده.</div>
+</section>
+<section id="findings" aria-labelledby="findingshead"><div class="sectionhead"><div><div class="kicker">05 / HYPOTHESIS THEMES</div><h2 id="findingshead" class="tr" data-fa="9 موضوعی که اسکیل نگه داشت" data-en="The 9 hypothesis themes retained">9 موضوعی که اسکیل نگه داشت</h2><p class="tr" data-fa="برای رعایت انتشار مسئولانه، اینجا فقط موضوع‌ها رو معرفی می‌کنیم؛ نه مراحل سوءاستفاده یا جزئیات فنی یافته‌های تأییدنشده." data-en="High-level categories only: no exploit recipes or unverified vulnerability details are published here.">برای رعایت انتشار مسئولانه، اینجا فقط موضوع‌ها رو معرفی می‌کنیم؛ نه مراحل سوءاستفاده یا جزئیات فنی یافته‌های تأییدنشده.</p></div></div>
+<div class="topicgrid"><article class="topic"><span class="topic-n">01</span><div><h3 class="tr" data-fa="مجوز کلیدهای دسترسی" data-en="API-key authority">مجوز کلیدهای دسترسی</h3><p class="tr" data-fa="مرز اختیار کاربر و نقش کلیدهای موجود" data-en="Issuer-versus-key permission boundary">مرز اختیار کاربر و نقش کلیدهای موجود</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">02</span><div><h3 class="tr" data-fa="نقش اعضای دعوت‌شده" data-en="Invitation role selection">نقش اعضای دعوت‌شده</h3><p class="tr" data-fa="اختیار انتخاب نقش هنگام دعوت عضو جدید" data-en="Authority to assign a role during invitation">اختیار انتخاب نقش هنگام دعوت عضو جدید</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">03</span><div><h3 class="tr" data-fa="کش گفتگوی هوش مصنوعی" data-en="AI stream cache isolation">کش گفتگوی هوش مصنوعی</h3><p class="tr" data-fa="جداسازی داده‌های موقت گفتگو بین محیط‌های کاری" data-en="Transient chat-data separation by workspace">جداسازی داده‌های موقت گفتگو بین محیط‌های کاری</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">04</span><div><h3 class="tr" data-fa="باطل‌شدن توکن‌های ورود" data-en="Refresh-token revocation">باطل‌شدن توکن‌های ورود</h3><p class="tr" data-fa="بررسی رفتار ابطال در خروج و تغییر رمز" data-en="Revocation behavior after sign-out and password change">بررسی رفتار ابطال در خروج و تغییر رمز</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">05</span><div><h3 class="tr" data-fa="محدودیت اپلیکیشن متصل" data-en="Delegated app permissions">محدودیت اپلیکیشن متصل</h3><p class="tr" data-fa="سازگاری مجوزهای کاربر و اپلیکیشن" data-en="Intersection of user and application permissions">سازگاری مجوزهای کاربر و اپلیکیشن</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">06</span><div><h3 class="tr" data-fa="نصب ناموفق اپلیکیشن" data-en="Application install fallback">نصب ناموفق اپلیکیشن</h3><p class="tr" data-fa="رفتار مجوزها پس از نصب ناتمام" data-en="Permission behavior following failed installation">رفتار مجوزها پس از نصب ناتمام</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">07</span><div><h3 class="tr" data-fa="دسترسی به فایل‌ها" data-en="File access boundaries">دسترسی به فایل‌ها</h3><p class="tr" data-fa="بررسی مجوز منبع پیش از صدور لینک فایل" data-en="Source authorization before creating file links">بررسی مجوز منبع پیش از صدور لینک فایل</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">08</span><div><h3 class="tr" data-fa="اشتراک رکوردها" data-en="Record-sharing policy">اشتراک رکوردها</h3><p class="tr" data-fa="تعامل اشتراک‌گذاری با محدودیت اپلیکیشن" data-en="Interaction between sharing grants and app restrictions">تعامل اشتراک‌گذاری با محدودیت اپلیکیشن</p></div><span class="status-dot" aria-hidden="true"></span></article>
+<article class="topic"><span class="topic-n">09</span><div><h3 class="tr" data-fa="مجوز اجرای گردش‌کار" data-en="Workflow run permissions">مجوز اجرای گردش‌کار</h3><p class="tr" data-fa="اختیار تغییر وضعیت اجرای گردش‌کار خصوصی" data-en="Authority to modify private workflow runs">اختیار تغییر وضعیت اجرای گردش‌کار خصوصی</p></div><span class="status-dot" aria-hidden="true"></span></article></div>
+</section>
+<section id="method" aria-labelledby="methodhead"><div class="sectionhead"><div><div class="kicker">06 / METHODOLOGY</div><h2 id="methodhead" class="tr" data-fa="این مقایسه چه چیزی رو ثابت نمی‌کنه؟" data-en="What this comparison does not prove">این مقایسه چه چیزی رو ثابت نمی‌کنه؟</h2></div></div>
+<div class="tablebox"><table><thead><tr><th class="tr" data-fa="معیار" data-en="Criterion">معیار</th><th class="tr" data-fa="بدون اسکیل" data-en="Baseline">بدون اسکیل</th><th class="tr" data-fa="با اسکیل" data-en="With skill">با اسکیل</th></tr></thead><tbody>
+<tr><td class="tr" data-fa="مشکل مرجع دعوت کاربران" data-en="Known invitation-role issue">مشکل مرجع دعوت کاربران</td><td class="tr" data-fa="شناسایی در سطح فرضیه" data-en="Detected as a hypothesis">شناسایی در سطح فرضیه</td><td class="tr" data-fa="شناسایی و بررسی مستقل سورس" data-en="Detected, independently source-reviewed">شناسایی و بررسی مستقل سورس</td></tr>
+<tr><td class="tr" data-fa="پوشش اولیه‌ی موضوع‌ها" data-en="Initial coverage of topics">پوشش اولیه‌ی موضوع‌ها</td><td>5</td><td>11</td></tr>
+<tr><td class="tr" data-fa="بازبینی مستقل کاندیداها" data-en="Independent candidate review">بازبینی مستقل کاندیداها</td><td class="tr" data-fa="ثبت نشده" data-en="Not documented">ثبت نشده</td><td>11 / 11</td></tr>
+<tr><td class="tr" data-fa="ادعاهای ردشده" data-en="Rejected claims">ادعاهای ردشده</td><td class="tr" data-fa="نامشخص" data-en="Unknown">نامشخص</td><td>2</td></tr>
+<tr><td class="tr" data-fa="تأیید عملی" data-en="Runtime confirmation">تأیید عملی</td><td>0</td><td>0</td></tr>
+<tr><td class="tr" data-fa="وضعیت نهایی" data-en="Reporting status">وضعیت نهایی</td><td class="tr" data-fa="گزارش ایستا آماده" data-en="Static report completed">گزارش ایستا آماده</td><td class="tr" data-fa="ممیزی جامع ناتمام" data-en="Full Audit incomplete">ممیزی جامع ناتمام</td></tr>
+</tbody></table></div>
+<p class="fineprint tr" data-fa="این فقط یک آزمایش روی یک نسخه‌ی نرم‌افزار بود. مقایسه‌ی شمارش کاندیداها به‌تنهایی معیار دقت نیست؛ نمونه‌های جدید حتی ممکنه هشدار اشتباه باشن. همچنین زمان فعال پردازش، توکن‌ها و هزینه‌ی قابل‌مقایسه برای هر 2 اجرا ثبت نشده." data-en="This is one experiment on one codebase version. Comparing candidate counts does not establish higher accuracy; unvalidated hypotheses may be false positives. Comparable active compute time, token usage and cost were not available.">این فقط یک آزمایش روی یک نسخه‌ی نرم‌افزار بود. مقایسه‌ی شمارش کاندیداها به‌تنهایی معیار دقت نیست؛ نمونه‌های جدید حتی ممکنه هشدار اشتباه باشن. همچنین زمان فعال پردازش، توکن‌ها و هزینه‌ی قابل‌مقایسه برای هر 2 اجرا ثبت نشده.</p>
+</section>
+</main>
+<footer class="footer"><div class="shell footin"><p>© 2026 TUNNELLAB · PRACTICAL AI EXPERIMENTS</p><div class="footlinks"><a href="https://pouramin.dev/" class="tr" data-fa="سایت اصلی" data-en="Home">سایت اصلی</a><a href="https://www.youtube.com/@TunnelLab/" target="_blank" rel="noreferrer" class="tr" data-fa="کانال یوتیوب" data-en="YouTube channel">کانال یوتیوب</a><a href="#overview" class="tr" data-fa="بازگشت به بالا" data-en="Back to top">بازگشت به بالا</a></div></div></footer>
+<script>
+(function(){
+  var lang='fa';
+  try{lang=localStorage.getItem('tl-security-lang')==='en'?'en':'fa'}catch(e){}
+  function apply(next){
+    lang=next;document.documentElement.lang=next;document.documentElement.dir=next==='fa'?'rtl':'ltr';
+    document.querySelectorAll('.tr').forEach(function(el){el.textContent=el.dataset[next]||''});
+    document.querySelectorAll('[data-set-lang]').forEach(function(b){var on=b.dataset.setLang===next;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
+    try{localStorage.setItem('tl-security-lang',next)}catch(e){}
+  }
+  document.querySelectorAll('[data-set-lang]').forEach(function(b){b.addEventListener('click',function(){apply(b.dataset.setLang)})});
+  document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+    var source=document.getElementById(b.dataset.copy);if(!source)return;
+    var value=source.innerText||source.textContent;
+    function flash(){var old=b.textContent;b.textContent=lang==='fa'?'کپی شد!':'Copied!';setTimeout(function(){b.textContent=lang==='fa'?b.dataset.fa:b.dataset.en},1600)}
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(value).then(flash).catch(function(){fallback()})}else{fallback()}
+    function fallback(){var t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');flash()}catch(e){}t.remove()}
+  })});
+  apply(lang);
+})();
+</script>
+</body></html>
