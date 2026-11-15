@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-14T08:11:12+00:00",
+  "feedUpdatedAt": "2026-11-15T03:30:23+00:00",
   "videos": [
+    {
+      "videoId": "4Xs-lwsbUR4",
+      "title": "بالاخره نسخه 1 llama منتشر شد! چه تغییری کرده؟  #هوش_مصنوعی",
+      "publishedAt": "2026-11-15T03:30:22+00:00",
+      "updatedAt": "2026-11-15T03:30:23+00:00",
+      "url": "https://www.youtube.com/watch?v=4Xs-lwsbUR4",
+      "thumbnail": "https://i.ytimg.com/vi/4Xs-lwsbUR4/maxresdefault.jpg"
+    },
+    {
+      "videoId": "cSGd9ZhX_j8",
+      "title": "بررسی امنیتی با هوش مصنوعی؟ | پیدا کردن باگ با security-audit از Cloudflare",
+      "publishedAt": "2026-11-14T15:00:21+00:00",
+      "updatedAt": "2026-11-15T00:20:03+00:00",
+      "url": "https://www.youtube.com/watch?v=cSGd9ZhX_j8",
+      "thumbnail": "https://i.ytimg.com/vi/cSGd9ZhX_j8/maxresdefault.jpg"
+    },
     {
       "videoId": "GDPBs33XOxc",
       "title": "خرید اینترنتی بدون دردسر با  ChatGPT Wallet  #هوش_مصنوعی",
@@ -40,7 +56,7 @@
       "videoId": "YdKbPKSZBro",
       "title": "نبرد غول‌ها: Claude Mythos در برابر Google Carbon #ClaudeAI #Google",
       "publishedAt": "2026-11-11T03:30:17+00:00",
-      "updatedAt": "2026-11-11T03:30:18+00:00",
+      "updatedAt": "2026-11-14T00:05:58+00:00",
       "url": "https://www.youtube.com/watch?v=YdKbPKSZBro",
       "thumbnail": "https://i.ytimg.com/vi/YdKbPKSZBro/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-11-08T22:01:28+00:00",
       "url": "https://www.youtube.com/watch?v=p_CID_sAa0Q",
       "thumbnail": "https://i.ytimg.com/vi/p_CID_sAa0Q/maxresdefault.jpg"
-    },
-    {
-      "videoId": "d4GZRUp6l6I",
-      "title": "آموزش جامع OmniRoute | بخش Providers, Modelsو API Keys (قسمت 1)",
-      "publishedAt": "2026-11-05T15:55:14+00:00",
-      "updatedAt": "2026-11-08T22:05:39+00:00",
-      "url": "https://www.youtube.com/watch?v=d4GZRUp6l6I",
-      "thumbnail": "https://i.ytimg.com/vi/d4GZRUp6l6I/maxresdefault.jpg"
-    },
-    {
-      "videoId": "ulCYr2JhwW8",
-      "title": "ابزار جدید Google برای ساخت مدل سه‌بعدی و واقعیت افزوده!",
-      "publishedAt": "2026-11-05T03:30:10+00:00",
-      "updatedAt": "2026-11-07T23:40:35+00:00",
-      "url": "https://www.youtube.com/watch?v=ulCYr2JhwW8",
-      "thumbnail": "https://i.ytimg.com/vi/ulCYr2JhwW8/maxresdefault.jpg"
     }
   ]
 }
