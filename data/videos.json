@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-15T17:36:56+00:00",
+  "feedUpdatedAt": "2026-11-17T03:30:12+00:00",
   "videos": [
+    {
+      "videoId": "HMqI-5vNY8E",
+      "title": "چرا باید همین الان از TokenEconomizer استفاده کنی؟ ⚡ #هوش_مصنوعی #AI",
+      "publishedAt": "2026-11-17T03:30:12+00:00",
+      "updatedAt": "2026-11-17T03:30:12+00:00",
+      "url": "https://www.youtube.com/watch?v=HMqI-5vNY8E",
+      "thumbnail": "https://i.ytimg.com/vi/HMqI-5vNY8E/maxresdefault.jpg"
+    },
+    {
+      "videoId": "OgTwEqD6QL4",
+      "title": "دسترسی رایگان به Claude Fable 5.2 بدون خرید اشتراک؟! netlify رو تست کردم",
+      "publishedAt": "2026-11-16T16:00:11+00:00",
+      "updatedAt": "2026-11-16T16:00:11+00:00",
+      "url": "https://www.youtube.com/watch?v=OgTwEqD6QL4",
+      "thumbnail": "https://i.ytimg.com/vi/OgTwEqD6QL4/maxresdefault.jpg"
+    },
     {
       "videoId": "4Xs-lwsbUR4",
       "title": "بالاخره نسخه 1 llama منتشر شد! چه تغییری کرده؟  #هوش_مصنوعی",
@@ -32,7 +48,7 @@
       "videoId": "o1n93OGJUBg",
       "title": "گوگل مدل جدید هیدروژن رو منتشر کرد! ایجنت‌های سریع‌تر با هزینه کمتر",
       "publishedAt": "2026-11-13T03:30:24+00:00",
-      "updatedAt": "2026-11-13T03:30:24+00:00",
+      "updatedAt": "2026-11-15T23:10:44+00:00",
       "url": "https://www.youtube.com/watch?v=o1n93OGJUBg",
       "thumbnail": "https://i.ytimg.com/vi/o1n93OGJUBg/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-11-10T22:40:24+00:00",
       "url": "https://www.youtube.com/watch?v=e3rigqZ5Dfk",
       "thumbnail": "https://i.ytimg.com/vi/e3rigqZ5Dfk/maxresdefault.jpg"
-    },
-    {
-      "videoId": "BwbgoUFlQtE",
-      "title": "حافظه هوش مصنوعی Meta قوی‌تر شد | Meta Active Memory",
-      "publishedAt": "2026-11-07T03:30:09+00:00",
-      "updatedAt": "2026-11-09T23:40:26+00:00",
-      "url": "https://www.youtube.com/watch?v=BwbgoUFlQtE",
-      "thumbnail": "https://i.ytimg.com/vi/BwbgoUFlQtE/maxresdefault.jpg"
-    },
-    {
-      "videoId": "p_CID_sAa0Q",
-      "title": "مدل جدید GPT-6 Cyber منتشر شد؛ با دسترسی محدود",
-      "publishedAt": "2026-11-06T03:30:33+00:00",
-      "updatedAt": "2026-11-08T22:01:28+00:00",
-      "url": "https://www.youtube.com/watch?v=p_CID_sAa0Q",
-      "thumbnail": "https://i.ytimg.com/vi/p_CID_sAa0Q/maxresdefault.jpg"
     }
   ]
 }
