@@ -1,8 +1,18 @@
 {
   "owner": "pouramin",
   "generatedFrom": "public TunnelLab companion repositories",
-  "count": 8,
+  "count": 9,
   "entries": [
+    {
+      "repo": "Astra-Sol-6.2",
+      "title": "Astra vs Sol 6.2 | TunnelLab Visual Experiments",
+      "headline": "Same prompts. Different results.",
+      "description": "A visual head-to-head of Astra 6.2 and Sol 6.2 across four rendered experiments, plus Astra 6 vs 6.2. Watch the actual results and copy the original prompts.",
+      "siteUrl": "https://pouramin.dev/Astra-Sol-6.2/",
+      "repoUrl": "https://github.com/pouramin/Astra-Sol-6.2",
+      "createdAt": "2026-11-18T11:52:06Z",
+      "updatedAt": "2026-11-18T13:05:03Z"
+    },
     {
       "repo": "Security-Audit-Cloudflare",
       "title": "Security Audit · Codex × Cloudflare — TunnelLab",
