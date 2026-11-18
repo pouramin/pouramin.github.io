@@ -159,7 +159,7 @@
   function renderPrompts(){
     const box=document.getElementById("prompt-list");
     box.innerHTML=items.map((item,index)=>
-      '<details class="prompt-item" '+(index===0?'open':'')+'><summary><span><span class="prompt-count">'+item.number+'</span><span class="prompt-title">'+escapeHTML(t(item.title))+'</span></span></summary><div class="code-wrap"><button class="copy-btn" type="button" data-copy="'+item.id+'">'+(lang==="fa"?"کپی پرامپت":"Copy prompt")+'</button><pre class="prompt-code">'+escapeHTML(item.prompt)+'</pre></div></details>'
+      '<details class="prompt-item" '+(index===0?'open':'')+'><summary><span><span class="prompt-count">'+item.number+'</span><span class="prompt-title">'+escapeHTML(t(item.title))+'</span></span></summary><div class="code-wrap"><button class="copy-btn" type="button" data-copy="'+item.id+'">'+(lang==="fa"?"کپی متن اصلی انگلیسی":"Copy original prompt")+'</button><pre class="prompt-code">'+escapeHTML(item.prompt)+'</pre></div>'+(lang==="fa" && window.TL_PROMPT_FA ? '<details class="prompt-translation"><summary>ترجمه فارسی پرامپت</summary><pre>'+escapeHTML(window.TL_PROMPT_FA[item.id])+'</pre></details>' : '')+'</details>'
     ).join("");
     box.querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",()=>{
       const item=items.find(x=>x.id===button.dataset.copy);
