@@ -2,8 +2,16 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-17T03:30:12+00:00",
+  "feedUpdatedAt": "2026-11-18T03:30:25+00:00",
   "videos": [
+    {
+      "videoId": "roUko5GB800",
+      "title": "مدل‌های جدید GPT منتشر شدن، GPT-6.2 Astra, GPT-6.2 Sol چه فرقی دارن؟",
+      "publishedAt": "2026-11-18T03:30:25+00:00",
+      "updatedAt": "2026-11-18T03:30:25+00:00",
+      "url": "https://www.youtube.com/watch?v=roUko5GB800",
+      "thumbnail": "https://i.ytimg.com/vi/roUko5GB800/maxresdefault.jpg"
+    },
     {
       "videoId": "HMqI-5vNY8E",
       "title": "چرا باید همین الان از TokenEconomizer استفاده کنی؟ ⚡ #هوش_مصنوعی #AI",
@@ -40,7 +48,7 @@
       "videoId": "GDPBs33XOxc",
       "title": "خرید اینترنتی بدون دردسر با  ChatGPT Wallet  #هوش_مصنوعی",
       "publishedAt": "2026-11-14T03:30:22+00:00",
-      "updatedAt": "2026-11-14T03:30:23+00:00",
+      "updatedAt": "2026-11-16T23:34:07+00:00",
       "url": "https://www.youtube.com/watch?v=GDPBs33XOxc",
       "thumbnail": "https://i.ytimg.com/vi/GDPBs33XOxc/maxresdefault.jpg"
     },
@@ -91,14 +99,6 @@
       "updatedAt": "2026-11-15T15:51:22+00:00",
       "url": "https://www.youtube.com/watch?v=f5s_BpzwklM",
       "thumbnail": "https://i.ytimg.com/vi/f5s_BpzwklM/maxresdefault.jpg"
-    },
-    {
-      "videoId": "e3rigqZ5Dfk",
-      "title": "سرمایه‌گذاری میلیاردی تازه روی Open AI  #هوش_مصنوعی",
-      "publishedAt": "2026-11-08T03:30:19+00:00",
-      "updatedAt": "2026-11-10T22:40:24+00:00",
-      "url": "https://www.youtube.com/watch?v=e3rigqZ5Dfk",
-      "thumbnail": "https://i.ytimg.com/vi/e3rigqZ5Dfk/maxresdefault.jpg"
     }
   ]
 }
