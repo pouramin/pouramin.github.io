@@ -129,10 +129,11 @@
   const t=(obj)=>obj[lang];
   const escapeHTML=(v)=>String(v).replace(/[&<>"']/g,(ch)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
   const mediaCard=(item)=>{
-    const label=escapeHTML(item.model),src=escapeHTML(item.src),poster=escapeHTML(item.poster);
+    const cdn="https://cdn.jsdelivr.net/gh/pouramin/Astra-Sol-6.2@main/";
+    const label=escapeHTML(item.model),src=escapeHTML(cdn+item.src),poster=escapeHTML(cdn+item.poster);
     const missing=lang==="fa"?"ویدیو هنوز روی این نسخه از سایت بارگذاری نشده":"Video not available on this deployment";
     const help=lang==="fa"?"فایل ویدیو باید در پوشه رسانه‌ها قرار بگیره.":"The media asset needs to be published.";
-    return '<div class="video-card"><div class="video-card-head"><span class="model '+item.style+'">'+label+'</span><span class="video-meta">'+escapeHTML(item.meta)+' · '+escapeHTML(item.score)+'/10</span></div><div class="video-frame"><video playsinline controls preload="metadata" muted poster="./'+poster+'" aria-label="'+label+' video"><source src="./'+src+'" type="video/mp4"></video><div class="media-error"><b>'+missing+'</b><small>'+help+'</small></div></div></div>';
+    return '<div class="video-card"><div class="video-card-head"><span class="model '+item.style+'">'+label+'</span><span class="video-meta">'+escapeHTML(item.meta)+' · '+escapeHTML(item.score)+'/10</span></div><div class="video-frame"><video playsinline controls preload="metadata" muted poster="'+poster+'" aria-label="'+label+' video"><source src="'+src+'" type="video/mp4"></video><div class="media-error"><b>'+missing+'</b><small>'+help+'</small></div></div></div>';
   };
   const pairHTML=(files,idx)=>'<div class="pair" data-pair="'+escapeHTML(idx)+'">'+files.map(mediaCard).join('')+'</div><div class="pair-tools"><button type="button" class="small-action both" data-action="play">'+(lang==="fa"?"▶ پخش هر 2":"▶ Play both")+'</button><button type="button" class="small-action both" data-action="pause">'+(lang==="fa"?"Ⅱ توقف هر 2":"Ⅱ Pause both")+'</button><button type="button" class="small-action both" data-action="restart">'+(lang==="fa"?"↺ پخش از اول":"↺ Restart")+'</button><span class="muted">'+(lang==="fa"?"صدا در شروع خاموشه.":"Muted by default.")+'</span></div>';
   function renderExperiments(){
