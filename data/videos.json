@@ -2,8 +2,24 @@
   "channelId": "UCq7sUDbAbuaiYztM-IBO0aQ",
   "channelName": "TunnelLab",
   "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq7sUDbAbuaiYztM-IBO0aQ",
-  "feedUpdatedAt": "2026-11-18T03:30:25+00:00",
+  "feedUpdatedAt": "2026-11-19T15:19:50+00:00",
   "videos": [
+    {
+      "videoId": "IqyqVpcVHkc",
+      "title": "گوگل Gemini 4 Neon رو معرفی کرد | قدرت بالا با هزینه کمتر #هوش_مصنوعی",
+      "publishedAt": "2026-11-19T15:00:03+00:00",
+      "updatedAt": "2026-11-19T15:19:50+00:00",
+      "url": "https://www.youtube.com/watch?v=IqyqVpcVHkc",
+      "thumbnail": "https://i.ytimg.com/vi/IqyqVpcVHkc/maxresdefault.jpg"
+    },
+    {
+      "videoId": "nl2TdF1simg",
+      "title": "مقایسه GPT-6.2 Sol vs Astra | آیا Sol حریف Astra می‌شه؟",
+      "publishedAt": "2026-11-18T16:30:30+00:00",
+      "updatedAt": "2026-11-18T18:33:51+00:00",
+      "url": "https://www.youtube.com/watch?v=nl2TdF1simg",
+      "thumbnail": "https://i.ytimg.com/vi/nl2TdF1simg/maxresdefault.jpg"
+    },
     {
       "videoId": "roUko5GB800",
       "title": "مدل‌های جدید GPT منتشر شدن، GPT-6.2 Astra, GPT-6.2 Sol چه فرقی دارن؟",
@@ -32,7 +48,7 @@
       "videoId": "4Xs-lwsbUR4",
       "title": "بالاخره نسخه 1 llama منتشر شد! چه تغییری کرده؟  #هوش_مصنوعی",
       "publishedAt": "2026-11-15T03:30:22+00:00",
-      "updatedAt": "2026-11-15T03:30:23+00:00",
+      "updatedAt": "2026-11-19T12:20:59+00:00",
       "url": "https://www.youtube.com/watch?v=4Xs-lwsbUR4",
       "thumbnail": "https://i.ytimg.com/vi/4Xs-lwsbUR4/maxresdefault.jpg"
     },
@@ -83,22 +99,6 @@
       "updatedAt": "2026-11-14T00:05:58+00:00",
       "url": "https://www.youtube.com/watch?v=YdKbPKSZBro",
       "thumbnail": "https://i.ytimg.com/vi/YdKbPKSZBro/maxresdefault.jpg"
-    },
-    {
-      "videoId": "pkHXhSC7XGg",
-      "title": "مدل جدید متا Muse Ember: همه رقبا رو شکست داد؟ #هوش_مصنوعی #تکنولوژی",
-      "publishedAt": "2026-11-10T03:30:19+00:00",
-      "updatedAt": "2026-11-12T22:18:42+00:00",
-      "url": "https://www.youtube.com/watch?v=pkHXhSC7XGg",
-      "thumbnail": "https://i.ytimg.com/vi/pkHXhSC7XGg/maxresdefault.jpg"
-    },
-    {
-      "videoId": "f5s_BpzwklM",
-      "title": "سوپر ایجنت DeepSeek چیه؟ آموزش کامل + تست واقعی ساخت پروژه با GitHub!",
-      "publishedAt": "2026-11-08T15:00:26+00:00",
-      "updatedAt": "2026-11-15T15:51:22+00:00",
-      "url": "https://www.youtube.com/watch?v=f5s_BpzwklM",
-      "thumbnail": "https://i.ytimg.com/vi/f5s_BpzwklM/maxresdefault.jpg"
     }
   ]
 }
